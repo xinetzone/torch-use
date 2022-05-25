@@ -7,7 +7,7 @@ authors = [{name = "xinetzone", email = "735613050@qq.com"}]
 classifiers = ["License :: OSI Approved :: Apache Software License"]
 dynamic = ["version", "description"]
 license = {file = "LICENSE"}
-name = "demo-book"
+name = "torch-book"
 readme = "README.md"
 requires-python = ">=3.8"
 
@@ -44,7 +44,7 @@ doc = [
 ]
 
 [tool.flit.module]
-name = "demo_book"
+name = "torch_book"
 
 [tool.flit.sdist]
 # include = ["docs/"]

@@ -2,9 +2,10 @@
 ```
 
 ```{toctree}
+:hidden:
 :maxdepth: 2
 
-demo
+quant/index
 ```
 
 ## 目录和索引
