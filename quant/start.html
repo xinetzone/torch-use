@@ -1,0 +1,1401 @@
+
+<!DOCTYPE html>
+
+<html lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>快速入门 &#8212; torch-book 0.0.1 文档</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/default.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script kind="utterances">
+
+    var commentsRunWhenDOMLoaded = cb => {
+    if (document.readyState != 'loading') {
+        cb()
+    } else if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', cb)
+    } else {
+        document.attachEvent('onreadystatechange', function() {
+        if (document.readyState == 'complete') cb()
+        })
+    }
+}
+
+var addUtterances = () => {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "https://utteranc.es/client.js";
+    script.async = "async";
+
+    script.setAttribute("repo", "xinetzone/torch-book");
+    script.setAttribute("issue-term", "pathname");
+    script.setAttribute("theme", "github-light");
+    script.setAttribute("label", "💬 comment");
+    script.setAttribute("crossorigin", "anonymous");
+
+    sections = document.querySelectorAll("div.section");
+    if (sections !== null) {
+        section = sections[sections.length-1];
+        section.appendChild(script);
+    }
+}
+commentsRunWhenDOMLoaded(addUtterances);
+</script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script src="../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <link rel="canonical" href="https://xinetzone.github.io/torch-book/quant/start.html" />
+    <link rel="shortcut icon" href="../_static/favicon.jpg"/>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="生态系统" href="../ecosystem/index.html" />
+    <link rel="prev" title="量化" href="index.html" /> 
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="zh_CN">
+    
+
+    <!-- Google Analytics -->
+     
+<link
+  rel="alternate"
+  type="application/atom+xml"
+  href="../posts/atom.xml"
+  title="Blog"
+/>
+ 
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/logo.jpg" class="logo" alt="logo">
+      
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../intro.html">
+   项目简介
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../tutorials/index.html">
+   教程
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../tutorials/basics/index.html">
+     PyTorch 基础
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../tutorials/basics/quickstart.html">
+       快速入门
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../tutorials/basics/autogradqs.html">
+       自动微分
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../tutorials/notes/index.html">
+     笔记
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../tutorials/notes/autograd-mechanics.html">
+       自动微分机制
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../tutorials/notes/extending.html">
+       扩展 PyTorch
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="index.html">
+   量化
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     快速入门
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../ecosystem/index.html">
+   生态系统
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../ecosystem/intro.html">
+     简介
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../others/index.html">
+   其他
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../others/colab.html">
+     Colab 训练
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../others/en-zh.html">
+     中英互译
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../refs.html">
+   参考
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            <div>
+版权所有 © 2021 <a href="https://xinetzone.github.io/">xinetzone</a></div>
+<div>由 <a href="https://ebp.jupyterbook.org/">EBP</a> 提供技术支持</div>
+<a href="https://torch-book.readthedocs.io/zh/latest/">版本切换</a>
+
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/xinetzone/torch-book/main?urlpath=lab/tree/docs/quant/start.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://colab.research.google.com/github/xinetzone/torch-book/blob/main/docs/quant/start.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Colab"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_colab.png">
+  </span>
+<span class="headerbtn__text-container">Colab</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/xinetzone/torch-book"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/xinetzone/torch-book/issues/new?title=Issue%20on%20page%20%2Fquant/start.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/xinetzone/torch-book/edit/main/docs/quant/start.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/quant/start.ipynb.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> 导航
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#fx-graph">
+   FX Graph 模式量化的动机
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#prepare-dataset">
+   定义辅助函数和 Prepare Dataset
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   评估模式的模型
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#qconfig-dict">
+   使用
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     qconfig_dict
+    </span>
+   </code>
+   指定如何量化模型
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   为静态后训练量化模型做准备
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   校准
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id5">
+   将模型转换为量化模型
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id6">
+   评估
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id7">
+   调试量化模型
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#eager">
+   基线浮点模型和 Eager 模式量化的比较
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>快速入门</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> 导航 </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#fx-graph">
+   FX Graph 模式量化的动机
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#prepare-dataset">
+   定义辅助函数和 Prepare Dataset
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   评估模式的模型
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#qconfig-dict">
+   使用
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     qconfig_dict
+    </span>
+   </code>
+   指定如何量化模型
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   为静态后训练量化模型做准备
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   校准
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id5">
+   将模型转换为量化模型
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id6">
+   评估
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id7">
+   调试量化模型
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#eager">
+   基线浮点模型和 Eager 模式量化的比较
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                 <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>快速入门<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h1>
+<p>参考：</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://pytorch.org/blog/quantization-in-practice/">量化实践</a></p></li>
+<li><p><a class="reference external" href="https://pytorch.org/tutorials/prototype/fx_graph_mode_ptq_static.html">fx graph 模式 POST TRAINING STATIC QUANTIZATION</a></p></li>
+</ol>
+<p>本教程介绍基于 <a class="reference external" href="https://pytorch.org/docs/stable/fx.html#module-torch.fx" title="(在 PyTorch v1.11.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">torch.fx</span></code></a> 在 graph 模式下进行训练后静态量化的步骤。FX Graph 模式量化的优点：可以在模型上完全自动地执行量化，尽管可能需要一些努力使模型与 FX Graph 模式量化兼容（象征性地用 <a class="reference external" href="https://pytorch.org/docs/stable/fx.html#module-torch.fx" title="(在 PyTorch v1.11.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">torch.fx</span></code></a> 跟踪），将有单独的教程来展示如何使我们想量化的模型的一部分与 FX Graph 模式量化兼容。也有 <a class="reference external" href="https://pytorch.org/tutorials/prototype/fx_graph_mode_ptq_dynamic.html">FX Graph 模式后训练动态量化</a> 教程。FX Graph 模式 API 如下所示：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch.quantization</span> <span class="kn">import</span> <span class="n">get_default_qconfig</span>
+<span class="c1"># Note that this is temporary, </span>
+<span class="c1"># we&#39;ll expose these functions to torch.quantization after official releasee</span>
+<span class="kn">from</span> <span class="nn">torch.quantization.quantize_fx</span> <span class="kn">import</span> <span class="n">prepare_fx</span><span class="p">,</span> <span class="n">convert_fx</span>
+<span class="n">float_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">qconfig</span> <span class="o">=</span> <span class="n">get_default_qconfig</span><span class="p">(</span><span class="s2">&quot;fbgemm&quot;</span><span class="p">)</span>
+<span class="n">qconfig_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;&quot;</span><span class="p">:</span> <span class="n">qconfig</span><span class="p">}</span>
+<span class="k">def</span> <span class="nf">calibrate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">data_loader</span><span class="p">):</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">image</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">data_loader</span><span class="p">:</span>
+            <span class="n">model</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+<span class="n">prepared_model</span> <span class="o">=</span> <span class="n">prepare_fx</span><span class="p">(</span><span class="n">float_model</span><span class="p">,</span> <span class="n">qconfig_dict</span><span class="p">)</span>  <span class="c1"># fuse modules and insert observers</span>
+<span class="n">calibrate</span><span class="p">(</span><span class="n">prepared_model</span><span class="p">,</span> <span class="n">data_loader_test</span><span class="p">)</span>  <span class="c1"># run calibration on sample data</span>
+<span class="n">quantized_model</span> <span class="o">=</span> <span class="n">convert_fx</span><span class="p">(</span><span class="n">prepared_model</span><span class="p">)</span>  <span class="c1"># convert the calibrated model to a quantized model</span>
+</pre></div>
+</div>
+<section id="fx-graph">
+<h2>FX Graph 模式量化的动机<a class="headerlink" href="#fx-graph" title="永久链接至标题">#</a></h2>
+<p>目前 PyTorch 存在 eager 模式量化：<a class="reference external" href="https://pytorch.org/tutorials/advanced/static_quantization_tutorial.html">Static Quantization with Eager Mode in PyTorch</a>。</p>
+<p>可以看到，该过程涉及到多个手动步骤，包括：</p>
+<ul class="simple">
+<li><p>显式地 quantize 和 dequantize activations，当浮点和量化运算混合在模型中时，这是非常耗时的。</p></li>
+<li><p>显式融合模块，这需要手动识别卷积序列、 batch norms 以及 relus 和其他融合模式。</p></li>
+<li><p>PyTorch 张量运算需要特殊处理（如 <code class="docutils literal notranslate"><span class="pre">add</span></code>、<code class="docutils literal notranslate"><span class="pre">concat</span></code> 等）。</p></li>
+<li><p>函数式没有  first class 支持（<code class="docutils literal notranslate"><span class="pre">functional.conv2d</span></code> 和 <code class="docutils literal notranslate"><span class="pre">functional.linear</span></code> 不会被量化）</p></li>
+</ul>
+<p>这些需要的修改大多来自于 Eager 模式量化的潜在限制。Eager 模式在模块级工作，因为它不能检查实际运行的代码（在 <code class="docutils literal notranslate"><span class="pre">forward</span></code> 函数中），量化是通过模块交换实现的，不知道在 Eager 模式下 <code class="docutils literal notranslate"><span class="pre">forward</span></code> 函数中模块是如何使用的。因此，它需要用户手动插入 <code class="docutils literal notranslate"><span class="pre">QuantStub</span></code> 和 <code class="docutils literal notranslate"><span class="pre">DeQuantStub</span></code>，以标记他们想要 quantize 或 dequantize 的点。在图模式中，可以检查在 <code class="docutils literal notranslate"><span class="pre">forward</span></code> 函数中执行的实际代码（例如 <code class="docutils literal notranslate"><span class="pre">aten</span></code> 函数调用），量化是通过模块和 graph 操作实现的。由于图模式对运行的代码具有完全的可见性，能够自动地找出要融合哪些模块，在哪里插入 observer 调用，quantize/dequantize 函数等，能够自动化整个量化过程。</p>
+<p>FX Graph 模式量化的优点是：</p>
+<ul class="simple">
+<li><p>简化量化流程，最小化手动步骤</p></li>
+<li><p>开启了进行更高级别优化的可能性，如自动精度选择（automatic precision selection）</p></li>
+</ul>
+</section>
+<section id="prepare-dataset">
+<h2>定义辅助函数和 Prepare Dataset<a class="headerlink" href="#prepare-dataset" title="永久链接至标题">#</a></h2>
+<p>首先进行必要的导入，定义一些辅助函数并准备数据。这些步骤与 PyTorch 中 <a class="reference external" href="https://pytorch.org/tutorials/advanced/static_quantization_tutorial.html">使用 Eager 模式的静态量化</a> 相同。</p>
+<p>要使用整个 ImageNet 数据集运行本教程中的代码，首先按照 <a class="reference external" href="http://www.image-net.org/download">ImageNet Data</a> 中的说明下载 ImageNet。将下载的文件解压缩到 <code class="docutils literal notranslate"><span class="pre">data_path</span></code> 文件夹中。</p>
+<p>下载 <code class="xref py py-mod docutils literal notranslate"><span class="pre">torchvision</span> <span class="pre">resnet18</span> <span class="pre">模型</span></code> 并将其重命名为 <code class="docutils literal notranslate"><span class="pre">models/resnet18_pretrained_float.pth</span></code>。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
+<span class="c1"># from torch_book.data import ImageNet</span>
+<span class="kn">from</span> <span class="nn">tools.helper</span> <span class="kn">import</span> <span class="n">prepare_data_loaders</span><span class="p">,</span> <span class="n">load_model</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="nn">Input In [1],</span> in <span class="ni">&lt;cell line: 2&gt;</span><span class="nt">()</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">import</span> <span class="nn">copy</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="c1"># from torch_book.data import ImageNet</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">from</span> <span class="nn">tools.helper</span> <span class="kn">import</span> <span class="n">prepare_data_loaders</span><span class="p">,</span> <span class="n">load_model</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;torch&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_path</span> <span class="o">=</span> <span class="s2">&quot;/media/pc/data/4tb/lxw/datasets/ILSVRC&quot;</span>
+<span class="n">saved_model_dir</span> <span class="o">=</span> <span class="s1">&#39;models/&#39;</span>
+<span class="n">float_model_file</span> <span class="o">=</span> <span class="s1">&#39;resnet18_pretrained_float.pth&#39;</span>
+
+<span class="n">data_loader</span><span class="p">,</span> <span class="n">data_loader_test</span> <span class="o">=</span> <span class="n">prepare_data_loaders</span><span class="p">(</span><span class="n">data_path</span><span class="p">)</span>
+<span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
+<span class="n">float_model</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="n">saved_model_dir</span> <span class="o">+</span> <span class="n">float_model_file</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+<span class="n">float_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+<span class="c1"># deepcopy the model since we need to keep the original model around</span>
+<span class="n">model_to_quantize</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">float_model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id2">
+<h2>评估模式的模型<a class="headerlink" href="#id2" title="永久链接至标题">#</a></h2>
+<p>对于训练后量化，需要将模型设置为评估模式。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_to_quantize</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ResNet(
+  (conv1): Conv2d(3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+  (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (relu): ReLU(inplace=True)
+  (maxpool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
+  (layer1): Sequential(
+    (0): BasicBlock(
+      (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (1): BasicBlock(
+      (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (layer2): Sequential(
+    (0): BasicBlock(
+      (conv1): Conv2d(64, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (downsample): Sequential(
+        (0): Conv2d(64, 128, kernel_size=(1, 1), stride=(2, 2), bias=False)
+        (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (1): BasicBlock(
+      (conv1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (layer3): Sequential(
+    (0): BasicBlock(
+      (conv1): Conv2d(128, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (downsample): Sequential(
+        (0): Conv2d(128, 256, kernel_size=(1, 1), stride=(2, 2), bias=False)
+        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (1): BasicBlock(
+      (conv1): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (layer4): Sequential(
+    (0): BasicBlock(
+      (conv1): Conv2d(256, 512, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (downsample): Sequential(
+        (0): Conv2d(256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False)
+        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (1): BasicBlock(
+      (conv1): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (avgpool): AdaptiveAvgPool2d(output_size=(1, 1))
+  (fc): Linear(in_features=512, out_features=1000, bias=True)
+)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="qconfig-dict">
+<h2>使用 <code class="docutils literal notranslate"><span class="pre">qconfig_dict</span></code> 指定如何量化模型<a class="headerlink" href="#qconfig-dict" title="永久链接至标题">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">qconfig_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;&quot;</span> <span class="p">:</span> <span class="n">default_qconfig</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>使用与 Eager 模式量化中相同的 <code class="docutils literal notranslate"><span class="pre">qconfig</span></code>, <code class="docutils literal notranslate"><span class="pre">qconfig</span></code> 只是用于激活和权重的 observers 的命名元组。<code class="docutils literal notranslate"><span class="pre">qconfig_dict</span></code> 是具有以下配置的字典：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>qconfig = {
+    &quot; : qconfig_global,
+    &quot;sub&quot; : qconfig_sub,
+    &quot;sub.fc&quot; : qconfig_fc,
+    &quot;sub.conv&quot;: None
+}
+qconfig_dict = {
+    # qconfig? means either a valid qconfig or None
+    # optional, global config
+    &quot;&quot;: qconfig?,
+    # optional, used for module and function types
+    # could also be split into module_types and function_types if we prefer
+    &quot;object_type&quot;: [
+        (torch.nn.Conv2d, qconfig?),
+        (torch.nn.functional.add, qconfig?),
+        ...,
+    ],
+    # optional, used for module names
+    &quot;module_name&quot;: [
+        (&quot;foo.bar&quot;, qconfig?)
+        ...,
+    ],
+    # optional, matched in order, first match takes precedence
+    &quot;module_name_regex&quot;: [
+        (&quot;foo.*bar.*conv[0-9]+&quot;, qconfig?)
+        ...,
+    ],
+    # priority (in increasing order): global, object_type, module_name_regex, module_name
+    # qconfig == None means fusion and quantization should be skipped for anything
+    # matching the rule
+
+    # **api subject to change**
+    # optional: specify the path for standalone modules
+    # These modules are symbolically traced and quantized as one unit
+    # so that the call to the submodule appears as one call_module
+    # node in the forward graph of the GraphModule
+    &quot;standalone_module_name&quot;: [
+        &quot;submodule.standalone&quot;
+    ],
+    &quot;standalone_module_class&quot;: [
+        StandaloneModuleClass
+    ]
+}
+</pre></div>
+</div>
+<p>可以在 <a class="reference external" href="https://github.com/pytorch/pytorch/blob/master/torch/quantization/qconfig.py"><code class="docutils literal notranslate"><span class="pre">qconfig</span></code> 文件</a> 中找到与 <code class="docutils literal notranslate"><span class="pre">qconfig</span></code> 相关的实用函数：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch.quantization</span> <span class="kn">import</span> <span class="n">get_default_qconfig</span><span class="p">,</span> <span class="n">quantize_jit</span>
+
+<span class="n">qconfig</span> <span class="o">=</span> <span class="n">get_default_qconfig</span><span class="p">(</span><span class="s2">&quot;fbgemm&quot;</span><span class="p">)</span>
+<span class="n">qconfig_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;&quot;</span><span class="p">:</span> <span class="n">qconfig</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id3">
+<h2>为静态后训练量化模型做准备<a class="headerlink" href="#id3" title="永久链接至标题">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch.quantization.quantize_fx</span> <span class="kn">import</span> <span class="n">prepare_fx</span>
+
+<span class="n">prepared_model</span> <span class="o">=</span> <span class="n">prepare_fx</span><span class="p">(</span><span class="n">model_to_quantize</span><span class="p">,</span> <span class="n">qconfig_dict</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/media/workspace/anaconda3/envs/torchx/lib/python3.10/site-packages/torch/ao/quantization/observer.py:177: UserWarning: Please use quant_min and quant_max to specify the range for observers.                     reduce_range will be deprecated in a future release of PyTorch.
+  warnings.warn(
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">prepare_fx</span></code> 将 BatchNorm 模块折叠到前面的 Conv2d 模块中，并在模型中的适当位置插入 observers。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">prepared_model</span><span class="o">.</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>graph():
+    %x : torch.Tensor [#users=1] = placeholder[target=x]
+    %activation_post_process_0 : [#users=1] = call_module[target=activation_post_process_0](args = (%x,), kwargs = {})
+    %conv1 : [#users=1] = call_module[target=conv1](args = (%activation_post_process_0,), kwargs = {})
+    %activation_post_process_1 : [#users=1] = call_module[target=activation_post_process_1](args = (%conv1,), kwargs = {})
+    %maxpool : [#users=1] = call_module[target=maxpool](args = (%activation_post_process_1,), kwargs = {})
+    %activation_post_process_2 : [#users=2] = call_module[target=activation_post_process_2](args = (%maxpool,), kwargs = {})
+    %layer1_0_conv1 : [#users=1] = call_module[target=layer1.0.conv1](args = (%activation_post_process_2,), kwargs = {})
+    %activation_post_process_3 : [#users=1] = call_module[target=activation_post_process_3](args = (%layer1_0_conv1,), kwargs = {})
+    %layer1_0_conv2 : [#users=1] = call_module[target=layer1.0.conv2](args = (%activation_post_process_3,), kwargs = {})
+    %activation_post_process_4 : [#users=1] = call_module[target=activation_post_process_4](args = (%layer1_0_conv2,), kwargs = {})
+    %add : [#users=1] = call_function[target=operator.add](args = (%activation_post_process_4, %activation_post_process_2), kwargs = {})
+    %layer1_0_relu_1 : [#users=1] = call_module[target=layer1.0.relu](args = (%add,), kwargs = {})
+    %activation_post_process_5 : [#users=2] = call_module[target=activation_post_process_5](args = (%layer1_0_relu_1,), kwargs = {})
+    %layer1_1_conv1 : [#users=1] = call_module[target=layer1.1.conv1](args = (%activation_post_process_5,), kwargs = {})
+    %activation_post_process_6 : [#users=1] = call_module[target=activation_post_process_6](args = (%layer1_1_conv1,), kwargs = {})
+    %layer1_1_conv2 : [#users=1] = call_module[target=layer1.1.conv2](args = (%activation_post_process_6,), kwargs = {})
+    %activation_post_process_7 : [#users=1] = call_module[target=activation_post_process_7](args = (%layer1_1_conv2,), kwargs = {})
+    %add_1 : [#users=1] = call_function[target=operator.add](args = (%activation_post_process_7, %activation_post_process_5), kwargs = {})
+    %layer1_1_relu_1 : [#users=1] = call_module[target=layer1.1.relu](args = (%add_1,), kwargs = {})
+    %activation_post_process_8 : [#users=2] = call_module[target=activation_post_process_8](args = (%layer1_1_relu_1,), kwargs = {})
+    %layer2_0_conv1 : [#users=1] = call_module[target=layer2.0.conv1](args = (%activation_post_process_8,), kwargs = {})
+    %activation_post_process_9 : [#users=1] = call_module[target=activation_post_process_9](args = (%layer2_0_conv1,), kwargs = {})
+    %layer2_0_conv2 : [#users=1] = call_module[target=layer2.0.conv2](args = (%activation_post_process_9,), kwargs = {})
+    %activation_post_process_10 : [#users=1] = call_module[target=activation_post_process_10](args = (%layer2_0_conv2,), kwargs = {})
+    %layer2_0_downsample_0 : [#users=1] = call_module[target=layer2.0.downsample.0](args = (%activation_post_process_8,), kwargs = {})
+    %activation_post_process_11 : [#users=1] = call_module[target=activation_post_process_11](args = (%layer2_0_downsample_0,), kwargs = {})
+    %add_2 : [#users=1] = call_function[target=operator.add](args = (%activation_post_process_10, %activation_post_process_11), kwargs = {})
+    %layer2_0_relu_1 : [#users=1] = call_module[target=layer2.0.relu](args = (%add_2,), kwargs = {})
+    %activation_post_process_12 : [#users=2] = call_module[target=activation_post_process_12](args = (%layer2_0_relu_1,), kwargs = {})
+    %layer2_1_conv1 : [#users=1] = call_module[target=layer2.1.conv1](args = (%activation_post_process_12,), kwargs = {})
+    %activation_post_process_13 : [#users=1] = call_module[target=activation_post_process_13](args = (%layer2_1_conv1,), kwargs = {})
+    %layer2_1_conv2 : [#users=1] = call_module[target=layer2.1.conv2](args = (%activation_post_process_13,), kwargs = {})
+    %activation_post_process_14 : [#users=1] = call_module[target=activation_post_process_14](args = (%layer2_1_conv2,), kwargs = {})
+    %add_3 : [#users=1] = call_function[target=operator.add](args = (%activation_post_process_14, %activation_post_process_12), kwargs = {})
+    %layer2_1_relu_1 : [#users=1] = call_module[target=layer2.1.relu](args = (%add_3,), kwargs = {})
+    %activation_post_process_15 : [#users=2] = call_module[target=activation_post_process_15](args = (%layer2_1_relu_1,), kwargs = {})
+    %layer3_0_conv1 : [#users=1] = call_module[target=layer3.0.conv1](args = (%activation_post_process_15,), kwargs = {})
+    %activation_post_process_16 : [#users=1] = call_module[target=activation_post_process_16](args = (%layer3_0_conv1,), kwargs = {})
+    %layer3_0_conv2 : [#users=1] = call_module[target=layer3.0.conv2](args = (%activation_post_process_16,), kwargs = {})
+    %activation_post_process_17 : [#users=1] = call_module[target=activation_post_process_17](args = (%layer3_0_conv2,), kwargs = {})
+    %layer3_0_downsample_0 : [#users=1] = call_module[target=layer3.0.downsample.0](args = (%activation_post_process_15,), kwargs = {})
+    %activation_post_process_18 : [#users=1] = call_module[target=activation_post_process_18](args = (%layer3_0_downsample_0,), kwargs = {})
+    %add_4 : [#users=1] = call_function[target=operator.add](args = (%activation_post_process_17, %activation_post_process_18), kwargs = {})
+    %layer3_0_relu_1 : [#users=1] = call_module[target=layer3.0.relu](args = (%add_4,), kwargs = {})
+    %activation_post_process_19 : [#users=2] = call_module[target=activation_post_process_19](args = (%layer3_0_relu_1,), kwargs = {})
+    %layer3_1_conv1 : [#users=1] = call_module[target=layer3.1.conv1](args = (%activation_post_process_19,), kwargs = {})
+    %activation_post_process_20 : [#users=1] = call_module[target=activation_post_process_20](args = (%layer3_1_conv1,), kwargs = {})
+    %layer3_1_conv2 : [#users=1] = call_module[target=layer3.1.conv2](args = (%activation_post_process_20,), kwargs = {})
+    %activation_post_process_21 : [#users=1] = call_module[target=activation_post_process_21](args = (%layer3_1_conv2,), kwargs = {})
+    %add_5 : [#users=1] = call_function[target=operator.add](args = (%activation_post_process_21, %activation_post_process_19), kwargs = {})
+    %layer3_1_relu_1 : [#users=1] = call_module[target=layer3.1.relu](args = (%add_5,), kwargs = {})
+    %activation_post_process_22 : [#users=2] = call_module[target=activation_post_process_22](args = (%layer3_1_relu_1,), kwargs = {})
+    %layer4_0_conv1 : [#users=1] = call_module[target=layer4.0.conv1](args = (%activation_post_process_22,), kwargs = {})
+    %activation_post_process_23 : [#users=1] = call_module[target=activation_post_process_23](args = (%layer4_0_conv1,), kwargs = {})
+    %layer4_0_conv2 : [#users=1] = call_module[target=layer4.0.conv2](args = (%activation_post_process_23,), kwargs = {})
+    %activation_post_process_24 : [#users=1] = call_module[target=activation_post_process_24](args = (%layer4_0_conv2,), kwargs = {})
+    %layer4_0_downsample_0 : [#users=1] = call_module[target=layer4.0.downsample.0](args = (%activation_post_process_22,), kwargs = {})
+    %activation_post_process_25 : [#users=1] = call_module[target=activation_post_process_25](args = (%layer4_0_downsample_0,), kwargs = {})
+    %add_6 : [#users=1] = call_function[target=operator.add](args = (%activation_post_process_24, %activation_post_process_25), kwargs = {})
+    %layer4_0_relu_1 : [#users=1] = call_module[target=layer4.0.relu](args = (%add_6,), kwargs = {})
+    %activation_post_process_26 : [#users=2] = call_module[target=activation_post_process_26](args = (%layer4_0_relu_1,), kwargs = {})
+    %layer4_1_conv1 : [#users=1] = call_module[target=layer4.1.conv1](args = (%activation_post_process_26,), kwargs = {})
+    %activation_post_process_27 : [#users=1] = call_module[target=activation_post_process_27](args = (%layer4_1_conv1,), kwargs = {})
+    %layer4_1_conv2 : [#users=1] = call_module[target=layer4.1.conv2](args = (%activation_post_process_27,), kwargs = {})
+    %activation_post_process_28 : [#users=1] = call_module[target=activation_post_process_28](args = (%layer4_1_conv2,), kwargs = {})
+    %add_7 : [#users=1] = call_function[target=operator.add](args = (%activation_post_process_28, %activation_post_process_26), kwargs = {})
+    %layer4_1_relu_1 : [#users=1] = call_module[target=layer4.1.relu](args = (%add_7,), kwargs = {})
+    %activation_post_process_29 : [#users=1] = call_module[target=activation_post_process_29](args = (%layer4_1_relu_1,), kwargs = {})
+    %avgpool : [#users=1] = call_module[target=avgpool](args = (%activation_post_process_29,), kwargs = {})
+    %activation_post_process_30 : [#users=1] = call_module[target=activation_post_process_30](args = (%avgpool,), kwargs = {})
+    %flatten : [#users=1] = call_function[target=torch.flatten](args = (%activation_post_process_30, 1), kwargs = {})
+    %activation_post_process_31 : [#users=1] = call_module[target=activation_post_process_31](args = (%flatten,), kwargs = {})
+    %fc : [#users=1] = call_module[target=fc](args = (%activation_post_process_31,), kwargs = {})
+    %activation_post_process_32 : [#users=1] = call_module[target=activation_post_process_32](args = (%fc,), kwargs = {})
+    return activation_post_process_32
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id4">
+<h2>校准<a class="headerlink" href="#id4" title="永久链接至标题">#</a></h2>
+<p>将 observers 插入模型后，运行校准函数。校准的目的就是通过一些样本运行代表性的工作负载（例如样本的训练数据集）以便 observers 在模型中能够观测到张量的统计数据，以后使用这些信息来计算量化参数。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="k">def</span> <span class="nf">calibrate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">data_loader</span><span class="p">):</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">image</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">data_loader</span><span class="p">:</span>
+            <span class="n">model</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+<span class="n">calibrate</span><span class="p">(</span><span class="n">prepared_model</span><span class="p">,</span> <span class="n">data_loader_test</span><span class="p">)</span>  <span class="c1"># run calibration on sample data</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id5">
+<h2>将模型转换为量化模型<a class="headerlink" href="#id5" title="永久链接至标题">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">convert_fx</span></code> 采用校准模型并产生量化模型。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch.quantization.quantize_fx</span> <span class="kn">import</span> <span class="n">convert_fx</span>
+
+<span class="n">quantized_model</span> <span class="o">=</span> <span class="n">convert_fx</span><span class="p">(</span><span class="n">prepared_model</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">quantized_model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/media/workspace/anaconda3/envs/torchx/lib/python3.10/site-packages/torch/ao/quantization/observer.py:177: UserWarning: Please use quant_min and quant_max to specify the range for observers.                     reduce_range will be deprecated in a future release of PyTorch.
+  warnings.warn(
+/media/workspace/anaconda3/envs/torchx/lib/python3.10/site-packages/torch/nn/quantized/_reference/modules/conv.py:49: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  torch.tensor(weight_qparams[&quot;scale&quot;], dtype=torch.float, device=device))
+/media/workspace/anaconda3/envs/torchx/lib/python3.10/site-packages/torch/nn/quantized/_reference/modules/conv.py:52: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  torch.tensor(weight_qparams[&quot;zero_point&quot;], dtype=torch.int, device=device))
+/media/workspace/anaconda3/envs/torchx/lib/python3.10/site-packages/torch/nn/quantized/_reference/modules/linear.py:41: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  torch.tensor(weight_qparams[&quot;scale&quot;], dtype=torch.float, device=device))
+/media/workspace/anaconda3/envs/torchx/lib/python3.10/site-packages/torch/nn/quantized/_reference/modules/linear.py:44: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  torch.tensor(
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GraphModule(
+  (conv1): QuantizedConvReLU2d(3, 64, kernel_size=(7, 7), stride=(2, 2), scale=0.02416340634226799, zero_point=0, padding=(3, 3))
+  (maxpool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
+  (layer1): Module(
+    (0): Module(
+      (conv1): QuantizedConvReLU2d(64, 64, kernel_size=(3, 3), stride=(1, 1), scale=0.016458377242088318, zero_point=0, padding=(1, 1))
+      (conv2): QuantizedConv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), scale=0.05186988785862923, zero_point=76, padding=(1, 1))
+    )
+    (1): Module(
+      (conv1): QuantizedConvReLU2d(64, 64, kernel_size=(3, 3), stride=(1, 1), scale=0.01640539988875389, zero_point=0, padding=(1, 1))
+      (conv2): QuantizedConv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), scale=0.06668238341808319, zero_point=75, padding=(1, 1))
+    )
+  )
+  (layer2): Module(
+    (0): Module(
+      (conv1): QuantizedConvReLU2d(64, 128, kernel_size=(3, 3), stride=(2, 2), scale=0.014990044757723808, zero_point=0, padding=(1, 1))
+      (conv2): QuantizedConv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), scale=0.043533820658922195, zero_point=65, padding=(1, 1))
+      (downsample): Module(
+        (0): QuantizedConv2d(64, 128, kernel_size=(1, 1), stride=(2, 2), scale=0.039839211851358414, zero_point=57)
+      )
+    )
+    (1): Module(
+      (conv1): QuantizedConvReLU2d(128, 128, kernel_size=(3, 3), stride=(1, 1), scale=0.017353743314743042, zero_point=0, padding=(1, 1))
+      (conv2): QuantizedConv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), scale=0.04932788759469986, zero_point=67, padding=(1, 1))
+    )
+  )
+  (layer3): Module(
+    (0): Module(
+      (conv1): QuantizedConvReLU2d(128, 256, kernel_size=(3, 3), stride=(2, 2), scale=0.021761329844594002, zero_point=0, padding=(1, 1))
+      (conv2): QuantizedConv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), scale=0.0588294193148613, zero_point=51, padding=(1, 1))
+      (downsample): Module(
+        (0): QuantizedConv2d(128, 256, kernel_size=(1, 1), stride=(2, 2), scale=0.02464589849114418, zero_point=70)
+      )
+    )
+    (1): Module(
+      (conv1): QuantizedConvReLU2d(256, 256, kernel_size=(3, 3), stride=(1, 1), scale=0.02051834762096405, zero_point=0, padding=(1, 1))
+      (conv2): QuantizedConv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), scale=0.0531822107732296, zero_point=73, padding=(1, 1))
+    )
+  )
+  (layer4): Module(
+    (0): Module(
+      (conv1): QuantizedConvReLU2d(256, 512, kernel_size=(3, 3), stride=(2, 2), scale=0.017118634656071663, zero_point=0, padding=(1, 1))
+      (conv2): QuantizedConv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), scale=0.05871155112981796, zero_point=72, padding=(1, 1))
+      (downsample): Module(
+        (0): QuantizedConv2d(256, 512, kernel_size=(1, 1), stride=(2, 2), scale=0.04433954134583473, zero_point=68)
+      )
+    )
+    (1): Module(
+      (conv1): QuantizedConvReLU2d(512, 512, kernel_size=(3, 3), stride=(1, 1), scale=0.016849324107170105, zero_point=0, padding=(1, 1))
+      (conv2): QuantizedConv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), scale=0.19534127414226532, zero_point=50, padding=(1, 1))
+    )
+  )
+  (avgpool): AdaptiveAvgPool2d(output_size=(1, 1))
+  (fc): QuantizedLinear(in_features=512, out_features=1000, scale=0.3029012978076935, zero_point=35, qscheme=torch.per_channel_affine)
+)
+
+
+
+def forward(self, x : torch.Tensor):
+    conv1_input_scale_0 = self.conv1_input_scale_0
+    conv1_input_zero_point_0 = self.conv1_input_zero_point_0
+    quantize_per_tensor = torch.quantize_per_tensor(x, conv1_input_scale_0, conv1_input_zero_point_0, torch.quint8);  x = conv1_input_scale_0 = conv1_input_zero_point_0 = None
+    conv1 = self.conv1(quantize_per_tensor);  quantize_per_tensor = None
+    maxpool = self.maxpool(conv1);  conv1 = None
+    layer1_0_conv1 = getattr(self.layer1, &quot;0&quot;).conv1(maxpool)
+    layer1_0_conv2 = getattr(self.layer1, &quot;0&quot;).conv2(layer1_0_conv1);  layer1_0_conv1 = None
+    layer1_0_relu_scale_0 = self.layer1_0_relu_scale_0
+    layer1_0_relu_zero_point_0 = self.layer1_0_relu_zero_point_0
+    add_relu = torch.ops.quantized.add_relu(layer1_0_conv2, maxpool, layer1_0_relu_scale_0, layer1_0_relu_zero_point_0);  layer1_0_conv2 = maxpool = layer1_0_relu_scale_0 = layer1_0_relu_zero_point_0 = None
+    layer1_1_conv1 = getattr(self.layer1, &quot;1&quot;).conv1(add_relu)
+    layer1_1_conv2 = getattr(self.layer1, &quot;1&quot;).conv2(layer1_1_conv1);  layer1_1_conv1 = None
+    layer1_1_relu_scale_0 = self.layer1_1_relu_scale_0
+    layer1_1_relu_zero_point_0 = self.layer1_1_relu_zero_point_0
+    add_relu_1 = torch.ops.quantized.add_relu(layer1_1_conv2, add_relu, layer1_1_relu_scale_0, layer1_1_relu_zero_point_0);  layer1_1_conv2 = add_relu = layer1_1_relu_scale_0 = layer1_1_relu_zero_point_0 = None
+    layer2_0_conv1 = getattr(self.layer2, &quot;0&quot;).conv1(add_relu_1)
+    layer2_0_conv2 = getattr(self.layer2, &quot;0&quot;).conv2(layer2_0_conv1);  layer2_0_conv1 = None
+    layer2_0_downsample_0 = getattr(getattr(self.layer2, &quot;0&quot;).downsample, &quot;0&quot;)(add_relu_1);  add_relu_1 = None
+    layer2_0_relu_scale_0 = self.layer2_0_relu_scale_0
+    layer2_0_relu_zero_point_0 = self.layer2_0_relu_zero_point_0
+    add_relu_2 = torch.ops.quantized.add_relu(layer2_0_conv2, layer2_0_downsample_0, layer2_0_relu_scale_0, layer2_0_relu_zero_point_0);  layer2_0_conv2 = layer2_0_downsample_0 = layer2_0_relu_scale_0 = layer2_0_relu_zero_point_0 = None
+    layer2_1_conv1 = getattr(self.layer2, &quot;1&quot;).conv1(add_relu_2)
+    layer2_1_conv2 = getattr(self.layer2, &quot;1&quot;).conv2(layer2_1_conv1);  layer2_1_conv1 = None
+    layer2_1_relu_scale_0 = self.layer2_1_relu_scale_0
+    layer2_1_relu_zero_point_0 = self.layer2_1_relu_zero_point_0
+    add_relu_3 = torch.ops.quantized.add_relu(layer2_1_conv2, add_relu_2, layer2_1_relu_scale_0, layer2_1_relu_zero_point_0);  layer2_1_conv2 = add_relu_2 = layer2_1_relu_scale_0 = layer2_1_relu_zero_point_0 = None
+    layer3_0_conv1 = getattr(self.layer3, &quot;0&quot;).conv1(add_relu_3)
+    layer3_0_conv2 = getattr(self.layer3, &quot;0&quot;).conv2(layer3_0_conv1);  layer3_0_conv1 = None
+    layer3_0_downsample_0 = getattr(getattr(self.layer3, &quot;0&quot;).downsample, &quot;0&quot;)(add_relu_3);  add_relu_3 = None
+    layer3_0_relu_scale_0 = self.layer3_0_relu_scale_0
+    layer3_0_relu_zero_point_0 = self.layer3_0_relu_zero_point_0
+    add_relu_4 = torch.ops.quantized.add_relu(layer3_0_conv2, layer3_0_downsample_0, layer3_0_relu_scale_0, layer3_0_relu_zero_point_0);  layer3_0_conv2 = layer3_0_downsample_0 = layer3_0_relu_scale_0 = layer3_0_relu_zero_point_0 = None
+    layer3_1_conv1 = getattr(self.layer3, &quot;1&quot;).conv1(add_relu_4)
+    layer3_1_conv2 = getattr(self.layer3, &quot;1&quot;).conv2(layer3_1_conv1);  layer3_1_conv1 = None
+    layer3_1_relu_scale_0 = self.layer3_1_relu_scale_0
+    layer3_1_relu_zero_point_0 = self.layer3_1_relu_zero_point_0
+    add_relu_5 = torch.ops.quantized.add_relu(layer3_1_conv2, add_relu_4, layer3_1_relu_scale_0, layer3_1_relu_zero_point_0);  layer3_1_conv2 = add_relu_4 = layer3_1_relu_scale_0 = layer3_1_relu_zero_point_0 = None
+    layer4_0_conv1 = getattr(self.layer4, &quot;0&quot;).conv1(add_relu_5)
+    layer4_0_conv2 = getattr(self.layer4, &quot;0&quot;).conv2(layer4_0_conv1);  layer4_0_conv1 = None
+    layer4_0_downsample_0 = getattr(getattr(self.layer4, &quot;0&quot;).downsample, &quot;0&quot;)(add_relu_5);  add_relu_5 = None
+    layer4_0_relu_scale_0 = self.layer4_0_relu_scale_0
+    layer4_0_relu_zero_point_0 = self.layer4_0_relu_zero_point_0
+    add_relu_6 = torch.ops.quantized.add_relu(layer4_0_conv2, layer4_0_downsample_0, layer4_0_relu_scale_0, layer4_0_relu_zero_point_0);  layer4_0_conv2 = layer4_0_downsample_0 = layer4_0_relu_scale_0 = layer4_0_relu_zero_point_0 = None
+    layer4_1_conv1 = getattr(self.layer4, &quot;1&quot;).conv1(add_relu_6)
+    layer4_1_conv2 = getattr(self.layer4, &quot;1&quot;).conv2(layer4_1_conv1);  layer4_1_conv1 = None
+    layer4_1_relu_scale_0 = self.layer4_1_relu_scale_0
+    layer4_1_relu_zero_point_0 = self.layer4_1_relu_zero_point_0
+    add_relu_7 = torch.ops.quantized.add_relu(layer4_1_conv2, add_relu_6, layer4_1_relu_scale_0, layer4_1_relu_zero_point_0);  layer4_1_conv2 = add_relu_6 = layer4_1_relu_scale_0 = layer4_1_relu_zero_point_0 = None
+    avgpool = self.avgpool(add_relu_7);  add_relu_7 = None
+    flatten = torch.flatten(avgpool, 1);  avgpool = None
+    fc = self.fc(flatten);  flatten = None
+    dequantize_14 = fc.dequantize();  fc = None
+    return dequantize_14
+    
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id6">
+<h2>评估<a class="headerlink" href="#id6" title="永久链接至标题">#</a></h2>
+<p>现在可以打印量化模型的大小和精度。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helper</span> <span class="kn">import</span> <span class="n">print_size_of_model</span><span class="p">,</span> <span class="n">evaluate</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Size of model before quantization&quot;</span><span class="p">)</span>
+<span class="n">print_size_of_model</span><span class="p">(</span><span class="n">float_model</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Size of model after quantization&quot;</span><span class="p">)</span>
+<span class="n">print_size_of_model</span><span class="p">(</span><span class="n">quantized_model</span><span class="p">)</span>
+<span class="n">top1</span><span class="p">,</span> <span class="n">top5</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">quantized_model</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">data_loader_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[before serilaization] Evaluation accuracy on test dataset: </span><span class="si">%2.2f</span><span class="s2">, </span><span class="si">%2.2f</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">top1</span><span class="o">.</span><span class="n">avg</span><span class="p">,</span> <span class="n">top5</span><span class="o">.</span><span class="n">avg</span><span class="p">))</span>
+
+<span class="n">fx_graph_mode_model_file_path</span> <span class="o">=</span> <span class="n">saved_model_dir</span> <span class="o">+</span> <span class="s2">&quot;resnet18_fx_graph_mode_quantized.pth&quot;</span>
+
+<span class="c1"># this does not run due to some erros loading convrelu module:</span>
+<span class="c1"># ModuleAttributeError: &#39;ConvReLU2d&#39; object has no attribute &#39;_modules&#39;</span>
+<span class="c1"># save the whole model directly</span>
+<span class="c1"># torch.save(quantized_model, fx_graph_mode_model_file_path)</span>
+<span class="c1"># loaded_quantized_model = torch.load(fx_graph_mode_model_file_path)</span>
+
+<span class="c1"># save with state_dict</span>
+<span class="c1"># torch.save(quantized_model.state_dict(), fx_graph_mode_model_file_path)</span>
+<span class="c1"># import copy</span>
+<span class="c1"># model_to_quantize = copy.deepcopy(float_model)</span>
+<span class="c1"># prepared_model = prepare_fx(model_to_quantize, {&quot;&quot;: qconfig})</span>
+<span class="c1"># loaded_quantized_model = convert_fx(prepared_model)</span>
+<span class="c1"># loaded_quantized_model.load_state_dict(torch.load(fx_graph_mode_model_file_path))</span>
+
+<span class="c1"># save with script</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">script</span><span class="p">(</span><span class="n">quantized_model</span><span class="p">),</span> <span class="n">fx_graph_mode_model_file_path</span><span class="p">)</span>
+<span class="n">loaded_quantized_model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fx_graph_mode_model_file_path</span><span class="p">)</span>
+
+<span class="n">top1</span><span class="p">,</span> <span class="n">top5</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">loaded_quantized_model</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">data_loader_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[after serialization/deserialization] Evaluation accuracy on test dataset: </span><span class="si">%2.2f</span><span class="s2">, </span><span class="si">%2.2f</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">top1</span><span class="o">.</span><span class="n">avg</span><span class="p">,</span> <span class="n">top5</span><span class="o">.</span><span class="n">avg</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Size of model before quantization
+Size (MB): 46.873073
+Size of model after quantization
+Size (MB): 11.853109
+
+[before serilaization] Evaluation accuracy on test dataset: 69.45, 88.90
+
+[after serialization/deserialization] Evaluation accuracy on test dataset: 69.45, 88.90
+</pre></div>
+</div>
+</div>
+</div>
+<p>如果希望获得更好的精度或性能，请尝试更改 <code class="docutils literal notranslate"><span class="pre">qconfig_dict</span></code>。</p>
+</section>
+<section id="id7">
+<h2>调试量化模型<a class="headerlink" href="#id7" title="永久链接至标题">#</a></h2>
+<p>还可以打印量化的 un-quantized conv 的权重来查看区别，首先显式地调用 <code class="docutils literal notranslate"><span class="pre">fuse</span></code> 来融合模型中的 conv 和 bn：注意，<code class="docutils literal notranslate"><span class="pre">fuse_fx</span></code> 只在 <code class="docutils literal notranslate"><span class="pre">eval</span></code> 模式下工作。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch.quantization.quantize_fx</span> <span class="kn">import</span> <span class="n">fuse_fx</span>
+
+<span class="n">fused</span> <span class="o">=</span> <span class="n">fuse_fx</span><span class="p">(</span><span class="n">float_model</span><span class="p">)</span>
+
+<span class="n">conv1_weight_after_fuse</span> <span class="o">=</span> <span class="n">fused</span><span class="o">.</span><span class="n">conv1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">weight</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">conv1_weight_after_quant</span> <span class="o">=</span> <span class="n">quantized_model</span><span class="o">.</span><span class="n">conv1</span><span class="o">.</span><span class="n">weight</span><span class="p">()</span><span class="o">.</span><span class="n">dequantize</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">conv1_weight_after_fuse</span> <span class="o">-</span> <span class="n">conv1_weight_after_quant</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor(0.0007, grad_fn=&lt;MaxBackward1&gt;)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="eager">
+<h2>基线浮点模型和 Eager 模式量化的比较<a class="headerlink" href="#eager" title="永久链接至标题">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scripted_float_model_file</span> <span class="o">=</span> <span class="s2">&quot;resnet18_scripted.pth&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Size of baseline model&quot;</span><span class="p">)</span>
+<span class="n">print_size_of_model</span><span class="p">(</span><span class="n">float_model</span><span class="p">)</span>
+
+<span class="n">top1</span><span class="p">,</span> <span class="n">top5</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">float_model</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">data_loader_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Baseline Float Model Evaluation accuracy: </span><span class="si">%2.2f</span><span class="s2">, </span><span class="si">%2.2f</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">top1</span><span class="o">.</span><span class="n">avg</span><span class="p">,</span> <span class="n">top5</span><span class="o">.</span><span class="n">avg</span><span class="p">))</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">script</span><span class="p">(</span><span class="n">float_model</span><span class="p">),</span> <span class="n">saved_model_dir</span> <span class="o">+</span> <span class="n">scripted_float_model_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Size of baseline model
+Size (MB): 46.874273
+
+Baseline Float Model Evaluation accuracy: 69.76, 89.08
+</pre></div>
+</div>
+</div>
+</div>
+<p>在本节中，将量化模型与 FX Graph 模式的量化模型与在 Eager 模式下量化的模型进行比较。FX Graph 模式和 Eager 模式产生的量化模型非常相似，因此期望精度和 speedup 也很相似。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Size of Fx graph mode quantized model&quot;</span><span class="p">)</span>
+<span class="n">print_size_of_model</span><span class="p">(</span><span class="n">quantized_model</span><span class="p">)</span>
+<span class="n">top1</span><span class="p">,</span> <span class="n">top5</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">quantized_model</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">data_loader_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FX graph mode quantized model Evaluation accuracy on test dataset: </span><span class="si">%2.2f</span><span class="s2">, </span><span class="si">%2.2f</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">top1</span><span class="o">.</span><span class="n">avg</span><span class="p">,</span> <span class="n">top5</span><span class="o">.</span><span class="n">avg</span><span class="p">))</span>
+
+<span class="kn">from</span> <span class="nn">torchvision.models.quantization.resnet</span> <span class="kn">import</span> <span class="n">resnet18</span>
+<span class="n">eager_quantized_model</span> <span class="o">=</span> <span class="n">resnet18</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">quantize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Size of eager mode quantized model&quot;</span><span class="p">)</span>
+<span class="n">eager_quantized_model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">script</span><span class="p">(</span><span class="n">eager_quantized_model</span><span class="p">)</span>
+<span class="n">print_size_of_model</span><span class="p">(</span><span class="n">eager_quantized_model</span><span class="p">)</span>
+<span class="n">top1</span><span class="p">,</span> <span class="n">top5</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">eager_quantized_model</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">data_loader_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eager mode quantized model Evaluation accuracy on test dataset: </span><span class="si">%2.2f</span><span class="s2">, </span><span class="si">%2.2f</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">top1</span><span class="o">.</span><span class="n">avg</span><span class="p">,</span> <span class="n">top5</span><span class="o">.</span><span class="n">avg</span><span class="p">))</span>
+<span class="n">eager_mode_model_file</span> <span class="o">=</span> <span class="s2">&quot;resnet18_eager_mode_quantized.pth&quot;</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">eager_quantized_model</span><span class="p">,</span> <span class="n">saved_model_dir</span> <span class="o">+</span> <span class="n">eager_mode_model_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Size of Fx graph mode quantized model
+Size (MB): 11.855297
+
+FX graph mode quantized model Evaluation accuracy on test dataset: 69.45, 88.90
+Size of eager mode quantized model
+Size (MB): 11.850395
+
+eager mode quantized model Evaluation accuracy on test dataset: 69.50, 88.88
+</pre></div>
+</div>
+</div>
+</div>
+<p>可以看到 FX Graph 模式和 Eager 模式量化模型的模型大小和精度是非常相似的。</p>
+<p>在 AIBench 中运行模型（单线程）会得到如下结果：</p>
+<div class="highlight-log notranslate"><div class="highlight"><pre><span></span>Scripted Float Model:
+Self CPU time total: 192.48ms
+
+Scripted Eager Mode Quantized Model:
+Self CPU time total: 50.76ms
+
+Scripted FX Graph Mode Quantized Model:
+Self CPU time total: 50.63ms
+</pre></div>
+</div>
+<p>可以看到，对于 resnet18, FX Graph 模式和 Eager 模式量化模型都比浮点模型获得了相似的速度，大约比浮点模型快 2-4 倍。但是浮点模型上的实际加速可能会因模型、设备、构建、输入批大小、线程等而不同。</p>
+</section>
+</section>
+
+<div class="section">
+   
+</div>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="index.html" title="上一页 页">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">上一页</p>
+            <p class="prev-next-title">量化</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../ecosystem/index.html" title="下一页 页">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">生态系统</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By xinetzone<br/>
+  
+      &copy; Copyright 2021, xinetzone.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
