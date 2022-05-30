@@ -3,8 +3,9 @@ from pathlib import Path
 import ablog
 
 ROOT = Path(__file__).parent.resolve()
-sys.path.extend([str(ROOT), str(ROOT/"src")])
+sys.path.extend([str(ROOT)])
 from _conf import *
+from doc_tool import *
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates', ablog.get_html_templates_path()]
@@ -22,12 +23,14 @@ extensions = [
     "sphinx_design",
     "sphinx_inline_tabs",
     # "sphinx.ext.autodoc",
-    # "sphinx.ext.autosummary",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.napoleon",
     "sphinx_automodapi.automodapi",
+    "sphinx.ext.autosectionlabel",
     # "sphinx.ext.todo",
-    # "sphinxcontrib.bibtex",
+    "sphinxcontrib.bibtex",
     # "sphinx_togglebutton",
-    # "sphinx.ext.viewcode",
+    "sphinx.ext.viewcode",
     # "sphinx.ext.doctest",
     # "sphinx_design",
     # "sphinx.ext.ifconfig",
@@ -46,3 +49,6 @@ html_css_files = ["default.css"]
 language = 'zh_CN'
 locale_dirs = ['locales/']  # path is example but recommended.
 gettext_compact = False  # optional.
+
+bibtex_bibfiles = ["refs.bib"]
+bibtex_reference_style = "author_year"
