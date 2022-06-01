@@ -1,0 +1,2417 @@
+
+<!DOCTYPE html>
+
+<html lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>1. PTQ 与 QAT 实践 &#8212; torch-book 0.0.1 文档</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/default.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/tabs.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script kind="utterances">
+
+    var commentsRunWhenDOMLoaded = cb => {
+    if (document.readyState != 'loading') {
+        cb()
+    } else if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', cb)
+    } else {
+        document.attachEvent('onreadystatechange', function() {
+        if (document.readyState == 'complete') cb()
+        })
+    }
+}
+
+var addUtterances = () => {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "https://utteranc.es/client.js";
+    script.async = "async";
+
+    script.setAttribute("repo", "xinetzone/torch-book");
+    script.setAttribute("issue-term", "pathname");
+    script.setAttribute("theme", "github-light");
+    script.setAttribute("label", "💬 comment");
+    script.setAttribute("crossorigin", "anonymous");
+
+    sections = document.querySelectorAll("div.section");
+    if (sections !== null) {
+        section = sections[sections.length-1];
+        section.appendChild(script);
+    }
+}
+commentsRunWhenDOMLoaded(addUtterances);
+</script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <link rel="canonical" href="https://xinetzone.github.io/torch-book/chaos/tutorial/pqt-qat.html" />
+    <link rel="shortcut icon" href="../../_static/favicon.jpg"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" /> 
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="zh_CN">
+    
+
+    <!-- Google Analytics -->
+     
+<link
+  rel="alternate"
+  type="application/atom+xml"
+  href="../../posts/atom.xml"
+  title="Blog"
+/>
+ 
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../../_static/logo.jpg" class="logo" alt="logo">
+      
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../intro.html">
+   项目简介
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../tutorials/index.html">
+   教程
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../tutorials/basics/index.html">
+     PyTorch 基础
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/basics/quickstart.html">
+       快速入门
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/basics/autogradqs.html">
+       自动微分
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../tutorials/notes/index.html">
+     笔记
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/notes/autograd-mechanics.html">
+       自动微分机制
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/notes/extending.html">
+       扩展 PyTorch
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../quant/index.html">
+   量化
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../quant/start.html">
+     快速入门
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../index.html">
+   Eager 量化(混乱)
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../intro.html">
+     量化简介（Eager）
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../recipes.html">
+     量化菜谱
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../quantized-tensor.html">
+     量化张量
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../start/index.html">
+     快速上手
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+    <label for="toctree-checkbox-6">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../start/basic.html">
+       基础
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../start/ns.html">
+       Pytorch 数值套件教程
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../study/index.html">
+     学习
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+    <label for="toctree-checkbox-7">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../study/intro.html">
+       概述
+      </a>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../study/transfer-learning/index.html">
+       迁移学习
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+      <label for="toctree-checkbox-8">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/transfer-learning/basic.html">
+         计算机视觉分类
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/transfer-learning/quantized.html">
+         量化计算机视觉分类
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/transfer-learning/custom.html">
+         自定义
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/transfer-learning/cifar.html">
+         测试
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/transfer-learning/tvm.html">
+         TVM
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../study/advanced/index.html">
+       高级教程
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+      <label for="toctree-checkbox-9">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/advanced/custom.html">
+         自定义量化
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/advanced/run.html">
+         通用量化模型
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/advanced/qat.html">
+         QAT
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/advanced/cifar.html">
+         特定于 cifar10 的量化（待更）
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../study/qat-resnet18.html">
+       QAT（resnet18）
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../study/test.html">
+       测试 QAT
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../study/draft.html">
+       回收站
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../papers/index.html">
+     论文
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+    <label for="toctree-checkbox-10">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../papers/gholami2021survey.html">
+       A Survey of Quantization Methods for Efficient Neural Network Inference
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../ecosystem/index.html">
+   生态系统
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+  <label for="toctree-checkbox-11">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../ecosystem/intro.html">
+     简介
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../others/index.html">
+   其他
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+  <label for="toctree-checkbox-12">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../others/colab.html">
+     Colab 训练
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../others/en-zh.html">
+     中英互译
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../refs.html">
+   参考
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            <div>
+版权所有 © 2021 <a href="https://xinetzone.github.io/">xinetzone</a></div>
+<div>由 <a href="https://ebp.jupyterbook.org/">EBP</a> 提供技术支持</div>
+<a href="https://torch-book.readthedocs.io/zh/latest/">版本切换</a>
+
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/xinetzone/torch-book/main?urlpath=lab/tree/docs/chaos/tutorial/pqt-qat.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://colab.research.google.com/github/xinetzone/torch-book/blob/main/docs/chaos/tutorial/pqt-qat.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Colab"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../../_static/images/logo_colab.png">
+  </span>
+<span class="headerbtn__text-container">Colab</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/xinetzone/torch-book"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/xinetzone/torch-book/issues/new?title=Issue%20on%20page%20%2Fchaos/tutorial/pqt-qat.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/xinetzone/torch-book/edit/main/docs/chaos/tutorial/pqt-qat.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../_sources/chaos/tutorial/pqt-qat.ipynb.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> 导航
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   1.1. 背景
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     1.1.1. 读者
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     1.1.2. 环境配置
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pqt-qat">
+   1.2. 概述：PQT 与 QAT
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ptq">
+     1.2.1. PTQ 简介
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#qat">
+     1.2.2. QAT 概述
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     1.2.3. PTQ/QAT 统一的量化流程
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     1.2.4. PTQ/QAT 量化策略
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id6">
+   1.3. PTQ 和 QAT 实战
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     1.3.1. 一些准备工作
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id8">
+     1.3.2. 微调浮点模型
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id9">
+     1.3.3. 配置可量化模型
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id10">
+     1.3.4. PTQ 实战
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id11">
+     1.3.5. QAT 实战
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id12">
+     1.3.6. 小结
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>PTQ 与 QAT 实践</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> 导航 </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   1.1. 背景
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     1.1.1. 读者
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     1.1.2. 环境配置
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pqt-qat">
+   1.2. 概述：PQT 与 QAT
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ptq">
+     1.2.1. PTQ 简介
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#qat">
+     1.2.2. QAT 概述
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     1.2.3. PTQ/QAT 统一的量化流程
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     1.2.4. PTQ/QAT 量化策略
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id6">
+   1.3. PTQ 和 QAT 实战
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     1.3.1. 一些准备工作
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id8">
+     1.3.2. 微调浮点模型
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id9">
+     1.3.3. 配置可量化模型
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id10">
+     1.3.4. PTQ 实战
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id11">
+     1.3.5. QAT 实战
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id12">
+     1.3.6. 小结
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                 <section class="tex2jax_ignore mathjax_ignore" id="ptq-qat">
+<h1><span class="section-number">1. </span>PTQ 与 QAT 实践<a class="headerlink" href="#ptq-qat" title="永久链接至标题">#</a></h1>
+<p>本文主要介绍如何使用 PyTorch 将浮点模型转换为 PTQ 或者 QAT 模型。</p>
+<section id="id1">
+<h2><span class="section-number">1.1. </span>背景<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h2>
+<p><span class="guilabel">目标</span>：快速将浮点模型转换为 PTQ 或者 QAT 模型。</p>
+<section id="id2">
+<h3><span class="section-number">1.1.1. </span>读者<a class="headerlink" href="#id2" title="永久链接至标题">#</a></h3>
+<p>本教程适用于会使用 PyTorch 编写 CNN 等模块的的算法工程师。</p>
+</section>
+<section id="id3">
+<h3><span class="section-number">1.1.2. </span>环境配置<a class="headerlink" href="#id3" title="永久链接至标题">#</a></h3>
+<p>本文使用 Python 3.10.0 （其他版本请自测），暂时仅 Linux 平台被测试。</p>
+<p>查看 <code class="docutils literal notranslate"><span class="pre">torch</span></code> 和 <code class="docutils literal notranslate"><span class="pre">torchvision</span></code> 的版本：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torchvision</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;torch: </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span>
+      <span class="sa">f</span><span class="s1">&#39;torchvision: </span><span class="si">{</span><span class="n">torchvision</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>torch: 1.11.0 
+torchvision: 0.12.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>设置一些警告配置：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 设置 warnings</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+    <span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span>
+    <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">,</span>
+    <span class="n">module</span><span class="o">=</span><span class="s1">&#39;.*&#39;</span>
+<span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+    <span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span>
+    <span class="n">module</span><span class="o">=</span><span class="s1">&#39;torch.ao.quantization&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="pqt-qat">
+<h2><span class="section-number">1.2. </span>概述：PQT 与 QAT<a class="headerlink" href="#pqt-qat" title="永久链接至标题">#</a></h2>
+<p>参考：<a class="reference external" href="https://pytorch.org/docs/master/quantization.html">量化</a></p>
+<dl class="simple myst">
+<dt><code class="docutils literal notranslate"><span class="pre">训练后量化</span></code></dt><dd><p>简称 PTQ（Post Training Quantization）：权重量化，激活量化，需要借助数据在训练后进行校准。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">静态量化感知训练</span></code></dt><dd><p>简称 QAT（static quantization aware training）：权重量化，激活量化，在训练过程中的量化数值进行建模。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">浮点模型</span></code></dt><dd><p>模型的 <strong>权重</strong> 和 <strong>激活</strong> 均为浮点类型（如 <code class="xref py py-data docutils literal notranslate"><span class="pre">torch.float32</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">torch.float64</span></code>）。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">量化模型</span></code></dt><dd><p>模型的 <strong>权重</strong> 和 <strong>激活</strong> 均为量化类型（如 <code class="xref py py-data docutils literal notranslate"><span class="pre">torch.qint32</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">torch.qint8</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">torch.quint8</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">torch.quint2x4</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">torch.quint4x2</span></code>）。</p>
+</dd>
+</dl>
+<p>下面举例说明如何将浮点模型转换为量化模型。</p>
+<p>为了方便说明定义如下模块：</p>
+<p class="rubric">定义简单的浮点模块</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span><span class="p">,</span> <span class="n">Tensor</span>
+
+
+<span class="k">class</span> <span class="nc">M</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_forward_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;提供便捷函数&#39;&#39;&#39;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="n">x</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_impl</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p class="rubric">定义可量化模块</p>
+<p>将浮点模块 <code class="docutils literal notranslate"><span class="pre">M</span></code> 转换为可量化模块 <code class="docutils literal notranslate"><span class="pre">QM</span></code>（量化流程的最关键的一步）。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch.ao.quantization</span> <span class="kn">import</span> <span class="n">QuantStub</span><span class="p">,</span> <span class="n">DeQuantStub</span>
+
+
+<span class="k">class</span> <span class="nc">QM</span><span class="p">(</span><span class="n">M</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        is_print: 为了测试需求，打印一些信息</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_print</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_print</span> <span class="o">=</span> <span class="n">is_print</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quant</span> <span class="o">=</span> <span class="n">QuantStub</span><span class="p">()</span> <span class="c1"># 将张量从浮点转换为量化</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dequant</span> <span class="o">=</span> <span class="n">DeQuantStub</span><span class="p">()</span> <span class="c1"># 将张量从量化转换为浮点</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="c1"># 手动指定张量将在量化模型中从浮点模块转换为量化模块的位置</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quant</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_print</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;量化前的类型：&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_impl</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_print</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;量化中的类型：&#39;</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="c1"># 在量化模型中手动指定张量从量化到浮点的转换位置</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dequant</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_print</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;量化后的类型：&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>简单测试前向过程的激活数据类型：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">input_fp32</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="c1"># 输入的数据</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">QM</span><span class="p">(</span><span class="n">is_print</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="n">input_fp32</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>量化前的类型： torch.float32
+量化中的类型： torch.float32
+量化后的类型： torch.float32
+</pre></div>
+</div>
+</div>
+</div>
+<p>查看权重的数据类型：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">dtype</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>torch.float32
+</pre></div>
+</div>
+</div>
+</div>
+<p>可以看出，此时模块 <code class="docutils literal notranslate"><span class="pre">m</span></code> 是浮点模块。</p>
+<section id="ptq">
+<h3><span class="section-number">1.2.1. </span>PTQ 简介<a class="headerlink" href="#ptq" title="永久链接至标题">#</a></h3>
+<p>当内存带宽和计算空间都很重要时，通常会使用训练后量化，而 CNN 就是其典型的用例。训练后量化对模型的 <strong>权重</strong> 和 <strong>激活</strong> 进行量化。它在可能的情况下将 <strong>激活</strong> 融合到前面的层中。它需要用具有代表性的数据集进行 <strong>校准</strong>，以确定激活的最佳量化参数。</p>
+<p class="rubric">示意图</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># 原始模型</span>
+<span class="c1"># 全部的张量和计算均在浮点上进行</span>
+<span class="n">previous_layer_fp32</span> <span class="o">--</span> <span class="n">linear_fp32</span> <span class="o">--</span> <span class="n">activation_fp32</span> <span class="o">--</span> <span class="n">next_layer_fp32</span>
+                    <span class="o">/</span>
+    <span class="n">linear_weight_fp32</span>
+
+<span class="c1"># 静态量化模型</span>
+<span class="c1"># weights 和 activations 在 int8 上</span>
+<span class="n">previous_layer_int8</span> <span class="o">--</span> <span class="n">linear_with_activation_int8</span> <span class="o">--</span> <span class="n">next_layer_int8</span>
+                    <span class="o">/</span>
+  <span class="n">linear_weight_int8</span>
+</pre></div>
+</div>
+<p>直接创建浮点模块的实例：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 创建浮点模型实例</span>
+<span class="n">model_fp32</span> <span class="o">=</span> <span class="n">QM</span><span class="p">(</span><span class="n">is_print</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>要使 PTQ 生效，必须将模型设置为 <code class="docutils literal notranslate"><span class="pre">eval</span></code> 模式：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_fp32</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>QM(
+  (conv): Conv2d(1, 1, kernel_size=(1, 1), stride=(1, 1))
+  (relu): ReLU()
+  (quant): QuantStub()
+  (dequant): DeQuantStub()
+)
+</pre></div>
+</div>
+</div>
+</div>
+<p>查看此时的数据类型：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">input_fp32</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">model_fp32</span><span class="p">(</span><span class="n">input_fp32</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;激活和权重的数据类型分别为：&#39;</span>
+      <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">model_fp32</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>量化前的类型： torch.float32
+量化中的类型： torch.float32
+量化后的类型： torch.float32
+激活和权重的数据类型分别为：torch.float32, torch.float32
+</pre></div>
+</div>
+</div>
+</div>
+<p class="rubric">定义观测器</p>
+<p>赋值实例变量 <code class="docutils literal notranslate"><span class="pre">qconfig</span></code>，其中包含关于要附加哪种观测器的信息：</p>
+<ul class="simple">
+<li><p>使用 <a class="reference external" href="https://github.com/pytorch/FBGEMM"><code class="docutils literal notranslate"><span class="pre">'fbgemm'</span></code></a> 用于带 AVX2 的 x86（没有AVX2，一些运算的实现效率很低）；使用 <a class="reference external" href="https://github.com/pytorch/pytorch/tree/master/aten/src/ATen/native/quantized/cpu/qnnpack"><code class="docutils literal notranslate"><span class="pre">'qnnpack'</span></code></a> 用于 ARM CPU（通常出现在移动/嵌入式设备中）。</p></li>
+<li><p>其他量化配置，如选择对称或非对称量化和 <code class="docutils literal notranslate"><span class="pre">MinMax</span></code> 或 <code class="docutils literal notranslate"><span class="pre">L2Norm</span></code> 校准技术，可以在这里指定。</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_fp32</span><span class="o">.</span><span class="n">qconfig</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ao</span><span class="o">.</span><span class="n">quantization</span><span class="o">.</span><span class="n">get_default_qconfig</span><span class="p">(</span><span class="s1">&#39;fbgemm&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>查看此时的数据类型：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">input_fp32</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">model_fp32</span><span class="p">(</span><span class="n">input_fp32</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;激活和权重的数据类型分别为：&#39;</span>
+      <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">model_fp32</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>量化前的类型： torch.float32
+量化中的类型： torch.float32
+量化后的类型： torch.float32
+激活和权重的数据类型分别为：torch.float32, torch.float32
+</pre></div>
+</div>
+</div>
+</div>
+<p class="rubric">融合激活层</p>
+<p>在适用的地方，融合 activation 到前面的层（这需要根据模型架构手动完成）。常见的融合包括 <code class="docutils literal notranslate"><span class="pre">conv</span> <span class="pre">+</span> <span class="pre">relu</span></code> 和 <code class="docutils literal notranslate"><span class="pre">conv</span> <span class="pre">+</span> <span class="pre">batchnorm</span> <span class="pre">+</span> <span class="pre">relu</span></code>。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_fp32_fused</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ao</span><span class="o">.</span><span class="n">quantization</span><span class="o">.</span><span class="n">fuse_modules</span><span class="p">(</span><span class="n">model_fp32</span><span class="p">,</span>
+                                                      <span class="p">[[</span><span class="s1">&#39;conv&#39;</span><span class="p">,</span> <span class="s1">&#39;relu&#39;</span><span class="p">]])</span>
+                                                    
+<span class="n">model_fp32_fused</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>QM(
+  (conv): ConvReLU2d(
+    (0): Conv2d(1, 1, kernel_size=(1, 1), stride=(1, 1))
+    (1): ReLU()
+  )
+  (relu): Identity()
+  (quant): QuantStub()
+  (dequant): DeQuantStub()
+)
+</pre></div>
+</div>
+</div>
+</div>
+<p>可以看到 <code class="docutils literal notranslate"><span class="pre">model_fp32_fused</span></code> 中 <code class="docutils literal notranslate"><span class="pre">ConvReLU2d</span></code> 融合 <code class="docutils literal notranslate"><span class="pre">model_fp32</span></code> 的两个层 <code class="docutils literal notranslate"><span class="pre">conv</span></code> 和 <code class="docutils literal notranslate"><span class="pre">relu</span></code>。</p>
+<p>查看此时的数据类型：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">input_fp32</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">model_fp32_fused</span><span class="p">(</span><span class="n">input_fp32</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;激活和权重的数据类型分别为：&#39;</span>
+      <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">model_fp32</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>量化前的类型： torch.float32
+量化中的类型： torch.float32
+量化后的类型： torch.float32
+激活和权重的数据类型分别为：torch.float32, torch.float32
+</pre></div>
+</div>
+</div>
+</div>
+<p class="rubric">启用观测器</p>
+<p>在融合后的模块中启用观测器，用于在校准期间观测激活（activation）张量。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_fp32_prepared</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">quantization</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span><span class="n">model_fp32_fused</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p class="rubric">校准准备好的模型</p>
+<p>校准准备好的模型，以确定量化参数的激活在现实世界的设置，校准具有代表性的数据集。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">input_fp32</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">model_fp32_prepared</span><span class="p">(</span><span class="n">input_fp32</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;激活和权重的数据类型分别为：&#39;</span>
+      <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">model_fp32</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>量化前的类型： torch.float32
+量化中的类型： torch.float32
+量化后的类型： torch.float32
+激活和权重的数据类型分别为：torch.float32, torch.float32
+</pre></div>
+</div>
+</div>
+</div>
+<p class="rubric">模型转换</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>量化权重，计算和存储每个激活张量要使用的尺度（scale）和偏差（bias）值，并用量化实现替换关键算子。</p>
+</div>
+<p>转换已校准好的模型为量化模型：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_int8</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">quantization</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">model_fp32_prepared</span><span class="p">)</span>
+<span class="n">model_int8</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>QM(
+  (conv): QuantizedConvReLU2d(1, 1, kernel_size=(1, 1), stride=(1, 1), scale=0.010650944896042347, zero_point=0)
+  (relu): Identity()
+  (quant): Quantize(scale=tensor([0.0351]), zero_point=tensor([74]), dtype=torch.quint8)
+  (dequant): DeQuantize()
+)
+</pre></div>
+</div>
+</div>
+</div>
+<p>查看权重的数据类型：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_int8</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">weight</span><span class="p">()</span><span class="o">.</span><span class="n">dtype</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>torch.qint8
+</pre></div>
+</div>
+</div>
+</div>
+<p>可以看出此时权重的元素大小为 1 字节，而不是 FP32 的 4 字节：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_int8</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">weight</span><span class="p">()</span><span class="o">.</span><span class="n">element_size</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1
+</pre></div>
+</div>
+</div>
+</div>
+<p>运行模型，相关的计算将在 <code class="xref py py-data docutils literal notranslate"><span class="pre">torch.qint8</span></code> 中发生。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="n">model_int8</span><span class="p">(</span><span class="n">input_fp32</span><span class="p">)</span>
+<span class="n">res</span><span class="o">.</span><span class="n">dtype</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>量化前的类型： torch.quint8
+量化中的类型： torch.quint8
+量化后的类型： torch.float32
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>torch.float32
+</pre></div>
+</div>
+</div>
+</div>
+<p>要了解更多关于量化意识训练的信息，请参阅 <a class="reference external" href="https://pytorch.org/tutorials/advanced/static_quantization_tutorial.html">QAT 教程</a>。</p>
+</section>
+<section id="qat">
+<h3><span class="section-number">1.2.2. </span>QAT 概述<a class="headerlink" href="#qat" title="永久链接至标题">#</a></h3>
+<p>与其他量化方法相比，QAT 在 <strong>训练过程中</strong> 模拟量化的效果，可以获得更高的 accuracy。在训练过程中，所有的计算都是在浮点上进行的，使用 fake_quant 模块通过夹紧和舍入的方式对量化效果进行建模，模拟 INT8 的效果。模型转换后，权值和激活被量化，激活在可能的情况下被融合到前一层。它通常与 CNN 一起使用，与 PTQ 相比具有更高的 accuracy。</p>
+<p class="rubric">示意图</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># 原始模型</span>
+<span class="c1"># 全部张量和计算均在浮点上</span>
+<span class="n">previous_layer_fp32</span> <span class="o">--</span> <span class="n">linear_fp32</span> <span class="o">--</span> <span class="n">activation_fp32</span> <span class="o">--</span> <span class="n">next_layer_fp32</span>
+                      <span class="o">/</span>
+    <span class="n">linear_weight_fp32</span>
+
+<span class="c1"># 在训练过程中使用 fake_quants 建模量化数值</span>
+<span class="n">previous_layer_fp32</span> <span class="o">--</span> <span class="n">fq</span> <span class="o">--</span> <span class="n">linear_fp32</span> <span class="o">--</span> <span class="n">activation_fp32</span> <span class="o">--</span> <span class="n">fq</span> <span class="o">--</span> <span class="n">next_layer_fp32</span>
+                           <span class="o">/</span>
+   <span class="n">linear_weight_fp32</span> <span class="o">--</span> <span class="n">fq</span>
+
+<span class="c1"># 量化模型</span>
+<span class="c1"># weights 和 activations 在 int8 上</span>
+<span class="n">previous_layer_int8</span> <span class="o">--</span> <span class="n">linear_with_activation_int8</span> <span class="o">--</span> <span class="n">next_layer_int8</span>
+                     <span class="o">/</span>
+   <span class="n">linear_weight_int8</span>
+</pre></div>
+</div>
+<p>定义比 <code class="docutils literal notranslate"><span class="pre">M</span></code> 稍微复杂一点的浮点模块：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">M2</span><span class="p">(</span><span class="n">M</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_forward_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;提供便捷函数&#39;&#39;&#39;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>同样需要定义可量化模块：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">QM2</span><span class="p">(</span><span class="n">M2</span><span class="p">,</span> <span class="n">QM</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>创建浮点模型实例：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 创建模型实例</span>
+<span class="n">model_fp32</span> <span class="o">=</span> <span class="n">QM2</span><span class="p">()</span>
+<span class="n">model_fp32</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>QM2(
+  (conv): Conv2d(1, 1, kernel_size=(1, 1), stride=(1, 1))
+  (relu): ReLU()
+  (quant): QuantStub()
+  (dequant): DeQuantStub()
+  (bn): BatchNorm2d(1, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+)
+</pre></div>
+</div>
+</div>
+</div>
+<p>模型必须设置为训练模式，以便 QAT 可用：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_fp32</span><span class="o">.</span><span class="n">train</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>添加量化配置（与 PTQ 相同相似）：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_fp32</span><span class="o">.</span><span class="n">qconfig</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ao</span><span class="o">.</span><span class="n">quantization</span><span class="o">.</span><span class="n">get_default_qat_qconfig</span><span class="p">(</span><span class="s1">&#39;fbgemm&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p class="rubric">融合 QAT 模块</p>
+<p>QAT 的模块融合与 PTQ 相同相似：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch.ao.quantization</span> <span class="kn">import</span> <span class="n">fuse_modules_qat</span>
+
+<span class="n">model_fp32_fused</span> <span class="o">=</span> <span class="n">fuse_modules_qat</span><span class="p">(</span><span class="n">model_fp32</span><span class="p">,</span>
+                                    <span class="p">[[</span><span class="s1">&#39;conv&#39;</span><span class="p">,</span> <span class="s1">&#39;bn&#39;</span><span class="p">,</span> <span class="s1">&#39;relu&#39;</span><span class="p">]])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p class="rubric">准备 QAT 模型</p>
+<p>这将在模型中插入观测者和伪量化模块，它们将在校准期间观测权重和激活的张量。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_fp32_prepared</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">quantization</span><span class="o">.</span><span class="n">prepare_qat</span><span class="p">(</span><span class="n">model_fp32_fused</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p class="rubric">训练 QAT 模型</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 下文会编写实际的例子，此处没有显示</span>
+<span class="n">training_loop</span><span class="p">(</span><span class="n">model_fp32_prepared</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>将观测到的模型转换为量化模型。需要：</p>
+<ul class="simple">
+<li><p>量化权重，计算和存储用于每个激活张量的尺度（scale）和偏差（bias）值，</p></li>
+<li><p>在适当的地方融合模块，并用量化实现替换关键算子。</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_fp32_prepared</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">model_int8</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">quantization</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">model_fp32_prepared</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>运行模型，相关的计算将在 <code class="xref py py-data docutils literal notranslate"><span class="pre">torch.qint8</span></code> 中发生。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="n">model_int8</span><span class="p">(</span><span class="n">input_fp32</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>要了解更多关于量化意识训练的信息，请参阅 <a class="reference external" href="https://pytorch.org/tutorials/advanced/static_quantization_tutorial.html">QAT 教程</a>。</p>
+</section>
+<section id="id4">
+<h3><span class="section-number">1.2.3. </span>PTQ/QAT 统一的量化流程<a class="headerlink" href="#id4" title="永久链接至标题">#</a></h3>
+<p>PTQ 和 QAT 的量化流程十分相似，为了统一接口，可以使用 <code class="docutils literal notranslate"><span class="pre">torchvision</span></code> 提供的函数 <a class="reference external" href="https://xinetzone.github.io/pytorch-book/api/pytorch/torchvision/generated/torchvision.models.quantization.utils._fuse_modules.html#torchvision.models.quantization.utils._fuse_modules" title="(在 Pytorch Book)"><code class="xref py py-func docutils literal notranslate"><span class="pre">_fuse_modules()</span></code></a>。</p>
+<p>下面利用函数 <a class="reference external" href="https://xinetzone.github.io/pytorch-book/api/pytorch/torchvision/generated/torchvision.models.quantization.utils._fuse_modules.html#torchvision.models.quantization.utils._fuse_modules" title="(在 Pytorch Book)"><code class="xref py py-func docutils literal notranslate"><span class="pre">_fuse_modules()</span></code></a> 可量化模块 <code class="docutils literal notranslate"><span class="pre">QM2</span></code>。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">torch.ao.quantization</span> <span class="kn">import</span> <span class="n">fuse_modules</span><span class="p">,</span> <span class="n">fuse_modules_qat</span>
+<span class="kn">from</span> <span class="nn">torch.ao.quantization</span> <span class="kn">import</span> <span class="n">get_default_qconfig</span><span class="p">,</span> <span class="n">get_default_qat_qconfig</span>
+<span class="kn">from</span> <span class="nn">torch.ao.quantization</span> <span class="kn">import</span> <span class="n">quantize</span><span class="p">,</span> <span class="n">quantize_qat</span>
+
+<span class="k">def</span> <span class="nf">_fuse_modules</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">modules_to_fuse</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">is_qat</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">is_qat</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">is_qat</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">training</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="n">fuse_modules_qat</span> <span class="k">if</span> <span class="n">is_qat</span> <span class="k">else</span> <span class="n">fuse_modules</span>
+    <span class="k">return</span> <span class="n">method</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">modules_to_fuse</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">QM3</span><span class="p">(</span><span class="n">QM2</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;可量化模型</span>
+<span class="sd">    Args:</span>
+<span class="sd">        is_qat: 是否使用 QAT 模式</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_qat</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;fbgemm&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_qat</span> <span class="o">=</span> <span class="n">is_qat</span>
+        <span class="c1"># 定义观测器</span>
+        <span class="k">if</span> <span class="n">is_qat</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qconfig</span> <span class="o">=</span> <span class="n">get_default_qat_qconfig</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qconfig</span> <span class="o">=</span> <span class="n">get_default_qconfig</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">fuse_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;模块融合&#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_qat</span><span class="p">:</span>
+            <span class="n">modules_to_fuse</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;bn&#39;</span><span class="p">,</span> <span class="s1">&#39;relu&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">modules_to_fuse</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;conv&#39;</span><span class="p">,</span> <span class="s1">&#39;bn&#39;</span><span class="p">,</span> <span class="s1">&#39;relu&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">_fuse_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                      <span class="n">modules_to_fuse</span><span class="p">,</span>
+                      <span class="bp">self</span><span class="o">.</span><span class="n">is_qat</span><span class="p">,</span>
+                      <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>有了可量化模块 <code class="docutils literal notranslate"><span class="pre">QM3</span></code>，可以十分便利的切换 PTQ/QAT了。</p>
+<p>比如，PTQ，可以这样：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_fn</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">num_epochs</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_epochs</span><span class="p">):</span>
+        <span class="n">input_fp32</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="n">model</span><span class="p">(</span><span class="n">input_fp32</span><span class="p">)</span>
+
+<span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">ptq_model</span> <span class="o">=</span> <span class="n">QM3</span><span class="p">(</span><span class="n">is_qat</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">model_fused</span> <span class="o">=</span> <span class="n">ptq_model</span><span class="o">.</span><span class="n">fuse_model</span><span class="p">()</span>
+<span class="n">quanted_model</span> <span class="o">=</span> <span class="n">quantize</span><span class="p">(</span><span class="n">model_fused</span><span class="p">,</span> <span class="n">run_fn</span><span class="p">,</span> <span class="p">[</span><span class="n">num_epochs</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>QAT 可以这样：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">qat_model</span> <span class="o">=</span> <span class="n">QM3</span><span class="p">(</span><span class="n">is_qat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">model_fused</span> <span class="o">=</span> <span class="n">qat_model</span><span class="o">.</span><span class="n">fuse_model</span><span class="p">()</span>
+<span class="n">quanted_model</span> <span class="o">=</span> <span class="n">quantize_qat</span><span class="p">(</span><span class="n">model_fused</span><span class="p">,</span> <span class="n">run_fn</span><span class="p">,</span> <span class="p">[</span><span class="n">num_epochs</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id5">
+<h3><span class="section-number">1.2.4. </span>PTQ/QAT 量化策略<a class="headerlink" href="#id5" title="永久链接至标题">#</a></h3>
+<p>对于通用量化技术，需要了解：</p>
+<ol class="arabic simple">
+<li><p>将任何需要输出再量化请求的运算（因此有额外的参数）从函数形式转换为模块形式（例如，使用 <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html#torch.nn.ReLU" title="(在 PyTorch v1.11.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.ReLU</span></code></a> 而不是 <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.functional.relu.html#torch.nn.functional.relu" title="(在 PyTorch v1.11.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.nn.functional.relu()</span></code></a>）。</p></li>
+<li><p>通过在子模块上指定 <code class="docutils literal notranslate"><span class="pre">.qconfig</span></code> 属性或指定 <code class="docutils literal notranslate"><span class="pre">qconfig_dict</span></code> 来指定模型的哪些部分需要量化。例如，设置 <code class="docutils literal notranslate"><span class="pre">model.conv1.qconfig</span> <span class="pre">=</span> <span class="pre">None</span></code> 表示 <code class="docutils literal notranslate"><span class="pre">model.conv1</span></code> 层不量化，设置 <code class="docutils literal notranslate"><span class="pre">model.linear1.qconfig</span> <span class="pre">=</span> <span class="pre">custom_qconfig</span></code> 表示 <code class="docutils literal notranslate"><span class="pre">model.linear1</span></code> 将使用 <code class="docutils literal notranslate"><span class="pre">custom_qconfig</span></code> 而不是全局 <code class="docutils literal notranslate"><span class="pre">qconfig</span></code>。</p></li>
+</ol>
+<p>对于量化激活的静态量化技术（即对模型的权重和激活均进行量化，包括 PTQ 和 QAT），用户还需要做以下工作：</p>
+<ol class="arabic simple">
+<li><p>指定量化和反量化激活的位置。这是使用 <a class="reference external" href="https://xinetzone.github.io/pytorch-book/api/pytorch/ao/quantization/generated/torch.ao.quantization.stubs.QuantStub.html#torch.ao.quantization.stubs.QuantStub" title="(在 Pytorch Book)"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantStub</span></code></a> 和 <a class="reference external" href="https://xinetzone.github.io/pytorch-book/api/pytorch/ao/quantization/generated/torch.ao.quantization.stubs.DeQuantStub.html#torch.ao.quantization.stubs.DeQuantStub" title="(在 Pytorch Book)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DeQuantStub</span></code></a> 模块完成的。</p></li>
+<li><p>使用 <a class="reference external" href="https://xinetzone.github.io/pytorch-book/api/pytorch/nn/generated/torch.nn.quantized.FloatFunctional.html#torch.nn.quantized.FloatFunctional" title="(在 Pytorch Book)"><code class="xref py py-class docutils literal notranslate"><span class="pre">FloatFunctional</span></code></a> 将需要对量化进行特殊处理的张量运算封装到模块中。例如像 <code class="xref py py-func docutils literal notranslate"><span class="pre">add()</span></code> 和 <code class="xref py py-func docutils literal notranslate"><span class="pre">cat()</span></code> 这样需要特殊处理来确定输出量化参数的运算。</p></li>
+<li><p>融合模块：将运算/模块组合成单个模块，获得更高的 accuracy 和性能。这是使用 <a class="reference external" href="https://xinetzone.github.io/pytorch-book/api/pytorch/ao/quantization/generated/torch.ao.quantization.fuse_modules.fuse_modules.html#torch.ao.quantization.fuse_modules.fuse_modules" title="(在 Pytorch Book)"><code class="xref py py-func docutils literal notranslate"><span class="pre">fuse_modules()</span></code></a> API 完成的，该 API 接受要融合的模块列表。目前支持以下融合：<code class="docutils literal notranslate"><span class="pre">[Conv,</span> <span class="pre">Relu]</span></code>、 <code class="docutils literal notranslate"><span class="pre">[Conv,</span> <span class="pre">BatchNorm]</span></code>、 <code class="docutils literal notranslate"><span class="pre">[Conv,</span> <span class="pre">BatchNorm,</span> <span class="pre">Relu]</span></code> 和 <code class="docutils literal notranslate"><span class="pre">[Linear,</span> <span class="pre">Relu]</span></code>。</p></li>
+</ol>
+<p>示例：</p>
+<figure class="align-center" id="id13">
+<img alt="../../_images/resnet.png" class="w3-border" src="../../_images/resnet.png" />
+<figcaption>
+<p><span class="caption-text">倒置残差块的转换前后对比</span><a class="headerlink" href="#id13" title="永久链接至图片">#</a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="id6">
+<h2><span class="section-number">1.3. </span>PTQ 和 QAT 实战<a class="headerlink" href="#id6" title="永久链接至标题">#</a></h2>
+<p class="rubric">模型对比</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-left head"><p>类型</p></th>
+<th class="text-left head"><p>大小（MB）</p></th>
+<th class="text-left head"><p>accuracy（<span class="math notranslate nohighlight">\(\%\)</span>）</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>浮点</p></td>
+<td class="text-left"><p>9.188</p></td>
+<td class="text-left"><p>94.91</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>浮点融合</p></td>
+<td class="text-left"><p>8.924</p></td>
+<td class="text-left"><p>94.91</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>QAT</p></td>
+<td class="text-left"><p>2.657</p></td>
+<td class="text-left"><p>94.41</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">不同 QConfig 的静态 PTQ 模型</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-left head"><p>accuracy（<span class="math notranslate nohighlight">\(\%\)</span>）</p></th>
+<th class="text-left head"><p>激活</p></th>
+<th class="text-left head"><p>权重</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>51.11</p></td>
+<td class="text-left"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">MinMaxObserver</span></code>.<code class="docutils literal notranslate"><span class="pre">with_args(quant_min=0,</span> <span class="pre">quant_max=127)</span></code></p></td>
+<td class="text-left"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">MinMaxObserver</span></code>.<code class="docutils literal notranslate"><span class="pre">with_args(dtype=torch.qint8,</span> <span class="pre">qscheme=torch.per_tensor_symmetric)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>80.42</p></td>
+<td class="text-left"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">HistogramObserver</span></code>.<code class="docutils literal notranslate"><span class="pre">with_args(quant_min=0,</span> <span class="pre">quant_max=127)</span></code></p></td>
+<td class="text-left"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">PerChannelMinMaxObserver</span></code>.<code class="docutils literal notranslate"><span class="pre">with_args(dtype=torch.qint8,</span> <span class="pre">qscheme=torch.per_channel_symmetric)</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>为了提供一致的量化工具接口，我们使用 Python 包 <code class="docutils literal notranslate"><span class="pre">torchq</span></code>。</p>
+<p>本地载入临时 <code class="docutils literal notranslate"><span class="pre">torchq</span></code> 包：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mod</span> <span class="kn">import</span> <span class="n">torchq</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>本文使用 <code class="docutils literal notranslate"><span class="pre">torchq</span></code> 的 <code class="docutils literal notranslate"><span class="pre">'0.0.1-alpha'</span></code> 版本。</p>
+</div>
+<p>更方便的是：使用 <code class="docutils literal notranslate"><span class="pre">pip</span></code> 安装：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install <span class="nv">torchq</span><span class="o">==</span><span class="m">0</span>.0.1-alpha
+</pre></div>
+</div>
+<p>接着，便可以直接导入：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torchq</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>本文使用 <code class="docutils literal notranslate"><span class="pre">torchq</span></code> 的 <code class="docutils literal notranslate"><span class="pre">'0.0.1-alpha'</span></code> 版本。</p>
+</div>
+<p>可以看出 PTQ 和 QAT 需要用户自定义的内容主要集中在： <strong>模块融合</strong> 和 <strong>算子替换</strong>。</p>
+<p><a class="reference external" href="https://xinetzone.github.io/pytorch-book/api/pytorch/torchvision/generated/torchvision.models.quantization.utils._fuse_modules.html#torchvision.models.quantization.utils._fuse_modules" title="(在 Pytorch Book)"><code class="xref py py-func docutils literal notranslate"><span class="pre">_fuse_modules()</span></code></a> 提供了 <a class="reference external" href="https://xinetzone.github.io/pytorch-book/api/pytorch/ao/quantization/generated/torch.ao.quantization.fuse_modules.fuse_modules.html#torch.ao.quantization.fuse_modules.fuse_modules" title="(在 Pytorch Book)"><code class="xref py py-func docutils literal notranslate"><span class="pre">fuse_modules()</span></code></a> 和 <a class="reference external" href="https://xinetzone.github.io/pytorch-book/api/pytorch/ao/quantization/generated/torch.ao.quantization.fuse_modules.fuse_modules_qat.html#torch.ao.quantization.fuse_modules.fuse_modules_qat" title="(在 Pytorch Book)"><code class="xref py py-func docutils literal notranslate"><span class="pre">fuse_modules_qat()</span></code></a> 的统一接口。下面以 MobileNetV2 为例，简述如何使用 <a class="reference external" href="https://xinetzone.github.io/pytorch-book/api/pytorch/torchvision/generated/torchvision.models.quantization.utils._fuse_modules.html#torchvision.models.quantization.utils._fuse_modules" title="(在 Pytorch Book)"><code class="xref py py-func docutils literal notranslate"><span class="pre">_fuse_modules()</span></code></a> 函数和 <a class="reference external" href="https://xinetzone.github.io/pytorch-book/api/pytorch/nn/generated/torch.nn.quantized.FloatFunctional.html#torch.nn.quantized.FloatFunctional" title="(在 Pytorch Book)"><code class="xref py py-class docutils literal notranslate"><span class="pre">FloatFunctional</span></code></a> 类定制可量化的模块。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;参考 torchvision/models/quantization/mobilenetv2.py</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
+
+<span class="kn">from</span> <span class="nn">torchvision._internally_replaced_utils</span> <span class="kn">import</span> <span class="n">load_state_dict_from_url</span>
+<span class="kn">from</span> <span class="nn">torchvision.ops.misc</span> <span class="kn">import</span> <span class="n">ConvNormActivation</span>
+<span class="kn">from</span> <span class="nn">torchvision.models.quantization.utils</span> <span class="kn">import</span> <span class="n">_fuse_modules</span><span class="p">,</span> <span class="n">_replace_relu</span><span class="p">,</span> <span class="n">quantize_model</span>
+<span class="kn">from</span> <span class="nn">torch.ao.quantization</span> <span class="kn">import</span> <span class="n">QuantStub</span><span class="p">,</span> <span class="n">DeQuantStub</span>
+<span class="kn">from</span> <span class="nn">torchvision.models.mobilenetv2</span> <span class="kn">import</span> <span class="n">InvertedResidual</span><span class="p">,</span> <span class="n">MobileNetV2</span><span class="p">,</span> <span class="n">model_urls</span>
+
+<span class="n">quant_model_urls</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;mobilenet_v2_qnnpack&quot;</span><span class="p">:</span> <span class="s2">&quot;https://download.pytorch.org/models/quantized/mobilenet_v2_qnnpack_37f702c5.pth&quot;</span>
+<span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">QuantizableInvertedResidual</span><span class="p">(</span><span class="n">InvertedResidual</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skip_add</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">quantized</span><span class="o">.</span><span class="n">FloatFunctional</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_res_connect</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">skip_add</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">fuse_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_qat</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span> <span class="ow">is</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">:</span>
+                <span class="n">_fuse_modules</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="p">,</span>
+                              <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span>
+                               <span class="nb">str</span><span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)],</span>
+                              <span class="n">is_qat</span><span class="p">,</span>
+                              <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">QuantizableMobileNetV2</span><span class="p">(</span><span class="n">MobileNetV2</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        MobileNet V2 main class</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">           继承自浮点 MobileNetV2 的参数</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quant</span> <span class="o">=</span> <span class="n">QuantStub</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dequant</span> <span class="o">=</span> <span class="n">DeQuantStub</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quant</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_impl</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dequant</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+
+    <span class="k">def</span> <span class="nf">fuse_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_qat</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="ow">is</span> <span class="n">ConvNormActivation</span><span class="p">:</span>
+                <span class="n">_fuse_modules</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">],</span> <span class="n">is_qat</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="ow">is</span> <span class="n">QuantizableInvertedResidual</span><span class="p">:</span>
+                <span class="n">m</span><span class="o">.</span><span class="n">fuse_model</span><span class="p">(</span><span class="n">is_qat</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">mobilenet_v2</span><span class="p">(</span>
+    <span class="n">pretrained</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">quantize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QuantizableMobileNetV2</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    从 `MobileNetV2：反向残差和线性瓶颈 &lt;https://arxiv.org/abs/1801.04381&gt;`_ 构建 MobileNetV2 架构。</span>
+
+<span class="sd">    注意，quantize = True 返回具有 8 bit 权值的量化模型。量化模型只支持推理并在 CPU 上运行。</span>
+<span class="sd">    目前还不支持 GPU 推理</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pretrained (bool): 如果为 True，返回在 ImageNet 上训练过的模型。</span>
+<span class="sd">        progress (bool): 如果为 True，则显示下载到标准错误的进度条</span>
+<span class="sd">        quantize(bool): 如果为 True，则返回量化模型，否则返回浮点模型</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">QuantizableMobileNetV2</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">QuantizableInvertedResidual</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">_replace_relu</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">quantize</span><span class="p">:</span>
+        <span class="c1"># TODO use pretrained as a string to specify the backend</span>
+        <span class="n">backend</span> <span class="o">=</span> <span class="s2">&quot;qnnpack&quot;</span>
+        <span class="n">quantize_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">pretrained</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">pretrained</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">quantize</span><span class="p">:</span>
+            <span class="n">model_url</span> <span class="o">=</span> <span class="n">quant_model_urls</span><span class="p">[</span><span class="s2">&quot;mobilenet_v2_&quot;</span> <span class="o">+</span> <span class="n">backend</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">model_url</span> <span class="o">=</span> <span class="n">model_urls</span><span class="p">[</span><span class="s2">&quot;mobilenet_v2&quot;</span><span class="p">]</span>
+
+        <span class="n">state_dict</span> <span class="o">=</span> <span class="n">load_state_dict_from_url</span><span class="p">(</span><span class="n">model_url</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="n">progress</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">state_dict</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="id7">
+<h3><span class="section-number">1.3.1. </span>一些准备工作<a class="headerlink" href="#id7" title="永久链接至标题">#</a></h3>
+<p>下面以 Cifar10 为了来说明 PTQ/QAT 的量化流程。</p>
+<p>定义几个<a class="reference external" href="https://github.com/pytorch/examples/blob/master/imagenet/main.py">辅助函数</a>来帮助评估模型。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torchq.helper</span> <span class="kn">import</span> <span class="n">evaluate</span><span class="p">,</span> <span class="n">print_size_of_model</span><span class="p">,</span> <span class="n">load_model</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>设置超参数：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">saved_model_dir</span> <span class="o">=</span> <span class="s1">&#39;models/&#39;</span>
+<span class="n">float_model_file</span> <span class="o">=</span> <span class="s1">&#39;mobilenet_pretrained_float.pth&#39;</span>
+<span class="n">scripted_float_model_file</span> <span class="o">=</span> <span class="s1">&#39;mobilenet_float_scripted.pth&#39;</span>
+<span class="n">scripted_ptq_model_file</span> <span class="o">=</span> <span class="s1">&#39;mobilenet_ptq_scripted.pth&#39;</span>
+<span class="n">scripted_quantized_model_file</span> <span class="o">=</span> <span class="s1">&#39;mobilenet_quantization_scripted_quantized.pth&#39;</span>
+<span class="n">scripted_qat_model_file</span> <span class="o">=</span> <span class="s1">&#39;mobilenet_qat_scripted_quantized.pth&#39;</span>
+
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">5e-5</span>
+<span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">num_classes</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="c1"># 设置评估策略</span>
+<span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>定义数据集和数据加载器：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torchq.xinet</span> <span class="kn">import</span> <span class="n">CV</span>
+
+<span class="c1"># 为了 cifar10 匹配 ImageNet，需要将其 resize 到 224</span>
+<span class="n">train_iter</span><span class="p">,</span> <span class="n">test_iter</span> <span class="o">=</span> <span class="n">CV</span><span class="o">.</span><span class="n">load_data_cifar10</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+                                             <span class="n">resize</span><span class="o">=</span><span class="mi">224</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Files already downloaded and verified
+Files already downloaded and verified
+</pre></div>
+</div>
+</div>
+</div>
+<p>查看数据集的 batch 次数：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;训练、测试批次分别为：&#39;</span><span class="p">,</span>
+      <span class="nb">len</span><span class="p">(</span><span class="n">train_iter</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_iter</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>训练、测试批次分别为： 3125 625
+</pre></div>
+</div>
+</div>
+</div>
+<p>获取训练和测试数据集的大小：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_train</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">ys</span> <span class="ow">in</span> <span class="n">train_iter</span><span class="p">)</span>
+<span class="n">num_eval</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">ys</span> <span class="ow">in</span> <span class="n">test_iter</span><span class="p">)</span>
+<span class="n">num_train</span><span class="p">,</span> <span class="n">num_eval</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(50000, 10000)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id8">
+<h3><span class="section-number">1.3.2. </span>微调浮点模型<a class="headerlink" href="#id8" title="永久链接至标题">#</a></h3>
+<p>配置浮点模型：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#from torchvision.models.quantization import mobilenet_v2</span>
+
+<span class="c1"># 定义模型</span>
+<span class="k">def</span> <span class="nf">create_model</span><span class="p">(</span><span class="n">quantize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                 <span class="n">pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">float_model</span> <span class="o">=</span> <span class="n">mobilenet_v2</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="n">pretrained</span><span class="p">,</span>
+                               <span class="n">quantize</span><span class="o">=</span><span class="n">quantize</span><span class="p">)</span>
+    <span class="c1"># 匹配 ``num_classes``</span>
+    <span class="n">float_model</span><span class="o">.</span><span class="n">classifier</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">float_model</span><span class="o">.</span><span class="n">last_channel</span><span class="p">,</span>
+                                          <span class="n">num_classes</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">float_model</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>定义模型：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">float_model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">quantize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                           <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>定义微调的函数 <code class="xref py py-class docutils literal notranslate"><span class="pre">torchq.xinet.CV</span></code>.<code class="xref py py-func docutils literal notranslate"><span class="pre">train_fine_tuning()</span></code> 用于模型。</p>
+<p>微调浮点模型：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">CV</span><span class="o">.</span><span class="n">train_fine_tuning</span><span class="p">(</span><span class="n">float_model</span><span class="p">,</span> <span class="n">train_iter</span><span class="p">,</span> <span class="n">test_iter</span><span class="p">,</span>
+                     <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span>
+                     <span class="n">num_epochs</span><span class="o">=</span><span class="n">num_epochs</span><span class="p">,</span>
+                     <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda:2&#39;</span><span class="p">,</span>
+                     <span class="n">param_group</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>loss 0.012, train acc 0.996, test acc 0.949
+276.9 examples/sec on cuda:2
+</pre></div>
+</div>
+<img alt="../../_images/dd7d8af477f080b750fef09b95e520b1d000528a96cb0608c2c2bb0db17b4972.svg" src="../../_images/dd7d8af477f080b750fef09b95e520b1d000528a96cb0608c2c2bb0db17b4972.svg" /></div>
+</div>
+<p>保存模型：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">float_model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">saved_model_dir</span> <span class="o">+</span> <span class="n">float_model_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id9">
+<h3><span class="section-number">1.3.3. </span>配置可量化模型<a class="headerlink" href="#id9" title="永久链接至标题">#</a></h3>
+<p>加载浮点模型：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">float_model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">quantize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                           <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">)</span>
+<span class="n">float_model</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="n">float_model</span><span class="p">,</span> <span class="n">saved_model_dir</span> <span class="o">+</span> <span class="n">float_model_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>查看浮点模型的信息：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">print_info</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+               <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;浮点模型&#39;</span><span class="p">,</span>
+               <span class="n">test_iter</span><span class="o">=</span><span class="n">test_iter</span><span class="p">,</span>
+               <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span> <span class="n">num_eval</span><span class="o">=</span><span class="n">num_eval</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;打印信息&#39;&#39;&#39;</span>
+    <span class="n">print_size_of_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">top1</span><span class="p">,</span> <span class="n">top5</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">test_iter</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s1">：</span><span class="se">\n\t</span><span class="s1">&#39;</span>
+          <span class="sa">f</span><span class="s1">&#39;在 </span><span class="si">{</span><span class="n">num_eval</span><span class="si">}</span><span class="s1"> 张图片上评估 accuracy 为: </span><span class="si">{</span><span class="n">top1</span><span class="o">.</span><span class="n">avg</span><span class="si">:</span><span class="s1">2.5f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">print_info</span><span class="p">(</span><span class="n">float_model</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;浮点模型&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>模型大小：9.187789 MB
+
+浮点模型：
+	在 10000 张图片上评估 accuracy 为: 94.91000
+</pre></div>
+</div>
+</div>
+</div>
+<p>可以先查看融合前的 inverted residual 块：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">float_model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conv</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sequential(
+  (0): ConvNormActivation(
+    (0): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=32, bias=False)
+    (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+  )
+  (1): Conv2d(32, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+  (2): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+)
+</pre></div>
+</div>
+</div>
+</div>
+<p>融合模块：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">float_model</span><span class="o">.</span><span class="n">fuse_model</span><span class="p">(</span><span class="n">is_qat</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>查看融合后的 inverted residual 块：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">float_model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conv</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sequential(
+  (0): ConvNormActivation(
+    (0): ConvReLU2d(
+      (0): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=32)
+      (1): ReLU()
+    )
+    (1): Identity()
+    (2): Identity()
+  )
+  (1): Conv2d(32, 16, kernel_size=(1, 1), stride=(1, 1))
+  (2): Identity()
+)
+</pre></div>
+</div>
+</div>
+</div>
+<p>为了得到“基线”精度，看看融合模块的非量化模型的精度：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;融合后的浮点模型&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;baseline 模型大小&quot;</span><span class="p">)</span>
+<span class="n">print_size_of_model</span><span class="p">(</span><span class="n">float_model</span><span class="p">)</span>
+
+<span class="n">top1</span><span class="p">,</span> <span class="n">top5</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">float_model</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">test_iter</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>baseline 模型大小
+模型大小：8.923757 MB
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">jit</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s1">：</span><span class="se">\n\t</span><span class="s1">在 </span><span class="si">{</span><span class="n">num_eval</span><span class="si">}</span><span class="s1"> 张图片上评估 accuracy 为: </span><span class="si">{</span><span class="n">top1</span><span class="o">.</span><span class="n">avg</span><span class="si">:</span><span class="s1">2.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="c1"># 保存</span>
+<span class="n">jit</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">jit</span><span class="o">.</span><span class="n">script</span><span class="p">(</span><span class="n">float_model</span><span class="p">),</span> <span class="n">saved_model_dir</span> <span class="o">+</span> <span class="n">scripted_float_model_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>融合后的浮点模型：
+	在 10000 张图片上评估 accuracy 为: 94.91
+</pre></div>
+</div>
+</div>
+</div>
+<p>这将是我们进行比较的基准。接下来，尝试不同的量化方法。</p>
+</section>
+<section id="id10">
+<h3><span class="section-number">1.3.4. </span>PTQ 实战<a class="headerlink" href="#id10" title="永久链接至标题">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 加载模型</span>
+<span class="n">myModel</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                       <span class="n">quantize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                       <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">)</span>
+<span class="n">float_model</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="n">myModel</span><span class="p">,</span>
+                         <span class="n">saved_model_dir</span> <span class="o">+</span> <span class="n">float_model_file</span><span class="p">)</span>
+<span class="n">myModel</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+<span class="c1"># 融合</span>
+<span class="n">myModel</span><span class="o">.</span><span class="n">fuse_model</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>指定量化配置（从简单的最小/最大范围估计和加权的逐张量量化开始）：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch.ao.quantization.qconfig</span> <span class="kn">import</span> <span class="n">default_qconfig</span>
+
+<span class="n">myModel</span><span class="o">.</span><span class="n">qconfig</span> <span class="o">=</span> <span class="n">default_qconfig</span>
+<span class="n">myModel</span><span class="o">.</span><span class="n">qconfig</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>QConfig(activation=functools.partial(&lt;class &#39;torch.ao.quantization.observer.MinMaxObserver&#39;&gt;, quant_min=0, quant_max=127){}, weight=functools.partial(&lt;class &#39;torch.ao.quantization.observer.MinMaxObserver&#39;&gt;, dtype=torch.qint8, qscheme=torch.per_tensor_symmetric){})
+</pre></div>
+</div>
+</div>
+</div>
+<p>开始校准准备：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch.ao.quantization.quantize</span> <span class="kn">import</span> <span class="n">prepare</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;PTQ 准备：插入观测者&#39;</span><span class="p">)</span>
+<span class="n">prepare</span><span class="p">(</span><span class="n">myModel</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> 查看观测者插入后的 inverted residual </span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span>
+      <span class="n">myModel</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conv</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PTQ 准备：插入观测者
+
+ 查看观测者插入后的 inverted residual 
+
+ Sequential(
+  (0): ConvNormActivation(
+    (0): ConvReLU2d(
+      (0): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=32)
+      (1): ReLU()
+      (activation_post_process): MinMaxObserver(min_val=inf, max_val=-inf)
+    )
+    (1): Identity()
+    (2): Identity()
+  )
+  (1): Conv2d(
+    32, 16, kernel_size=(1, 1), stride=(1, 1)
+    (activation_post_process): MinMaxObserver(min_val=inf, max_val=-inf)
+  )
+  (2): Identity()
+)
+</pre></div>
+</div>
+</div>
+</div>
+<p>用数据集校准：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_calibration_batches</span> <span class="o">=</span> <span class="mi">200</span> <span class="c1"># 取部分训练集做校准</span>
+<span class="n">evaluate</span><span class="p">(</span><span class="n">myModel</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">train_iter</span><span class="p">,</span> <span class="n">neval_batches</span><span class="o">=</span><span class="n">num_calibration_batches</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">PTQ：校准完成！&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PTQ：校准完成！
+</pre></div>
+</div>
+</div>
+</div>
+<p>转换为量化模型：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch.ao.quantization.quantize</span> <span class="kn">import</span> <span class="n">convert</span>
+
+<span class="n">convert</span><span class="p">(</span><span class="n">myModel</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;PTQ：转换完成！&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PTQ：转换完成！
+</pre></div>
+</div>
+</div>
+</div>
+<p>融合并量化后，查看融合模块的 Inverted Residual 块：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myModel</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conv</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sequential(
+  (0): ConvNormActivation(
+    (0): QuantizedConvReLU2d(32, 32, kernel_size=(3, 3), stride=(1, 1), scale=0.1370350867509842, zero_point=0, padding=(1, 1), groups=32)
+    (1): Identity()
+    (2): Identity()
+  )
+  (1): QuantizedConv2d(32, 16, kernel_size=(1, 1), stride=(1, 1), scale=0.20581312477588654, zero_point=69)
+  (2): Identity()
+)
+</pre></div>
+</div>
+</div>
+</div>
+<p>量化后的模型大小：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">print_size_of_model</span><span class="p">(</span><span class="n">myModel</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>模型大小：2.356113 MB
+</pre></div>
+</div>
+</div>
+</div>
+<p>评估：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;PTQ 模型&#39;</span>
+<span class="n">top1</span><span class="p">,</span> <span class="n">top5</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">myModel</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">test_iter</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s1">：</span><span class="se">\n\t</span><span class="s1">在 </span><span class="si">{</span><span class="n">num_eval</span><span class="si">}</span><span class="s1"> 张图片上评估 accuracy 为: </span><span class="si">{</span><span class="n">top1</span><span class="o">.</span><span class="n">avg</span><span class="si">:</span><span class="s1">2.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="c1"># jit.save(jit.script(myModel), saved_model_dir + scripted_ptq_model_file)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PTQ 模型：
+	在 10000 张图片上评估 accuracy 为: 51.11
+</pre></div>
+</div>
+</div>
+</div>
+<p>使用了简单的 min/max 观测器来确定量化参数，将模型的大小减少到了 2.36 MB 以下，几乎减少了 4 倍。</p>
+<p>此外，通过使用不同的量化配置来显著提高精度（对于量化 ARM 架构的推荐配置重复同样的练习）。该配置的操作如下：</p>
+<ul class="simple">
+<li><p>在 per-channel 基础上量化权重</p></li>
+<li><p>使用直方图观测器，收集激活的直方图，然后以最佳方式选择量化参数。</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">per_channel_quantized_model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">quantize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                           <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">)</span>
+<span class="n">per_channel_quantized_model</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="n">per_channel_quantized_model</span><span class="p">,</span>
+                                         <span class="n">saved_model_dir</span> <span class="o">+</span> <span class="n">float_model_file</span><span class="p">)</span>
+<span class="n">per_channel_quantized_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">per_channel_quantized_model</span><span class="o">.</span><span class="n">fuse_model</span><span class="p">()</span>
+<span class="n">per_channel_quantized_model</span><span class="o">.</span><span class="n">qconfig</span> <span class="o">=</span> <span class="n">get_default_qconfig</span><span class="p">(</span><span class="s1">&#39;fbgemm&#39;</span><span class="p">)</span>
+<span class="n">per_channel_quantized_model</span><span class="o">.</span><span class="n">qconfig</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>QConfig(activation=functools.partial(&lt;class &#39;torch.ao.quantization.observer.HistogramObserver&#39;&gt;, reduce_range=True){}, weight=functools.partial(&lt;class &#39;torch.ao.quantization.observer.PerChannelMinMaxObserver&#39;&gt;, dtype=torch.qint8, qscheme=torch.per_channel_symmetric){})
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_calibration_batches</span> <span class="o">=</span> <span class="mi">200</span> <span class="c1"># 仅仅取 200 个批次</span>
+<span class="n">prepare</span><span class="p">(</span><span class="n">per_channel_quantized_model</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">evaluate</span><span class="p">(</span><span class="n">per_channel_quantized_model</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span>
+         <span class="n">train_iter</span><span class="p">,</span> <span class="n">num_calibration_batches</span><span class="p">)</span>
+
+<span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;PTQ 模型（直方图观测器）&#39;</span>
+<span class="n">convert</span><span class="p">(</span><span class="n">per_channel_quantized_model</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">top1</span><span class="p">,</span> <span class="n">top5</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">per_channel_quantized_model</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">test_iter</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s1">：</span><span class="se">\n\t</span><span class="s1">在 </span><span class="si">{</span><span class="n">num_eval</span><span class="si">}</span><span class="s1"> 张图片上评估 accuracy 为: </span><span class="si">{</span><span class="n">top1</span><span class="o">.</span><span class="n">avg</span><span class="si">:</span><span class="s1">2.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">jit</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">jit</span><span class="o">.</span><span class="n">script</span><span class="p">(</span><span class="n">per_channel_quantized_model</span><span class="p">),</span>
+         <span class="n">saved_model_dir</span> <span class="o">+</span> <span class="n">scripted_quantized_model_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PTQ 模型（直方图观测器）：
+	在 10000 张图片上评估 accuracy 为: 80.42
+</pre></div>
+</div>
+</div>
+</div>
+<p>仅仅改变这种量化配置方法，就可以将准确度提高到 <span class="math notranslate nohighlight">\(80.42\%\)</span> 以上！尽管如此，这还是比 <span class="math notranslate nohighlight">\(95\%\)</span> 的基线水平低了 <span class="math notranslate nohighlight">\(15\%\)</span>。</p>
+</section>
+<section id="id11">
+<h3><span class="section-number">1.3.5. </span>QAT 实战<a class="headerlink" href="#id11" title="永久链接至标题">#</a></h3>
+<p>使用 QAT，所有的权值和激活都在前向和后向训练过程中被“伪量化”：也就是说，浮点值被舍入以模拟 int8 值，但所有的计算仍然使用浮点数完成。因此，训练过程中的所有权重调整都是在“感知到”模型最终将被量化的情况下进行的；因此，在量化之后，这种方法通常比动态量化或训练后的静态量化产生更高的精度。</p>
+<p>实际执行 QAT 的总体工作流程与之前非常相似：</p>
+<ul class="simple">
+<li><p>可以使用与以前相同的模型：不需要为量化感知训练做额外的准备。</p></li>
+<li><p>需要使用 <code class="docutils literal notranslate"><span class="pre">qconfig</span></code> 来指定在权重和激活之后插入何种类型的伪量化，而不是指定观测者。</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">create_qat_model</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span>
+                     <span class="n">model_path</span><span class="p">,</span>
+                     <span class="n">quantize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                     <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;fbgemm&#39;</span><span class="p">):</span>
+    <span class="n">qat_model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">quantize</span><span class="o">=</span><span class="n">quantize</span><span class="p">,</span>
+                             <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">)</span>
+    <span class="n">qat_model</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="n">qat_model</span><span class="p">,</span> <span class="n">model_path</span><span class="p">)</span>
+    <span class="n">qat_model</span><span class="o">.</span><span class="n">fuse_model</span><span class="p">()</span>
+    <span class="n">qat_model</span><span class="o">.</span><span class="n">qconfig</span> <span class="o">=</span> <span class="n">get_default_qat_qconfig</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">qat_model</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>最后，<code class="docutils literal notranslate"><span class="pre">prepare_qat</span></code> 执行“伪量化”，为量化感知训练准备模型：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch.ao.quantization.quantize</span> <span class="kn">import</span> <span class="n">prepare_qat</span>
+
+<span class="n">model_path</span> <span class="o">=</span> <span class="n">saved_model_dir</span> <span class="o">+</span> <span class="n">float_model_file</span>
+<span class="n">qat_model</span> <span class="o">=</span> <span class="n">create_qat_model</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">model_path</span><span class="p">)</span>
+<span class="n">qat_model</span> <span class="o">=</span> <span class="n">prepare_qat</span><span class="p">(</span><span class="n">qat_model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Inverted Residual Block：准备好 QAT 后，注意伪量化模块：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qat_model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conv</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sequential(
+  (0): ConvNormActivation(
+    (0): ConvBnReLU2d(
+      32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=32, bias=False
+      (bn): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (weight_fake_quant): FusedMovingAvgObsFakeQuantize(
+        fake_quant_enabled=tensor([1]), observer_enabled=tensor([1]), scale=tensor([1.]), zero_point=tensor([0], dtype=torch.int32), dtype=torch.qint8, quant_min=-128, quant_max=127, qscheme=torch.per_channel_symmetric, reduce_range=False
+        (activation_post_process): MovingAveragePerChannelMinMaxObserver(min_val=tensor([]), max_val=tensor([]))
+      )
+      (activation_post_process): FusedMovingAvgObsFakeQuantize(
+        fake_quant_enabled=tensor([1]), observer_enabled=tensor([1]), scale=tensor([1.]), zero_point=tensor([0], dtype=torch.int32), dtype=torch.quint8, quant_min=0, quant_max=127, qscheme=torch.per_tensor_affine, reduce_range=True
+        (activation_post_process): MovingAverageMinMaxObserver(min_val=inf, max_val=-inf)
+      )
+    )
+    (1): Identity()
+    (2): Identity()
+  )
+  (1): ConvBn2d(
+    32, 16, kernel_size=(1, 1), stride=(1, 1), bias=False
+    (bn): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (weight_fake_quant): FusedMovingAvgObsFakeQuantize(
+      fake_quant_enabled=tensor([1]), observer_enabled=tensor([1]), scale=tensor([1.]), zero_point=tensor([0], dtype=torch.int32), dtype=torch.qint8, quant_min=-128, quant_max=127, qscheme=torch.per_channel_symmetric, reduce_range=False
+      (activation_post_process): MovingAveragePerChannelMinMaxObserver(min_val=tensor([]), max_val=tensor([]))
+    )
+    (activation_post_process): FusedMovingAvgObsFakeQuantize(
+      fake_quant_enabled=tensor([1]), observer_enabled=tensor([1]), scale=tensor([1.]), zero_point=tensor([0], dtype=torch.int32), dtype=torch.quint8, quant_min=0, quant_max=127, qscheme=torch.per_tensor_affine, reduce_range=True
+      (activation_post_process): MovingAverageMinMaxObserver(min_val=inf, max_val=-inf)
+    )
+  )
+  (2): Identity()
+)
+</pre></div>
+</div>
+</div>
+</div>
+<p>训练具有高精确度的量化模型要求在推理时对数值进行精确的建模。因此，对于量化感知训练，我们对训练循环进行如下修改：</p>
+<ul class="simple">
+<li><p>将批处理范数转换为训练结束时的运行均值和方差，以更好地匹配推理数值。</p></li>
+<li><p>冻结量化器参数（尺度和零点）并微调权重。</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">CV</span><span class="o">.</span><span class="n">train_fine_tuning</span><span class="p">(</span><span class="n">qat_model</span><span class="p">,</span>
+                     <span class="n">train_iter</span><span class="p">,</span>
+                     <span class="n">test_iter</span><span class="p">,</span>
+                     <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span>
+                     <span class="n">num_epochs</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+                     <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda:2&#39;</span><span class="p">,</span>
+                     <span class="n">param_group</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                     <span class="n">is_freeze</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                     <span class="n">is_quantized_acc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                     <span class="n">need_qconfig</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                     <span class="n">ylim</span><span class="o">=</span><span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>loss 0.013, train acc 0.996, test acc 0.948
+55.3 examples/sec on cuda:2
+</pre></div>
+</div>
+<img alt="../../_images/c6e58c277bc331ef7c29229b3dbfba0803701348a36be19c173df10b07ccdf2b.svg" src="../../_images/c6e58c277bc331ef7c29229b3dbfba0803701348a36be19c173df10b07ccdf2b.svg" /></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>这里的损失函数向上平移了 0.8 以提供更好的视觉效果。</p>
+</div>
+<p>由于量化模型暂仅支持 CPU，故而需要先将模型转换为 CPU 版本，则转为量化版本：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">convert</span><span class="p">(</span><span class="n">qat_model</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">eval</span><span class="p">(),</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">qat_model</span><span class="o">.</span><span class="n">eval</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">print_info</span><span class="p">(</span><span class="n">qat_model</span><span class="p">,</span><span class="s1">&#39;QAT 模型&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>模型大小：2.656573 MB
+
+QAT 模型：
+	在 10000 张图片上评估 accuracy 为: 94.41000
+</pre></div>
+</div>
+</div>
+</div>
+<p>量化感知训练在整个数据集上的准确率超过 <span class="math notranslate nohighlight">\(94.4\%\)</span>，接近浮点精度 <span class="math notranslate nohighlight">\(95\%\)</span>。</p>
+<p>更多关于 QAT 的内容：</p>
+<ul class="simple">
+<li><p>QAT 是后训练量化技术的超集，允许更多的调试。例如，我们可以分析模型的准确性是否受到权重或激活量化的限制。</p></li>
+<li><p>也可以在浮点上模拟量化模型的准确性，因为使用伪量化来模拟实际量化算法的数值。</p></li>
+<li><p>也可以很容易地模拟训练后量化。</p></li>
+</ul>
+<p>保存 QAT 模型：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">jit</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">jit</span><span class="o">.</span><span class="n">script</span><span class="p">(</span><span class="n">qat_model</span><span class="p">),</span> <span class="n">saved_model_dir</span> <span class="o">+</span> <span class="n">scripted_qat_model_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id12">
+<h3><span class="section-number">1.3.6. </span>小结<a class="headerlink" href="#id12" title="永久链接至标题">#</a></h3>
+<p>同样可以使用 <a class="reference external" href="https://xinetzone.github.io/pytorch-book/api/pytorch/ao/quantization/generated/torch.ao.quantization.quantize.quantize.html#torch.ao.quantization.quantize.quantize" title="(在 Pytorch Book)"><code class="xref py py-func docutils literal notranslate"><span class="pre">quantize()</span></code></a> 和 <a class="reference external" href="https://xinetzone.github.io/pytorch-book/api/pytorch/ao/quantization/generated/torch.ao.quantization.quantize.quantize_qat.html#torch.ao.quantization.quantize.quantize_qat" title="(在 Pytorch Book)"><code class="xref py py-func docutils literal notranslate"><span class="pre">quantize_qat()</span></code></a> 简化流程。</p>
+<p>比如，QAT 流程可以这样：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_path</span> <span class="o">=</span> <span class="n">saved_model_dir</span> <span class="o">+</span> <span class="n">float_model_file</span>
+<span class="n">qat_model</span> <span class="o">=</span> <span class="n">create_qat_model</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">model_path</span><span class="p">)</span>
+<span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">ylim</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">device</span> <span class="o">=</span> <span class="s1">&#39;cuda:2&#39;</span>
+<span class="n">is_freeze</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">is_quantized_acc</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">need_qconfig</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># 做一些 QAT 的量化配置工作</span>
+<span class="n">param_group</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="c1"># 提供位置参数</span>
+<span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">train_iter</span><span class="p">,</span>
+        <span class="n">test_iter</span><span class="p">,</span>
+        <span class="n">learning_rate</span><span class="p">,</span>
+        <span class="n">num_epochs</span><span class="p">,</span>
+        <span class="n">device</span><span class="p">,</span>
+        <span class="n">is_freeze</span><span class="p">,</span>
+        <span class="n">is_quantized_acc</span><span class="p">,</span>
+        <span class="n">need_qconfig</span><span class="p">,</span>
+        <span class="n">param_group</span><span class="p">,</span>
+        <span class="n">ylim</span><span class="p">]</span>
+
+<span class="n">quantized_model</span> <span class="o">=</span> <span class="n">quantize_qat</span><span class="p">(</span><span class="n">qat_model</span><span class="p">,</span> <span class="n">CV</span><span class="o">.</span><span class="n">train_fine_tuning</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>简而言之，不管是 PTQ 还是 QAT，我们只需要自定义融合模块函数和量化校准函数（比如 QAT 的训练中校准，PTQ 的训练后校准）。</p>
+</section>
+</section>
+</section>
+
+<div class="section">
+   
+</div>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By xinetzone<br/>
+  
+      &copy; Copyright 2021, xinetzone.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

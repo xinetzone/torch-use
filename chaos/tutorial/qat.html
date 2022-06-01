@@ -1,0 +1,1726 @@
+
+<!DOCTYPE html>
+
+<html lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>2. QAT 的不同训练策略 &#8212; torch-book 0.0.1 文档</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/default.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/tabs.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script kind="utterances">
+
+    var commentsRunWhenDOMLoaded = cb => {
+    if (document.readyState != 'loading') {
+        cb()
+    } else if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', cb)
+    } else {
+        document.attachEvent('onreadystatechange', function() {
+        if (document.readyState == 'complete') cb()
+        })
+    }
+}
+
+var addUtterances = () => {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "https://utteranc.es/client.js";
+    script.async = "async";
+
+    script.setAttribute("repo", "xinetzone/torch-book");
+    script.setAttribute("issue-term", "pathname");
+    script.setAttribute("theme", "github-light");
+    script.setAttribute("label", "💬 comment");
+    script.setAttribute("crossorigin", "anonymous");
+
+    sections = document.querySelectorAll("div.section");
+    if (sections !== null) {
+        section = sections[sections.length-1];
+        section.appendChild(script);
+    }
+}
+commentsRunWhenDOMLoaded(addUtterances);
+</script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <link rel="canonical" href="https://xinetzone.github.io/torch-book/chaos/tutorial/qat.html" />
+    <link rel="shortcut icon" href="../../_static/favicon.jpg"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" /> 
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="zh_CN">
+    
+
+    <!-- Google Analytics -->
+     
+<link
+  rel="alternate"
+  type="application/atom+xml"
+  href="../../posts/atom.xml"
+  title="Blog"
+/>
+ 
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../../_static/logo.jpg" class="logo" alt="logo">
+      
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../intro.html">
+   项目简介
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../tutorials/index.html">
+   教程
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../tutorials/basics/index.html">
+     PyTorch 基础
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/basics/quickstart.html">
+       快速入门
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/basics/autogradqs.html">
+       自动微分
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../tutorials/notes/index.html">
+     笔记
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/notes/autograd-mechanics.html">
+       自动微分机制
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/notes/extending.html">
+       扩展 PyTorch
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../quant/index.html">
+   量化
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../quant/start.html">
+     快速入门
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../index.html">
+   Eager 量化(混乱)
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../intro.html">
+     量化简介（Eager）
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../recipes.html">
+     量化菜谱
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../quantized-tensor.html">
+     量化张量
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../start/index.html">
+     快速上手
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+    <label for="toctree-checkbox-6">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../start/basic.html">
+       基础
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../start/ns.html">
+       Pytorch 数值套件教程
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../study/index.html">
+     学习
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+    <label for="toctree-checkbox-7">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../study/intro.html">
+       概述
+      </a>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../study/transfer-learning/index.html">
+       迁移学习
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+      <label for="toctree-checkbox-8">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/transfer-learning/basic.html">
+         计算机视觉分类
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/transfer-learning/quantized.html">
+         量化计算机视觉分类
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/transfer-learning/custom.html">
+         自定义
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/transfer-learning/cifar.html">
+         测试
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/transfer-learning/tvm.html">
+         TVM
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../study/advanced/index.html">
+       高级教程
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+      <label for="toctree-checkbox-9">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/advanced/custom.html">
+         自定义量化
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/advanced/run.html">
+         通用量化模型
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/advanced/qat.html">
+         QAT
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/advanced/cifar.html">
+         特定于 cifar10 的量化（待更）
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../study/qat-resnet18.html">
+       QAT（resnet18）
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../study/test.html">
+       测试 QAT
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../study/draft.html">
+       回收站
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../papers/index.html">
+     论文
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+    <label for="toctree-checkbox-10">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../papers/gholami2021survey.html">
+       A Survey of Quantization Methods for Efficient Neural Network Inference
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../ecosystem/index.html">
+   生态系统
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+  <label for="toctree-checkbox-11">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../ecosystem/intro.html">
+     简介
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../others/index.html">
+   其他
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+  <label for="toctree-checkbox-12">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../others/colab.html">
+     Colab 训练
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../others/en-zh.html">
+     中英互译
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../refs.html">
+   参考
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            <div>
+版权所有 © 2021 <a href="https://xinetzone.github.io/">xinetzone</a></div>
+<div>由 <a href="https://ebp.jupyterbook.org/">EBP</a> 提供技术支持</div>
+<a href="https://torch-book.readthedocs.io/zh/latest/">版本切换</a>
+
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/xinetzone/torch-book/main?urlpath=lab/tree/docs/chaos/tutorial/qat.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://colab.research.google.com/github/xinetzone/torch-book/blob/main/docs/chaos/tutorial/qat.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Colab"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../../_static/images/logo_colab.png">
+  </span>
+<span class="headerbtn__text-container">Colab</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/xinetzone/torch-book"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/xinetzone/torch-book/issues/new?title=Issue%20on%20page%20%2Fchaos/tutorial/qat.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/xinetzone/torch-book/edit/main/docs/chaos/tutorial/qat.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../_sources/chaos/tutorial/qat.ipynb.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>QAT 的不同训练策略</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                 <section class="tex2jax_ignore mathjax_ignore" id="qat">
+<h1><span class="section-number">2. </span>QAT 的不同训练策略<a class="headerlink" href="#qat" title="永久链接至标题">#</a></h1>
+<p>载入库：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span><span class="p">,</span> <span class="n">jit</span>
+<span class="kn">from</span> <span class="nn">torch.ao.quantization</span> <span class="kn">import</span> <span class="n">quantize_qat</span>
+<span class="kn">from</span> <span class="nn">torchvision.models.quantization</span> <span class="kn">import</span> <span class="n">mobilenet_v2</span>
+
+<span class="c1"># 载入自定义模块</span>
+<span class="kn">from</span> <span class="nn">mod</span> <span class="kn">import</span> <span class="n">torchq</span>
+<span class="kn">from</span> <span class="nn">torchq.xinet</span> <span class="kn">import</span> <span class="n">CV</span>
+<span class="kn">from</span> <span class="nn">torchq.helper</span> <span class="kn">import</span> <span class="n">evaluate</span><span class="p">,</span> <span class="n">print_size_of_model</span><span class="p">,</span> <span class="n">load_model</span>
+
+
+<span class="k">def</span> <span class="nf">create_model</span><span class="p">(</span><span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                 <span class="n">quantize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;定义模型&#39;&#39;&#39;</span>
+    <span class="n">float_model</span> <span class="o">=</span> <span class="n">mobilenet_v2</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="n">pretrained</span><span class="p">,</span>
+                               <span class="n">quantize</span><span class="o">=</span><span class="n">quantize</span><span class="p">)</span>
+    <span class="c1"># 匹配 ``num_classes``</span>
+    <span class="n">float_model</span><span class="o">.</span><span class="n">classifier</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">float_model</span><span class="o">.</span><span class="n">last_channel</span><span class="p">,</span>
+                                          <span class="n">num_classes</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">float_model</span>
+
+
+<span class="k">def</span> <span class="nf">create_float_model</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span>
+                       <span class="n">model_path</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">quantize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                         <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">model_path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span> <span class="c1"># 清空 GPU 缓存</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">memory_summary</span><span class="p">())</span> <span class="c1"># 打印显存</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>|===========================================================================|
+|                  PyTorch CUDA memory summary, device ID 0                 |
+|---------------------------------------------------------------------------|
+|            CUDA OOMs: 0            |        cudaMalloc retries: 0         |
+|===========================================================================|
+|        Metric         | Cur Usage  | Peak Usage | Tot Alloc  | Tot Freed  |
+|---------------------------------------------------------------------------|
+| Allocated memory      |       0 B  |       0 B  |       0 B  |       0 B  |
+|       from large pool |       0 B  |       0 B  |       0 B  |       0 B  |
+|       from small pool |       0 B  |       0 B  |       0 B  |       0 B  |
+|---------------------------------------------------------------------------|
+| Active memory         |       0 B  |       0 B  |       0 B  |       0 B  |
+|       from large pool |       0 B  |       0 B  |       0 B  |       0 B  |
+|       from small pool |       0 B  |       0 B  |       0 B  |       0 B  |
+|---------------------------------------------------------------------------|
+| GPU reserved memory   |       0 B  |       0 B  |       0 B  |       0 B  |
+|       from large pool |       0 B  |       0 B  |       0 B  |       0 B  |
+|       from small pool |       0 B  |       0 B  |       0 B  |       0 B  |
+|---------------------------------------------------------------------------|
+| Non-releasable memory |       0 B  |       0 B  |       0 B  |       0 B  |
+|       from large pool |       0 B  |       0 B  |       0 B  |       0 B  |
+|       from small pool |       0 B  |       0 B  |       0 B  |       0 B  |
+|---------------------------------------------------------------------------|
+| Allocations           |       0    |       0    |       0    |       0    |
+|       from large pool |       0    |       0    |       0    |       0    |
+|       from small pool |       0    |       0    |       0    |       0    |
+|---------------------------------------------------------------------------|
+| Active allocs         |       0    |       0    |       0    |       0    |
+|       from large pool |       0    |       0    |       0    |       0    |
+|       from small pool |       0    |       0    |       0    |       0    |
+|---------------------------------------------------------------------------|
+| GPU reserved segments |       0    |       0    |       0    |       0    |
+|       from large pool |       0    |       0    |       0    |       0    |
+|       from small pool |       0    |       0    |       0    |       0    |
+|---------------------------------------------------------------------------|
+| Non-releasable allocs |       0    |       0    |       0    |       0    |
+|       from large pool |       0    |       0    |       0    |       0    |
+|       from small pool |       0    |       0    |       0    |       0    |
+|---------------------------------------------------------------------------|
+| Oversize allocations  |       0    |       0    |       0    |       0    |
+|---------------------------------------------------------------------------|
+| Oversize GPU segments |       0    |       0    |       0    |       0    |
+|===========================================================================|
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 设置 warnings</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+    <span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span>
+    <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">,</span>
+    <span class="n">module</span><span class="o">=</span><span class="s1">&#39;.*&#39;</span>
+<span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+    <span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span>
+    <span class="n">module</span><span class="o">=</span><span class="s1">&#39;torch.ao.quantization&#39;</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">print_info</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">num_eval</span><span class="p">,</span> <span class="n">criterion</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;打印信息&#39;&#39;&#39;</span>
+    <span class="n">print_size_of_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">top1</span><span class="p">,</span> <span class="n">top5</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">test_iter</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s1">：</span><span class="se">\n\t</span><span class="s1">&#39;</span>
+          <span class="sa">f</span><span class="s1">&#39;在 </span><span class="si">{</span><span class="n">num_eval</span><span class="si">}</span><span class="s1"> 张图片上评估 accuracy 为: </span><span class="si">{</span><span class="n">top1</span><span class="o">.</span><span class="n">avg</span><span class="si">:</span><span class="s1">2.5f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>超参数设置：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">saved_model_dir</span> <span class="o">=</span> <span class="s1">&#39;models/&#39;</span>
+<span class="n">float_model_file</span> <span class="o">=</span> <span class="s1">&#39;mobilenet_pretrained_float.pth&#39;</span>
+<span class="c1"># scripted_qat_model_file = &#39;mobilenet_qat_scripted_quantized.pth&#39;</span>
+<span class="c1"># 超参数</span>
+<span class="n">float_model_path</span> <span class="o">=</span> <span class="n">saved_model_dir</span> <span class="o">+</span> <span class="n">float_model_file</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">num_classes</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">5e-5</span>
+<span class="n">ylim</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>加载数据集：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 为了 cifar10 匹配 ImageNet，需要将其 resize 到 224</span>
+<span class="n">train_iter</span><span class="p">,</span> <span class="n">test_iter</span> <span class="o">=</span> <span class="n">CV</span><span class="o">.</span><span class="n">load_data_cifar10</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+                                             <span class="n">resize</span><span class="o">=</span><span class="mi">224</span><span class="p">)</span>
+<span class="n">num_eval</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">ys</span> <span class="ow">in</span> <span class="n">test_iter</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Files already downloaded and verified
+Files already downloaded and verified
+</pre></div>
+</div>
+</div>
+</div>
+<p>打印浮点模型信息：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">float_model</span> <span class="o">=</span> <span class="n">create_float_model</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">float_model_path</span><span class="p">)</span>
+<span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;浮点模型&#39;</span>
+<span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">(</span><span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">)</span>
+<span class="n">print_info</span><span class="p">(</span><span class="n">float_model</span><span class="p">,</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">num_eval</span><span class="p">,</span> <span class="n">criterion</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>模型大小：9.187789 MB
+
+浮点模型：
+	在 10000 张图片上评估 accuracy 为: 94.91000
+</pre></div>
+</div>
+</div>
+</div>
+<p>普通策略：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">ylim</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.85</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">device</span> <span class="o">=</span> <span class="s1">&#39;cuda:1&#39;</span>
+<span class="n">param_group</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="c1"># 量化参数</span>
+<span class="n">is_freeze</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">is_quantized_acc</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">need_qconfig</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># 做一些 QAT 的量化配置工作</span>
+
+<span class="c1"># 提供位置参数</span>
+<span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">train_iter</span><span class="p">,</span>
+        <span class="n">test_iter</span><span class="p">,</span>
+        <span class="n">learning_rate</span><span class="p">,</span>
+        <span class="n">num_epochs</span><span class="p">,</span>
+        <span class="n">device</span><span class="p">,</span>
+        <span class="n">is_freeze</span><span class="p">,</span>
+        <span class="n">is_quantized_acc</span><span class="p">,</span>
+        <span class="n">need_qconfig</span><span class="p">,</span>
+        <span class="n">param_group</span><span class="p">,</span>
+        <span class="n">ylim</span><span class="p">]</span>
+
+<span class="n">qat_model</span> <span class="o">=</span> <span class="n">create_float_model</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">float_model_path</span><span class="p">)</span>
+<span class="n">qat_model</span><span class="o">.</span><span class="n">fuse_model</span><span class="p">(</span><span class="n">is_qat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">quantized_model</span> <span class="o">=</span> <span class="n">quantize_qat</span><span class="p">(</span><span class="n">qat_model</span><span class="p">,</span> <span class="n">CV</span><span class="o">.</span><span class="n">train_fine_tuning</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>loss 0.013, train acc 0.996, test acc 0.950
+352.4 examples/sec on cuda:1
+</pre></div>
+</div>
+<img alt="../../_images/0cf9ffa7bfcfc5c7a010674b61473e6bd7211ed0ba26804cef7b173c3d86eda8.svg" src="../../_images/0cf9ffa7bfcfc5c7a010674b61473e6bd7211ed0ba26804cef7b173c3d86eda8.svg" /><div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">The</span> <span class="n">Kernel</span> <span class="n">crashed</span> <span class="k">while</span> <span class="n">executing</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">the</span> <span class="n">current</span> <span class="n">cell</span> <span class="ow">or</span> <span class="n">a</span> <span class="n">previous</span> <span class="n">cell</span><span class="o">.</span> <span class="n">Please</span> <span class="n">review</span> <span class="n">the</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">cell</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="n">to</span> <span class="n">identify</span> <span class="n">a</span> <span class="n">possible</span> <span class="n">cause</span> <span class="n">of</span> <span class="n">the</span> <span class="n">failure</span><span class="o">.</span> <span class="n">Click</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;https://aka.ms/vscodeJupyterKernelCrash&#39;</span><span class="o">&gt;</span><span class="n">here</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">more</span> <span class="n">info</span><span class="o">.</span> <span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">quantized_model</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+torch.float32
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">quantized_model</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>QuantizableMobileNetV2(
+  (features): Sequential(
+    (0): ConvNormActivation(
+      (0): ConvBnReLU2d(
+        (0): Conv2d(3, 32, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+        (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU()
+      )
+      (1): Identity()
+      (2): Identity()
+    )
+    (1): QuantizableInvertedResidual(
+      (conv): Sequential(
+        (0): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=32, bias=False)
+            (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (1): ConvBn2d(
+          (0): Conv2d(32, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (2): Identity()
+      )
+      (skip_add): FloatFunctional(
+        (activation_post_process): Identity()
+      )
+    )
+    (2): QuantizableInvertedResidual(
+      (conv): Sequential(
+        (0): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(16, 96, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (1): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(96, 96, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=96, bias=False)
+            (1): BatchNorm2d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (2): ConvBn2d(
+          (0): Conv2d(96, 24, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(24, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (3): Identity()
+      )
+      (skip_add): FloatFunctional(
+        (activation_post_process): Identity()
+      )
+    )
+    (3): QuantizableInvertedResidual(
+      (conv): Sequential(
+        (0): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(24, 144, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(144, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (1): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(144, 144, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=144, bias=False)
+            (1): BatchNorm2d(144, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (2): ConvBn2d(
+          (0): Conv2d(144, 24, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(24, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (3): Identity()
+      )
+      (skip_add): FloatFunctional(
+        (activation_post_process): Identity()
+      )
+    )
+    (4): QuantizableInvertedResidual(
+      (conv): Sequential(
+        (0): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(24, 144, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(144, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (1): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(144, 144, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=144, bias=False)
+            (1): BatchNorm2d(144, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (2): ConvBn2d(
+          (0): Conv2d(144, 32, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (3): Identity()
+      )
+      (skip_add): FloatFunctional(
+        (activation_post_process): Identity()
+      )
+    )
+    (5): QuantizableInvertedResidual(
+      (conv): Sequential(
+        (0): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(32, 192, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (1): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=192, bias=False)
+            (1): BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (2): ConvBn2d(
+          (0): Conv2d(192, 32, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (3): Identity()
+      )
+      (skip_add): FloatFunctional(
+        (activation_post_process): Identity()
+      )
+    )
+    (6): QuantizableInvertedResidual(
+      (conv): Sequential(
+        (0): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(32, 192, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (1): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=192, bias=False)
+            (1): BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (2): ConvBn2d(
+          (0): Conv2d(192, 32, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (3): Identity()
+      )
+      (skip_add): FloatFunctional(
+        (activation_post_process): Identity()
+      )
+    )
+    (7): QuantizableInvertedResidual(
+      (conv): Sequential(
+        (0): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(32, 192, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (1): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(192, 192, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=192, bias=False)
+            (1): BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (2): ConvBn2d(
+          (0): Conv2d(192, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (3): Identity()
+      )
+      (skip_add): FloatFunctional(
+        (activation_post_process): Identity()
+      )
+    )
+    (8): QuantizableInvertedResidual(
+      (conv): Sequential(
+        (0): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(64, 384, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (1): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(384, 384, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=384, bias=False)
+            (1): BatchNorm2d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (2): ConvBn2d(
+          (0): Conv2d(384, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (3): Identity()
+      )
+      (skip_add): FloatFunctional(
+        (activation_post_process): Identity()
+      )
+    )
+    (9): QuantizableInvertedResidual(
+      (conv): Sequential(
+        (0): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(64, 384, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (1): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(384, 384, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=384, bias=False)
+            (1): BatchNorm2d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (2): ConvBn2d(
+          (0): Conv2d(384, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (3): Identity()
+      )
+      (skip_add): FloatFunctional(
+        (activation_post_process): Identity()
+      )
+    )
+    (10): QuantizableInvertedResidual(
+      (conv): Sequential(
+        (0): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(64, 384, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (1): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(384, 384, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=384, bias=False)
+            (1): BatchNorm2d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (2): ConvBn2d(
+          (0): Conv2d(384, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (3): Identity()
+      )
+      (skip_add): FloatFunctional(
+        (activation_post_process): Identity()
+      )
+    )
+    (11): QuantizableInvertedResidual(
+      (conv): Sequential(
+        (0): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(64, 384, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (1): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(384, 384, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=384, bias=False)
+            (1): BatchNorm2d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (2): ConvBn2d(
+          (0): Conv2d(384, 96, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (3): Identity()
+      )
+      (skip_add): FloatFunctional(
+        (activation_post_process): Identity()
+      )
+    )
+    (12): QuantizableInvertedResidual(
+      (conv): Sequential(
+        (0): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(96, 576, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(576, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (1): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(576, 576, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=576, bias=False)
+            (1): BatchNorm2d(576, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (2): ConvBn2d(
+          (0): Conv2d(576, 96, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (3): Identity()
+      )
+      (skip_add): FloatFunctional(
+        (activation_post_process): Identity()
+      )
+    )
+    (13): QuantizableInvertedResidual(
+      (conv): Sequential(
+        (0): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(96, 576, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(576, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (1): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(576, 576, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=576, bias=False)
+            (1): BatchNorm2d(576, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (2): ConvBn2d(
+          (0): Conv2d(576, 96, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (3): Identity()
+      )
+      (skip_add): FloatFunctional(
+        (activation_post_process): Identity()
+      )
+    )
+    (14): QuantizableInvertedResidual(
+      (conv): Sequential(
+        (0): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(96, 576, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(576, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (1): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(576, 576, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=576, bias=False)
+            (1): BatchNorm2d(576, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (2): ConvBn2d(
+          (0): Conv2d(576, 160, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(160, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (3): Identity()
+      )
+      (skip_add): FloatFunctional(
+        (activation_post_process): Identity()
+      )
+    )
+    (15): QuantizableInvertedResidual(
+      (conv): Sequential(
+        (0): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(160, 960, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(960, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (1): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(960, 960, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=960, bias=False)
+            (1): BatchNorm2d(960, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (2): ConvBn2d(
+          (0): Conv2d(960, 160, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(160, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (3): Identity()
+      )
+      (skip_add): FloatFunctional(
+        (activation_post_process): Identity()
+      )
+    )
+    (16): QuantizableInvertedResidual(
+      (conv): Sequential(
+        (0): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(160, 960, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(960, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (1): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(960, 960, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=960, bias=False)
+            (1): BatchNorm2d(960, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (2): ConvBn2d(
+          (0): Conv2d(960, 160, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(160, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (3): Identity()
+      )
+      (skip_add): FloatFunctional(
+        (activation_post_process): Identity()
+      )
+    )
+    (17): QuantizableInvertedResidual(
+      (conv): Sequential(
+        (0): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(160, 960, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(960, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (1): ConvNormActivation(
+          (0): ConvBnReLU2d(
+            (0): Conv2d(960, 960, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=960, bias=False)
+            (1): BatchNorm2d(960, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU()
+          )
+          (1): Identity()
+          (2): Identity()
+        )
+        (2): ConvBn2d(
+          (0): Conv2d(960, 320, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(320, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (3): Identity()
+      )
+      (skip_add): FloatFunctional(
+        (activation_post_process): Identity()
+      )
+    )
+    (18): ConvNormActivation(
+      (0): ConvBnReLU2d(
+        (0): Conv2d(320, 1280, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (1): BatchNorm2d(1280, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU()
+      )
+      (1): Identity()
+      (2): Identity()
+    )
+  )
+  (classifier): Sequential(
+    (0): Dropout(p=0.2, inplace=False)
+    (1): Linear(in_features=1280, out_features=10, bias=True)
+  )
+  (quant): QuantStub()
+  (dequant): DeQuantStub()
+)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qmodel_file</span> <span class="o">=</span> <span class="s1">&#39;mobilenet_quantization_quantized.pth&#39;</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">quantized_model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">saved_model_dir</span> <span class="o">+</span> <span class="n">qmodel_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>冻结前几次训练的量化器以及观测器：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">args</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">qat_model</span> <span class="o">=</span> <span class="n">create_float_model</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">float_model_path</span><span class="p">)</span>
+<span class="n">quantized_model</span> <span class="o">=</span> <span class="n">quantize_qat</span><span class="p">(</span><span class="n">qat_model</span><span class="p">,</span> <span class="n">CV</span><span class="o">.</span><span class="n">train_fine_tuning</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>loss 0.004, train acc 0.999, test acc 0.951
+237.7 examples/sec on cuda:2
+</pre></div>
+</div>
+<img alt="../../_images/d460d156c5798dc31c4b8d81640121bd0c5ce7601bf0a86795bb87067c33d719.svg" src="../../_images/d460d156c5798dc31c4b8d81640121bd0c5ce7601bf0a86795bb87067c33d719.svg" /></div>
+</div>
+<p>输出量化精度：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">args</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">qat_model</span> <span class="o">=</span> <span class="n">create_float_model</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">float_model_path</span><span class="p">)</span>
+<span class="n">quantized_model</span> <span class="o">=</span> <span class="n">quantize_qat</span><span class="p">(</span><span class="n">qat_model</span><span class="p">,</span> <span class="n">CV</span><span class="o">.</span><span class="n">train_fine_tuning</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>loss 0.004, train acc 0.999, test acc 0.953
+239.0 examples/sec on cuda:2
+</pre></div>
+</div>
+<img alt="../../_images/5ecc1718fa890bad3163cf7a60780b8eac0e4af165acf833b1e8a79944ceb96b.svg" src="../../_images/5ecc1718fa890bad3163cf7a60780b8eac0e4af165acf833b1e8a79944ceb96b.svg" /></div>
+</div>
+<p>冻结前几次训练的观测器并且生成量化精度：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">args</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">qat_model</span> <span class="o">=</span> <span class="n">create_float_model</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">float_model_path</span><span class="p">)</span>
+<span class="n">quantized_model</span> <span class="o">=</span> <span class="n">quantize_qat</span><span class="p">(</span><span class="n">qat_model</span><span class="p">,</span> <span class="n">CV</span><span class="o">.</span><span class="n">train_fine_tuning</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>loss 0.004, train acc 0.999, test acc 0.951
+238.1 examples/sec on cuda:2
+</pre></div>
+</div>
+<img alt="../../_images/cb457a80b9121d2620ebfdb55bd84fb27c6b77d8f06d1eaaa31b1bf087231624.svg" src="../../_images/cb457a80b9121d2620ebfdb55bd84fb27c6b77d8f06d1eaaa31b1bf087231624.svg" /></div>
+</div>
+</section>
+
+<div class="section">
+   
+</div>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By xinetzone<br/>
+  
+      &copy; Copyright 2021, xinetzone.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

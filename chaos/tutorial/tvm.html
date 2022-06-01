@@ -1,0 +1,1416 @@
+
+<!DOCTYPE html>
+
+<html lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>TVM 初探 &#8212; torch-book 0.0.1 文档</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/default.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/tabs.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script kind="utterances">
+
+    var commentsRunWhenDOMLoaded = cb => {
+    if (document.readyState != 'loading') {
+        cb()
+    } else if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', cb)
+    } else {
+        document.attachEvent('onreadystatechange', function() {
+        if (document.readyState == 'complete') cb()
+        })
+    }
+}
+
+var addUtterances = () => {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "https://utteranc.es/client.js";
+    script.async = "async";
+
+    script.setAttribute("repo", "xinetzone/torch-book");
+    script.setAttribute("issue-term", "pathname");
+    script.setAttribute("theme", "github-light");
+    script.setAttribute("label", "💬 comment");
+    script.setAttribute("crossorigin", "anonymous");
+
+    sections = document.querySelectorAll("div.section");
+    if (sections !== null) {
+        section = sections[sections.length-1];
+        section.appendChild(script);
+    }
+}
+commentsRunWhenDOMLoaded(addUtterances);
+</script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <link rel="canonical" href="https://xinetzone.github.io/torch-book/chaos/tutorial/tvm.html" />
+    <link rel="shortcut icon" href="../../_static/favicon.jpg"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" /> 
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="zh_CN">
+    
+
+    <!-- Google Analytics -->
+     
+<link
+  rel="alternate"
+  type="application/atom+xml"
+  href="../../posts/atom.xml"
+  title="Blog"
+/>
+ 
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../../_static/logo.jpg" class="logo" alt="logo">
+      
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../intro.html">
+   项目简介
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../tutorials/index.html">
+   教程
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../tutorials/basics/index.html">
+     PyTorch 基础
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/basics/quickstart.html">
+       快速入门
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/basics/autogradqs.html">
+       自动微分
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../tutorials/notes/index.html">
+     笔记
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/notes/autograd-mechanics.html">
+       自动微分机制
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/notes/extending.html">
+       扩展 PyTorch
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../quant/index.html">
+   量化
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../quant/start.html">
+     快速入门
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../index.html">
+   Eager 量化(混乱)
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../intro.html">
+     量化简介（Eager）
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../recipes.html">
+     量化菜谱
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../quantized-tensor.html">
+     量化张量
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../start/index.html">
+     快速上手
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+    <label for="toctree-checkbox-6">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../start/basic.html">
+       基础
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../start/ns.html">
+       Pytorch 数值套件教程
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../study/index.html">
+     学习
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+    <label for="toctree-checkbox-7">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../study/intro.html">
+       概述
+      </a>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../study/transfer-learning/index.html">
+       迁移学习
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+      <label for="toctree-checkbox-8">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/transfer-learning/basic.html">
+         计算机视觉分类
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/transfer-learning/quantized.html">
+         量化计算机视觉分类
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/transfer-learning/custom.html">
+         自定义
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/transfer-learning/cifar.html">
+         测试
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/transfer-learning/tvm.html">
+         TVM
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../study/advanced/index.html">
+       高级教程
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+      <label for="toctree-checkbox-9">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/advanced/custom.html">
+         自定义量化
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/advanced/run.html">
+         通用量化模型
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/advanced/qat.html">
+         QAT
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/advanced/cifar.html">
+         特定于 cifar10 的量化（待更）
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../study/qat-resnet18.html">
+       QAT（resnet18）
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../study/test.html">
+       测试 QAT
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../study/draft.html">
+       回收站
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../papers/index.html">
+     论文
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+    <label for="toctree-checkbox-10">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../papers/gholami2021survey.html">
+       A Survey of Quantization Methods for Efficient Neural Network Inference
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../ecosystem/index.html">
+   生态系统
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+  <label for="toctree-checkbox-11">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../ecosystem/intro.html">
+     简介
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../others/index.html">
+   其他
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+  <label for="toctree-checkbox-12">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../others/colab.html">
+     Colab 训练
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../others/en-zh.html">
+     中英互译
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../refs.html">
+   参考
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            <div>
+版权所有 © 2021 <a href="https://xinetzone.github.io/">xinetzone</a></div>
+<div>由 <a href="https://ebp.jupyterbook.org/">EBP</a> 提供技术支持</div>
+<a href="https://torch-book.readthedocs.io/zh/latest/">版本切换</a>
+
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/xinetzone/torch-book/main?urlpath=lab/tree/docs/chaos/tutorial/tvm.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://colab.research.google.com/github/xinetzone/torch-book/blob/main/docs/chaos/tutorial/tvm.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Colab"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../../_static/images/logo_colab.png">
+  </span>
+<span class="headerbtn__text-container">Colab</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/xinetzone/torch-book"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/xinetzone/torch-book/issues/new?title=Issue%20on%20page%20%2Fchaos/tutorial/tvm.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/xinetzone/torch-book/edit/main/docs/chaos/tutorial/tvm.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../_sources/chaos/tutorial/tvm.ipynb.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>TVM 初探</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                 <section class="tex2jax_ignore mathjax_ignore" id="tvm">
+<h1>TVM 初探<a class="headerlink" href="#tvm" title="永久链接至标题">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># 载入自定义模块</span>
+<span class="kn">from</span> <span class="nn">mod</span> <span class="kn">import</span> <span class="n">torchq</span>
+
+<span class="kn">import</span> <span class="nn">set_env</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span><span class="p">,</span> <span class="n">jit</span>
+<span class="kn">from</span> <span class="nn">torchvision.models</span> <span class="kn">import</span> <span class="n">quantization</span> <span class="k">as</span> <span class="n">qmodels</span>
+<span class="kn">from</span> <span class="nn">torch.ao.quantization</span> <span class="kn">import</span> <span class="n">get_default_qat_qconfig</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">create_model</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;resnet18&#39;</span><span class="p">,</span>
+                 <span class="n">quantize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;定义模型&#39;&#39;&#39;</span>
+    <span class="n">mod</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">qmodels</span><span class="p">,</span> <span class="n">model_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mod</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="n">pretrained</span><span class="p">,</span>
+               <span class="n">quantize</span><span class="o">=</span><span class="n">quantize</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 设置 warnings</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+    <span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span>
+    <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">,</span>
+    <span class="n">module</span><span class="o">=</span><span class="s1">&#39;.*&#39;</span>
+<span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+    <span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span>
+    <span class="n">module</span><span class="o">=</span><span class="s1">&#39;torch.ao.quantization&#39;</span>
+<span class="p">)</span>
+<span class="c1"># 载入自定义模块</span>
+<span class="kn">from</span> <span class="nn">mod</span> <span class="kn">import</span> <span class="n">torchq</span>
+
+<span class="kn">from</span> <span class="nn">torchq.helper</span> <span class="kn">import</span> <span class="n">evaluate</span><span class="p">,</span> <span class="n">print_size_of_model</span><span class="p">,</span> <span class="n">load_model</span>
+
+<span class="k">def</span> <span class="nf">print_info</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">test_iter</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;打印信息&#39;&#39;&#39;</span>
+    <span class="n">num_eval</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_iter</span><span class="p">)</span>
+    <span class="n">print_size_of_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">top1</span><span class="p">,</span> <span class="n">top5</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">test_iter</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s1">：</span><span class="se">\n\t</span><span class="s1">&#39;</span>
+          <span class="sa">f</span><span class="s1">&#39;在 </span><span class="si">{</span><span class="n">num_eval</span><span class="si">}</span><span class="s1"> 批次图片上评估 accuracy 为: </span><span class="si">{</span><span class="n">top1</span><span class="o">.</span><span class="n">avg</span><span class="si">:</span><span class="s1">2.5f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">top1</span><span class="p">,</span> <span class="n">top5</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">utils.loader</span> <span class="kn">import</span> <span class="n">get_val_loader</span>
+
+<span class="n">saved_model_dir</span> <span class="o">=</span> <span class="s1">&#39;models/&#39;</span>
+<span class="n">model_name</span> <span class="o">=</span> <span class="s1">&#39;resnet18&#39;</span>
+<span class="n">float_model_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s1">_pretrained_float.pth&#39;</span>
+<span class="n">float_model_path</span> <span class="o">=</span> <span class="n">saved_model_dir</span> <span class="o">+</span> <span class="n">float_model_file</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">8</span>
+
+<span class="n">val_loader</span> <span class="o">=</span> <span class="n">get_val_loader</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="o">=</span> <span class="s1">&#39;fbgemm&#39;</span>
+
+<span class="n">qat_model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">quantize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">qat_model</span><span class="o">.</span><span class="n">fuse_model</span><span class="p">()</span>
+<span class="n">qat_model</span><span class="o">.</span><span class="n">qconfig</span> <span class="o">=</span> <span class="n">get_default_qat_qconfig</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)</span>
+<span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;浮点模型&#39;</span>
+<span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">(</span><span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">)</span>
+<span class="n">top1</span><span class="p">,</span> <span class="n">top5</span> <span class="o">=</span> <span class="n">print_info</span><span class="p">(</span><span class="n">qat_model</span><span class="p">,</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>模型大小：46.837645 MB
+Batch 0 ~ Acc@1  75.00 ( 75.00)	 Acc@5 100.00 (100.00)
+Batch 500 ~ Acc@1 100.00 ( 74.28)	 Acc@5 100.00 ( 91.89)
+Batch 1000 ~ Acc@1  75.00 ( 77.78)	 Acc@5  87.50 ( 92.87)
+Batch 1500 ~ Acc@1   0.00 ( 75.97)	 Acc@5 100.00 ( 93.03)
+Batch 2000 ~ Acc@1  87.50 ( 75.61)	 Acc@5 100.00 ( 93.35)
+Batch 2500 ~ Acc@1  50.00 ( 76.28)	 Acc@5  87.50 ( 93.47)
+Batch 3000 ~ Acc@1  50.00 ( 74.50)	 Acc@5  75.00 ( 92.22)
+Batch 3500 ~ Acc@1 100.00 ( 72.89)	 Acc@5 100.00 ( 91.26)
+Batch 4000 ~ Acc@1  87.50 ( 72.02)	 Acc@5  87.50 ( 90.55)
+Batch 4500 ~ Acc@1  50.00 ( 71.30)	 Acc@5  75.00 ( 90.17)
+Batch 5000 ~ Acc@1  87.50 ( 70.59)	 Acc@5  87.50 ( 89.57)
+Batch 5500 ~ Acc@1  87.50 ( 69.91)	 Acc@5  87.50 ( 89.13)
+Batch 6000 ~ Acc@1  75.00 ( 69.82)	 Acc@5 100.00 ( 89.07)
+
+浮点模型：
+	在 6250 批次图片上评估 accuracy 为: 69.76000
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">top1</span><span class="o">.</span><span class="n">avg</span><span class="p">,</span> <span class="n">top5</span><span class="o">.</span><span class="n">avg</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(tensor(69.7600), tensor(89.0820))
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="o">=</span> <span class="s1">&#39;fbgemm&#39;</span>
+
+<span class="n">qat_model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">quantize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># qat_model.fuse_model()</span>
+<span class="c1"># qat_model.qconfig = get_default_qat_qconfig(backend=backend)</span>
+<span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;浮点模型&#39;</span>
+<span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">(</span><span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">)</span>
+<span class="n">top1</span><span class="p">,</span> <span class="n">top5</span> <span class="o">=</span> <span class="n">print_info</span><span class="p">(</span><span class="n">qat_model</span><span class="p">,</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>模型大小：11.838625 MB
+Batch 0 ~ Acc@1  75.00 ( 75.00)	 Acc@5 100.00 (100.00)
+Batch 500 ~ Acc@1 100.00 ( 74.23)	 Acc@5 100.00 ( 92.02)
+Batch 1000 ~ Acc@1  75.00 ( 77.68)	 Acc@5  87.50 ( 93.01)
+Batch 1500 ~ Acc@1   0.00 ( 75.77)	 Acc@5 100.00 ( 93.12)
+Batch 2000 ~ Acc@1  87.50 ( 75.32)	 Acc@5 100.00 ( 93.35)
+Batch 2500 ~ Acc@1  50.00 ( 75.97)	 Acc@5  75.00 ( 93.43)
+Batch 3000 ~ Acc@1  62.50 ( 74.21)	 Acc@5  87.50 ( 92.13)
+Batch 3500 ~ Acc@1 100.00 ( 72.59)	 Acc@5 100.00 ( 91.12)
+Batch 4000 ~ Acc@1  75.00 ( 71.76)	 Acc@5  87.50 ( 90.46)
+Batch 4500 ~ Acc@1  50.00 ( 71.03)	 Acc@5  75.00 ( 90.05)
+Batch 5000 ~ Acc@1  87.50 ( 70.31)	 Acc@5  87.50 ( 89.46)
+Batch 5500 ~ Acc@1  87.50 ( 69.66)	 Acc@5  87.50 ( 89.01)
+Batch 6000 ~ Acc@1  87.50 ( 69.58)	 Acc@5 100.00 ( 88.90)
+
+浮点模型：
+	在 6250 批次图片上评估 accuracy 为: 69.48800
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">top1</span><span class="o">.</span><span class="n">avg</span><span class="p">,</span> <span class="n">top5</span><span class="o">.</span><span class="n">avg</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor(69.4880) tensor(88.9000)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qat_model</span><span class="o">.</span><span class="n">conv1</span><span class="o">.</span><span class="n">weight</span><span class="p">()</span><span class="o">.</span><span class="n">dtype</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>torch.qint8
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scripted_qat_model_file</span> <span class="o">=</span> <span class="s1">&#39;qat_resnet18.pth&#39;</span>
+<span class="n">jit</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">jit</span><span class="o">.</span><span class="n">script</span><span class="p">(</span><span class="n">qat_model</span><span class="p">),</span> <span class="n">saved_model_dir</span> <span class="o">+</span> <span class="n">scripted_qat_model_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torchvision.models</span> <span class="kn">import</span> <span class="n">quantization</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">jit</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scripted_qat_model_file</span> <span class="o">=</span> <span class="s1">&#39;/media/pc/data/4tb/lxw/work/torch-quantization/docs/tutorial/models/mobilenet_qat_scripted_quantized.pth&#39;</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">jit</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">scripted_qat_model_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">input_shape</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span>
+<span class="n">input_data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span>
+<span class="c1"># scripted_model = jit.trace(m, input_data).eval()</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>RecursiveScriptModule(
+  original_name=QuantizableMobileNetV2
+  (features): RecursiveScriptModule(
+    original_name=Sequential
+    (0): RecursiveScriptModule(
+      original_name=ConvNormActivation
+      (0): RecursiveScriptModule(original_name=ConvReLU2d)
+      (1): RecursiveScriptModule(original_name=Identity)
+      (2): RecursiveScriptModule(original_name=Identity)
+    )
+    (1): RecursiveScriptModule(
+      original_name=QuantizableInvertedResidual
+      (conv): RecursiveScriptModule(
+        original_name=Sequential
+        (0): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (1): RecursiveScriptModule(original_name=Conv2d)
+        (2): RecursiveScriptModule(original_name=Identity)
+      )
+      (skip_add): RecursiveScriptModule(
+        original_name=QFunctional
+        (activation_post_process): RecursiveScriptModule(original_name=Identity)
+      )
+    )
+    (2): RecursiveScriptModule(
+      original_name=QuantizableInvertedResidual
+      (conv): RecursiveScriptModule(
+        original_name=Sequential
+        (0): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (1): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (2): RecursiveScriptModule(original_name=Conv2d)
+        (3): RecursiveScriptModule(original_name=Identity)
+      )
+      (skip_add): RecursiveScriptModule(
+        original_name=QFunctional
+        (activation_post_process): RecursiveScriptModule(original_name=Identity)
+      )
+    )
+    (3): RecursiveScriptModule(
+      original_name=QuantizableInvertedResidual
+      (conv): RecursiveScriptModule(
+        original_name=Sequential
+        (0): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (1): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (2): RecursiveScriptModule(original_name=Conv2d)
+        (3): RecursiveScriptModule(original_name=Identity)
+      )
+      (skip_add): RecursiveScriptModule(
+        original_name=QFunctional
+        (activation_post_process): RecursiveScriptModule(original_name=Identity)
+      )
+    )
+    (4): RecursiveScriptModule(
+      original_name=QuantizableInvertedResidual
+      (conv): RecursiveScriptModule(
+        original_name=Sequential
+        (0): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (1): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (2): RecursiveScriptModule(original_name=Conv2d)
+        (3): RecursiveScriptModule(original_name=Identity)
+      )
+      (skip_add): RecursiveScriptModule(
+        original_name=QFunctional
+        (activation_post_process): RecursiveScriptModule(original_name=Identity)
+      )
+    )
+    (5): RecursiveScriptModule(
+      original_name=QuantizableInvertedResidual
+      (conv): RecursiveScriptModule(
+        original_name=Sequential
+        (0): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (1): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (2): RecursiveScriptModule(original_name=Conv2d)
+        (3): RecursiveScriptModule(original_name=Identity)
+      )
+      (skip_add): RecursiveScriptModule(
+        original_name=QFunctional
+        (activation_post_process): RecursiveScriptModule(original_name=Identity)
+      )
+    )
+    (6): RecursiveScriptModule(
+      original_name=QuantizableInvertedResidual
+      (conv): RecursiveScriptModule(
+        original_name=Sequential
+        (0): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (1): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (2): RecursiveScriptModule(original_name=Conv2d)
+        (3): RecursiveScriptModule(original_name=Identity)
+      )
+      (skip_add): RecursiveScriptModule(
+        original_name=QFunctional
+        (activation_post_process): RecursiveScriptModule(original_name=Identity)
+      )
+    )
+    (7): RecursiveScriptModule(
+      original_name=QuantizableInvertedResidual
+      (conv): RecursiveScriptModule(
+        original_name=Sequential
+        (0): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (1): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (2): RecursiveScriptModule(original_name=Conv2d)
+        (3): RecursiveScriptModule(original_name=Identity)
+      )
+      (skip_add): RecursiveScriptModule(
+        original_name=QFunctional
+        (activation_post_process): RecursiveScriptModule(original_name=Identity)
+      )
+    )
+    (8): RecursiveScriptModule(
+      original_name=QuantizableInvertedResidual
+      (conv): RecursiveScriptModule(
+        original_name=Sequential
+        (0): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (1): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (2): RecursiveScriptModule(original_name=Conv2d)
+        (3): RecursiveScriptModule(original_name=Identity)
+      )
+      (skip_add): RecursiveScriptModule(
+        original_name=QFunctional
+        (activation_post_process): RecursiveScriptModule(original_name=Identity)
+      )
+    )
+    (9): RecursiveScriptModule(
+      original_name=QuantizableInvertedResidual
+      (conv): RecursiveScriptModule(
+        original_name=Sequential
+        (0): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (1): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (2): RecursiveScriptModule(original_name=Conv2d)
+        (3): RecursiveScriptModule(original_name=Identity)
+      )
+      (skip_add): RecursiveScriptModule(
+        original_name=QFunctional
+        (activation_post_process): RecursiveScriptModule(original_name=Identity)
+      )
+    )
+    (10): RecursiveScriptModule(
+      original_name=QuantizableInvertedResidual
+      (conv): RecursiveScriptModule(
+        original_name=Sequential
+        (0): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (1): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (2): RecursiveScriptModule(original_name=Conv2d)
+        (3): RecursiveScriptModule(original_name=Identity)
+      )
+      (skip_add): RecursiveScriptModule(
+        original_name=QFunctional
+        (activation_post_process): RecursiveScriptModule(original_name=Identity)
+      )
+    )
+    (11): RecursiveScriptModule(
+      original_name=QuantizableInvertedResidual
+      (conv): RecursiveScriptModule(
+        original_name=Sequential
+        (0): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (1): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (2): RecursiveScriptModule(original_name=Conv2d)
+        (3): RecursiveScriptModule(original_name=Identity)
+      )
+      (skip_add): RecursiveScriptModule(
+        original_name=QFunctional
+        (activation_post_process): RecursiveScriptModule(original_name=Identity)
+      )
+    )
+    (12): RecursiveScriptModule(
+      original_name=QuantizableInvertedResidual
+      (conv): RecursiveScriptModule(
+        original_name=Sequential
+        (0): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (1): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (2): RecursiveScriptModule(original_name=Conv2d)
+        (3): RecursiveScriptModule(original_name=Identity)
+      )
+      (skip_add): RecursiveScriptModule(
+        original_name=QFunctional
+        (activation_post_process): RecursiveScriptModule(original_name=Identity)
+      )
+    )
+    (13): RecursiveScriptModule(
+      original_name=QuantizableInvertedResidual
+      (conv): RecursiveScriptModule(
+        original_name=Sequential
+        (0): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (1): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (2): RecursiveScriptModule(original_name=Conv2d)
+        (3): RecursiveScriptModule(original_name=Identity)
+      )
+      (skip_add): RecursiveScriptModule(
+        original_name=QFunctional
+        (activation_post_process): RecursiveScriptModule(original_name=Identity)
+      )
+    )
+    (14): RecursiveScriptModule(
+      original_name=QuantizableInvertedResidual
+      (conv): RecursiveScriptModule(
+        original_name=Sequential
+        (0): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (1): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (2): RecursiveScriptModule(original_name=Conv2d)
+        (3): RecursiveScriptModule(original_name=Identity)
+      )
+      (skip_add): RecursiveScriptModule(
+        original_name=QFunctional
+        (activation_post_process): RecursiveScriptModule(original_name=Identity)
+      )
+    )
+    (15): RecursiveScriptModule(
+      original_name=QuantizableInvertedResidual
+      (conv): RecursiveScriptModule(
+        original_name=Sequential
+        (0): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (1): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (2): RecursiveScriptModule(original_name=Conv2d)
+        (3): RecursiveScriptModule(original_name=Identity)
+      )
+      (skip_add): RecursiveScriptModule(
+        original_name=QFunctional
+        (activation_post_process): RecursiveScriptModule(original_name=Identity)
+      )
+    )
+    (16): RecursiveScriptModule(
+      original_name=QuantizableInvertedResidual
+      (conv): RecursiveScriptModule(
+        original_name=Sequential
+        (0): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (1): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (2): RecursiveScriptModule(original_name=Conv2d)
+        (3): RecursiveScriptModule(original_name=Identity)
+      )
+      (skip_add): RecursiveScriptModule(
+        original_name=QFunctional
+        (activation_post_process): RecursiveScriptModule(original_name=Identity)
+      )
+    )
+    (17): RecursiveScriptModule(
+      original_name=QuantizableInvertedResidual
+      (conv): RecursiveScriptModule(
+        original_name=Sequential
+        (0): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (1): RecursiveScriptModule(
+          original_name=ConvNormActivation
+          (0): RecursiveScriptModule(original_name=ConvReLU2d)
+          (1): RecursiveScriptModule(original_name=Identity)
+          (2): RecursiveScriptModule(original_name=Identity)
+        )
+        (2): RecursiveScriptModule(original_name=Conv2d)
+        (3): RecursiveScriptModule(original_name=Identity)
+      )
+      (skip_add): RecursiveScriptModule(
+        original_name=QFunctional
+        (activation_post_process): RecursiveScriptModule(original_name=Identity)
+      )
+    )
+    (18): RecursiveScriptModule(
+      original_name=ConvNormActivation
+      (0): RecursiveScriptModule(original_name=ConvReLU2d)
+      (1): RecursiveScriptModule(original_name=Identity)
+      (2): RecursiveScriptModule(original_name=Identity)
+    )
+  )
+  (classifier): RecursiveScriptModule(
+    original_name=Sequential
+    (0): RecursiveScriptModule(original_name=Dropout)
+    (1): RecursiveScriptModule(
+      original_name=Linear
+      (_packed_params): RecursiveScriptModule(original_name=LinearPackedParams)
+    )
+  )
+  (quant): RecursiveScriptModule(original_name=Quantize)
+  (dequant): RecursiveScriptModule(original_name=DeQuantize)
+)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+
+<div class="section">
+   
+</div>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By xinetzone<br/>
+  
+      &copy; Copyright 2021, xinetzone.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

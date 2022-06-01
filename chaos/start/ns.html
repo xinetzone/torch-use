@@ -1,0 +1,1417 @@
+
+<!DOCTYPE html>
+
+<html lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Pytorch 数值套件教程 &#8212; torch-book 0.0.1 文档</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/default.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/tabs.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script kind="utterances">
+
+    var commentsRunWhenDOMLoaded = cb => {
+    if (document.readyState != 'loading') {
+        cb()
+    } else if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', cb)
+    } else {
+        document.attachEvent('onreadystatechange', function() {
+        if (document.readyState == 'complete') cb()
+        })
+    }
+}
+
+var addUtterances = () => {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "https://utteranc.es/client.js";
+    script.async = "async";
+
+    script.setAttribute("repo", "xinetzone/torch-book");
+    script.setAttribute("issue-term", "pathname");
+    script.setAttribute("theme", "github-light");
+    script.setAttribute("label", "💬 comment");
+    script.setAttribute("crossorigin", "anonymous");
+
+    sections = document.querySelectorAll("div.section");
+    if (sections !== null) {
+        section = sections[sections.length-1];
+        section.appendChild(script);
+    }
+}
+commentsRunWhenDOMLoaded(addUtterances);
+</script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <link rel="canonical" href="https://xinetzone.github.io/torch-book/chaos/start/ns.html" />
+    <link rel="shortcut icon" href="../../_static/favicon.jpg"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="学习" href="../study/index.html" />
+    <link rel="prev" title="基础" href="basic.html" /> 
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="zh_CN">
+    
+
+    <!-- Google Analytics -->
+     
+<link
+  rel="alternate"
+  type="application/atom+xml"
+  href="../../posts/atom.xml"
+  title="Blog"
+/>
+ 
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../../_static/logo.jpg" class="logo" alt="logo">
+      
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../intro.html">
+   项目简介
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../tutorials/index.html">
+   教程
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../tutorials/basics/index.html">
+     PyTorch 基础
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/basics/quickstart.html">
+       快速入门
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/basics/autogradqs.html">
+       自动微分
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../tutorials/notes/index.html">
+     笔记
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/notes/autograd-mechanics.html">
+       自动微分机制
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/notes/extending.html">
+       扩展 PyTorch
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../quant/index.html">
+   量化
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../quant/start.html">
+     快速入门
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../index.html">
+   Eager 量化(混乱)
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../intro.html">
+     量化简介（Eager）
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../recipes.html">
+     量化菜谱
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../quantized-tensor.html">
+     量化张量
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="index.html">
+     快速上手
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+    <label for="toctree-checkbox-6">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="basic.html">
+       基础
+      </a>
+     </li>
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       Pytorch 数值套件教程
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../study/index.html">
+     学习
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+    <label for="toctree-checkbox-7">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../study/intro.html">
+       概述
+      </a>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../study/transfer-learning/index.html">
+       迁移学习
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+      <label for="toctree-checkbox-8">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/transfer-learning/basic.html">
+         计算机视觉分类
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/transfer-learning/quantized.html">
+         量化计算机视觉分类
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/transfer-learning/custom.html">
+         自定义
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/transfer-learning/cifar.html">
+         测试
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/transfer-learning/tvm.html">
+         TVM
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../study/advanced/index.html">
+       高级教程
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+      <label for="toctree-checkbox-9">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/advanced/custom.html">
+         自定义量化
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/advanced/run.html">
+         通用量化模型
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/advanced/qat.html">
+         QAT
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../study/advanced/cifar.html">
+         特定于 cifar10 的量化（待更）
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../study/qat-resnet18.html">
+       QAT（resnet18）
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../study/test.html">
+       测试 QAT
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../study/draft.html">
+       回收站
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../papers/index.html">
+     论文
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+    <label for="toctree-checkbox-10">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../papers/gholami2021survey.html">
+       A Survey of Quantization Methods for Efficient Neural Network Inference
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../ecosystem/index.html">
+   生态系统
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+  <label for="toctree-checkbox-11">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../ecosystem/intro.html">
+     简介
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../others/index.html">
+   其他
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+  <label for="toctree-checkbox-12">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../others/colab.html">
+     Colab 训练
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../others/en-zh.html">
+     中英互译
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../refs.html">
+   参考
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            <div>
+版权所有 © 2021 <a href="https://xinetzone.github.io/">xinetzone</a></div>
+<div>由 <a href="https://ebp.jupyterbook.org/">EBP</a> 提供技术支持</div>
+<a href="https://torch-book.readthedocs.io/zh/latest/">版本切换</a>
+
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/xinetzone/torch-book/main?urlpath=lab/tree/docs/chaos/start/ns.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://colab.research.google.com/github/xinetzone/torch-book/blob/main/docs/chaos/start/ns.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Colab"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../../_static/images/logo_colab.png">
+  </span>
+<span class="headerbtn__text-container">Colab</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/xinetzone/torch-book"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/xinetzone/torch-book/issues/new?title=Issue%20on%20page%20%2Fchaos/start/ns.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/xinetzone/torch-book/edit/main/docs/chaos/start/ns.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../_sources/chaos/start/ns.ipynb.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> 导航
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   数值套件之静态量化
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     1. 比较浮点模型和量化模型的权重
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     2. 比较浮点和量化模型在相应的位置
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     3. 使用相同的输入数据，将量化模型中的模块与等效的浮点模块进行比较
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#numeric-suite">
+   Numeric Suite 之动态量化
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     设置
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#compare-the-weights-of-float-and-quantized-models">
+     1. Compare the weights of float and quantized models
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#compare-float-point-and-quantized-models-at-corresponding-locations">
+     2. Compare float point and quantized models at corresponding locations
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#compare-a-module-in-a-quantized-model-with-its-float-point-equivalent-with-the-same-input-data">
+     3. Compare a module in a quantized model with its float point equivalent, with the same input data
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id7">
+   结论
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Pytorch 数值套件教程</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> 导航 </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   数值套件之静态量化
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     1. 比较浮点模型和量化模型的权重
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     2. 比较浮点和量化模型在相应的位置
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     3. 使用相同的输入数据，将量化模型中的模块与等效的浮点模块进行比较
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#numeric-suite">
+   Numeric Suite 之动态量化
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     设置
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#compare-the-weights-of-float-and-quantized-models">
+     1. Compare the weights of float and quantized models
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#compare-float-point-and-quantized-models-at-corresponding-locations">
+     2. Compare float point and quantized models at corresponding locations
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#compare-a-module-in-a-quantized-model-with-its-float-point-equivalent-with-the-same-input-data">
+     3. Compare a module in a quantized model with its float point equivalent, with the same input data
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id7">
+   结论
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                 <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="pytorch">
+<h1>Pytorch 数值套件教程<a class="headerlink" href="#pytorch" title="永久链接至标题">#</a></h1>
+<p>当它工作时，量化是好的，但很难知道什么是错误的，当它不满足我们期望的准确性。量化精度问题的调试并不容易，且耗时较长。</p>
+<p>调试的一个重要步骤是度量浮点模型及其相应量化模型的统计量，以了解它们的最大差异在哪里。PyTorch 量化中构建了一套名为 PyTorch Numeric Suite 的数值工具，以支持量化模块和浮点模块之间的统计量的度量，从而支持量化调试工作。即使对于精度较高的量化模型，PyTorch Numeric Suite 仍然可以作为剖析工具，更好地理解模型内部的量化误差，并为进一步优化提供指导。</p>
+<p>PyTorch Numeric Suite 目前支持通过统一的 API 的静态量化和动态量化来量化模型。</p>
+<p>在本教程中，首先使用 ResNet18 作为一个例子来展示如何使用 PyTorch Numeric Suite 来度量静态量化模型和浮点模型之间的统计信息。然后将以基于 LSTM 的序列模型为例，展示 PyTorch Numeric Suite 在动态量化模型中的应用。</p>
+<section id="id1">
+<h2>数值套件之静态量化<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h2>
+<p class="rubric">设置</p>
+<p>从必要的导入开始：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
+<span class="c1"># import numpy as np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torchvision</span>
+<span class="c1"># from torchvision import datasets</span>
+<span class="c1"># import torchvision.transforms as transforms</span>
+<span class="c1"># import os</span>
+<span class="kn">import</span> <span class="nn">torch.quantization</span>
+<span class="kn">import</span> <span class="nn">torch.quantization._numeric_suite</span> <span class="k">as</span> <span class="nn">ns</span>
+<span class="kn">from</span> <span class="nn">torch.quantization</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">default_eval_fn</span><span class="p">,</span>
+    <span class="n">default_qconfig</span><span class="p">,</span>
+    <span class="n">quantize</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>然后加载预训练的浮点 ResNet18 模型，将其量化为 <code class="docutils literal notranslate"><span class="pre">qmodel</span></code>。我们不能比较两个任意的模型，只能比较一个浮点模型和它派生的量化模型。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">float_model</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">quantization</span><span class="o">.</span><span class="n">resnet18</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                                       <span class="n">quantize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">float_model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+<span class="n">float_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">float_model</span><span class="o">.</span><span class="n">fuse_model</span><span class="p">()</span>
+<span class="n">float_model</span><span class="o">.</span><span class="n">qconfig</span> <span class="o">=</span> <span class="n">default_qconfig</span>
+<span class="n">img_data</span> <span class="o">=</span> <span class="p">[(</span><span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">),</span>
+             <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+<span class="n">qmodel</span> <span class="o">=</span> <span class="n">quantize</span><span class="p">(</span><span class="n">float_model</span><span class="p">,</span> <span class="n">default_eval_fn</span><span class="p">,</span> <span class="p">[</span><span class="n">img_data</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="id2">
+<h3>1. 比较浮点模型和量化模型的权重<a class="headerlink" href="#id2" title="永久链接至标题">#</a></h3>
+<p>首先要比较的是量化模型和浮点模型的权值。可以从 PyTorch Numeric Suite 调用 <code class="docutils literal notranslate"><span class="pre">compare_weights()</span></code> 来获得字典 <code class="docutils literal notranslate"><span class="pre">wt_compare_dict</span></code>，其键对应于模块名，每个条目都是一个字典，有两个键 <code class="docutils literal notranslate"><span class="pre">'float'</span></code> 和 <code class="docutils literal notranslate"><span class="pre">'quantized'</span></code>，包含 float 和 quantized 权重。<code class="docutils literal notranslate"><span class="pre">compare_weights()</span></code> 接受浮点和量化状态字典并返回一个字典，与浮点权值对应的键和值是浮点和量化权值的字典：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wt_compare_dict</span> <span class="o">=</span> <span class="n">ns</span><span class="o">.</span><span class="n">compare_weights</span><span class="p">(</span><span class="n">float_model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
+                                     <span class="n">qmodel</span><span class="o">.</span><span class="n">state_dict</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;`wt_compare_dict` 键：&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">wt_compare_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">`wt_compare_dict` 条目中 conv1 的权值：&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">wt_compare_dict</span><span class="p">[</span><span class="s1">&#39;conv1.weight&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">wt_compare_dict</span><span class="p">[</span><span class="s1">&#39;conv1.weight&#39;</span><span class="p">][</span><span class="s1">&#39;float&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">wt_compare_dict</span><span class="p">[</span><span class="s1">&#39;conv1.weight&#39;</span><span class="p">][</span><span class="s1">&#39;quantized&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>`wt_compare_dict` 键：
+dict_keys([&#39;conv1.weight&#39;, &#39;layer1.0.conv1.weight&#39;, &#39;layer1.0.conv2.weight&#39;, &#39;layer1.1.conv1.weight&#39;, &#39;layer1.1.conv2.weight&#39;, &#39;layer2.0.conv1.weight&#39;, &#39;layer2.0.conv2.weight&#39;, &#39;layer2.0.downsample.0.weight&#39;, &#39;layer2.1.conv1.weight&#39;, &#39;layer2.1.conv2.weight&#39;, &#39;layer3.0.conv1.weight&#39;, &#39;layer3.0.conv2.weight&#39;, &#39;layer3.0.downsample.0.weight&#39;, &#39;layer3.1.conv1.weight&#39;, &#39;layer3.1.conv2.weight&#39;, &#39;layer4.0.conv1.weight&#39;, &#39;layer4.0.conv2.weight&#39;, &#39;layer4.0.downsample.0.weight&#39;, &#39;layer4.1.conv1.weight&#39;, &#39;layer4.1.conv2.weight&#39;, &#39;fc._packed_params._packed_params&#39;])
+
+`wt_compare_dict` 条目中 conv1 的权值：
+dict_keys([&#39;float&#39;, &#39;quantized&#39;])
+torch.Size([64, 3, 7, 7])
+torch.Size([64, 3, 7, 7])
+</pre></div>
+</div>
+</div>
+</div>
+<p>一旦获得 <code class="docutils literal notranslate"><span class="pre">wt_compare_dict</span></code>，用户就可以以任何他们想要的方式处理这个字典。以 float 和量化模型权值的量化误差为例，计算如下。</p>
+<p>计算量化张量 <code class="docutils literal notranslate"><span class="pre">y</span></code> 的信噪比（Signal-to-Quantization-Noise Ratio，简称 SQNR），它反映了最大标称（nominal）信号强度与量化中引入的量化误差之间的关系。更高的 SQNR 对应更低的量化误差。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">compute_error</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">Ps</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">Pn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">20</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">Ps</span><span class="o">/</span><span class="n">Pn</span><span class="p">)</span>
+
+
+<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">wt_compare_dict</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">key</span><span class="p">,</span>
+          <span class="n">compute_error</span><span class="p">(</span><span class="n">wt_compare_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;float&#39;</span><span class="p">],</span>
+                        <span class="n">wt_compare_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;quantized&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dequantize</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>conv1.weight tensor(31.6638)
+layer1.0.conv1.weight tensor(30.6450)
+layer1.0.conv2.weight tensor(31.1528)
+layer1.1.conv1.weight tensor(32.1438)
+layer1.1.conv2.weight tensor(31.2477)
+layer2.0.conv1.weight tensor(30.9890)
+layer2.0.conv2.weight tensor(28.8233)
+layer2.0.downsample.0.weight tensor(31.5558)
+layer2.1.conv1.weight tensor(30.7668)
+layer2.1.conv2.weight tensor(28.4516)
+layer3.0.conv1.weight tensor(30.9247)
+layer3.0.conv2.weight tensor(26.6841)
+layer3.0.downsample.0.weight tensor(28.7825)
+layer3.1.conv1.weight tensor(28.9707)
+layer3.1.conv2.weight tensor(25.6785)
+layer4.0.conv1.weight tensor(26.8496)
+layer4.0.conv2.weight tensor(25.8396)
+layer4.0.downsample.0.weight tensor(28.6355)
+layer4.1.conv1.weight tensor(26.8759)
+layer4.1.conv2.weight tensor(28.4319)
+fc._packed_params._packed_params tensor(32.6506)
+</pre></div>
+</div>
+</div>
+</div>
+<p>另一个例子 <code class="docutils literal notranslate"><span class="pre">wt_compare_dict</span></code> 也可以用来绘制浮点和量化模型的权值直方图。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="n">wt_compare_dict</span><span class="p">[</span><span class="s1">&#39;conv1.weight&#39;</span><span class="p">][</span><span class="s1">&#39;float&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Floating point model weights of conv1&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">q</span> <span class="o">=</span> <span class="n">wt_compare_dict</span><span class="p">[</span><span class="s1">&#39;conv1.weight&#39;</span><span class="p">][</span><span class="s1">&#39;quantized&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">dequantize</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Quantized model weights of conv1&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/f1509d037794bf282bebf7ee3f669045510037692621fcd8fdbe96d327843d8c.png" src="../../_images/f1509d037794bf282bebf7ee3f669045510037692621fcd8fdbe96d327843d8c.png" />
+<img alt="../../_images/d306cdd5c2e0cf57c11c1ac60c7e54b8a4fbebaf28b31388c460086818c9cb97.png" src="../../_images/d306cdd5c2e0cf57c11c1ac60c7e54b8a4fbebaf28b31388c460086818c9cb97.png" />
+</div>
+</div>
+</section>
+<section id="id3">
+<h3>2. 比较浮点和量化模型在相应的位置<a class="headerlink" href="#id3" title="永久链接至标题">#</a></h3>
+<p>第二个工具允许对相同输入在相应位置上的浮点模型和量化模型之间的权重和激活进行比较，如下图所示。红色箭头表示比较的位置。</p>
+<figure class="align-default">
+<img alt="../../_images/compare_output.png" src="../../_images/compare_output.png" />
+</figure>
+<p>我们从 PyTorch Numeric Suite 调用 <code class="docutils literal notranslate"><span class="pre">compare_model_outputs()</span></code> 来获取给定输入数据对应位置的浮点模型和量化模型中的激活。这个 API 返回一个字典，其中模块名为键。每个条目本身是一个字典，有两个包含激活的键 ‘float’ 和 ‘quantized’。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">img_data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># 接受浮点和量化模型以及输入数据，并返回一个字典，其键对应于量化模块名称，</span>
+<span class="c1"># 每个条目是一个字典，有两个键&#39;float&#39;和&#39;quantized&#39;，包含匹配位置上的浮点和量化模型的激活。</span>
+<span class="n">act_compare_dict</span> <span class="o">=</span> <span class="n">ns</span><span class="o">.</span><span class="n">compare_model_outputs</span><span class="p">(</span><span class="n">float_model</span><span class="p">,</span> <span class="n">qmodel</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;keys of act_compare_dict:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">act_compare_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">keys of act_compare_dict entry for conv1&#39;s output:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">act_compare_dict</span><span class="p">[</span><span class="s1">&#39;conv1.stats&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">act_compare_dict</span><span class="p">[</span><span class="s1">&#39;conv1.stats&#39;</span><span class="p">][</span><span class="s1">&#39;float&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">act_compare_dict</span><span class="p">[</span><span class="s1">&#39;conv1.stats&#39;</span><span class="p">][</span><span class="s1">&#39;quantized&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>该字典可用于比较和计算 float 和量化模型激活的量化误差，如下所示。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">act_compare_dict</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">key</span><span class="p">,</span>
+          <span class="n">compute_error</span><span class="p">(</span><span class="n">act_compare_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;float&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="n">act_compare_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;quantized&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dequantize</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>如果希望对多个输入数据进行比较，可以执行以下操作。通过将 logger 附加到浮点模块和量化模块（如果它们在 <code class="docutils literal notranslate"><span class="pre">white_list</span></code> 中）来准备模型。默认的 logger 为 <code class="docutils literal notranslate"><span class="pre">OutputLogger</span></code>，默认的 <code class="docutils literal notranslate"><span class="pre">white_list</span></code> 为 <code class="docutils literal notranslate"><span class="pre">DEFAULT_NUMERIC_SUITE_COMPARE_MODEL_OUTPUT_WHITE_LIST</span></code>。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ns</span><span class="o">.</span><span class="n">prepare_model_outputs</span><span class="p">(</span><span class="n">float_model</span><span class="p">,</span> <span class="n">qmodel</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">img_data</span><span class="p">:</span>
+    <span class="n">float_model</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">qmodel</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># 查找浮点和量化模块之间的匹配激活，并返回一个字典，其键对应于量化模块名称，</span>
+<span class="c1"># 每个条目是一个字典，有两个键&#39;float&#39;和&#39;quantized&#39;，包含由记录器记录的匹配浮点和量化激活</span>
+<span class="n">act_compare_dict</span> <span class="o">=</span> <span class="n">ns</span><span class="o">.</span><span class="n">get_matching_activations</span><span class="p">(</span><span class="n">float_model</span><span class="p">,</span> <span class="n">qmodel</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>上述 API 中使用的默认 logger 是 <code class="docutils literal notranslate"><span class="pre">OutputLogger</span></code>，用于 log 模块的输出。我们可以继承基类 <code class="docutils literal notranslate"><span class="pre">Logger</span></code>，并创建自己的 logger 来执行不同的功能。例如，我们可以创建一个新的 <code class="docutils literal notranslate"><span class="pre">MyOutputLogger</span></code> 类，如下所示。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyOutputLogger</span><span class="p">(</span><span class="n">ns</span><span class="o">.</span><span class="n">Logger</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Customized logger class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MyOutputLogger</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># Custom functionalities</span>
+        <span class="c1"># ...</span>
+        <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>然后我们可以把这个记录器传递到上面的 API 中，比如：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">img_data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">act_compare_dict</span> <span class="o">=</span> <span class="n">ns</span><span class="o">.</span><span class="n">compare_model_outputs</span><span class="p">(</span><span class="n">float_model</span><span class="p">,</span>
+                                            <span class="n">qmodel</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span>
+                                            <span class="n">logger_cls</span><span class="o">=</span><span class="n">MyOutputLogger</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>或者：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ns</span><span class="o">.</span><span class="n">prepare_model_outputs</span><span class="p">(</span><span class="n">float_model</span><span class="p">,</span> <span class="n">qmodel</span><span class="p">,</span> <span class="n">MyOutputLogger</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">img_data</span><span class="p">:</span>
+    <span class="n">float_model</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">qmodel</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">act_compare_dict</span> <span class="o">=</span> <span class="n">ns</span><span class="o">.</span><span class="n">get_matching_activations</span><span class="p">(</span><span class="n">float_model</span><span class="p">,</span> <span class="n">qmodel</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id4">
+<h3>3. 使用相同的输入数据，将量化模型中的模块与等效的浮点模块进行比较<a class="headerlink" href="#id4" title="永久链接至标题">#</a></h3>
+<p>第三个工具允许比较模型中的量化模块和对应的浮点模块，为它们提供相同的输入，并比较它们的输出，如下所示。</p>
+<figure class="align-default">
+<img alt="../../_images/compare_stub.png" src="../../_images/compare_stub.png" />
+</figure>
+<p>在实践中，我们调用 <code class="docutils literal notranslate"><span class="pre">prepare_model_with_stub()</span></code> 来交换我们想要比较的量化模块与 <code class="docutils literal notranslate"><span class="pre">Shadow</span></code> 模块，如下所示:</p>
+<figure class="align-default">
+<img alt="../../_images/shadow.png" src="../../_images/shadow.png" />
+</figure>
+<p><code class="docutils literal notranslate"><span class="pre">Shadow</span></code> 模块以量化模块、浮点模块和 logger 作为输入，并在其中创建 forward 路径，使浮点模块与 shadow 量化模块共享同输入张量。</p>
+<p>logger 可以自定义，默认的记录器是 <code class="docutils literal notranslate"><span class="pre">ShadowLogger</span></code>，它将保存量化模块和浮点模块的输出，用于计算模块级量化误差。</p>
+<p>注意，在每次调用 <code class="docutils literal notranslate"><span class="pre">compare_model_outputs()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">compare_model_stub()</span></code> 之前，我们需要有干净的浮点和量化模型。这是因为 <code class="docutils literal notranslate"><span class="pre">compare_model_outputs()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">compare_model_stub()</span></code> 对 float 和量化模型进行了原地修改，如果一个接一个地调用，将导致意想不到的结果。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">float_model</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">quantization</span><span class="o">.</span><span class="n">resnet18</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">quantize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">float_model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+<span class="n">float_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">float_model</span><span class="o">.</span><span class="n">fuse_model</span><span class="p">()</span>
+<span class="n">float_model</span><span class="o">.</span><span class="n">qconfig</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">quantization</span><span class="o">.</span><span class="n">default_qconfig</span>
+<span class="n">img_data</span> <span class="o">=</span> <span class="p">[(</span><span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+<span class="n">qmodel</span> <span class="o">=</span> <span class="n">quantize</span><span class="p">(</span><span class="n">float_model</span><span class="p">,</span> <span class="n">default_eval_fn</span><span class="p">,</span> <span class="p">[</span><span class="n">img_data</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>在下面的例子中，我们调用 PyTorch 数值套件中的  <code class="docutils literal notranslate"><span class="pre">compare_model_stub()</span></code> 来比较 <code class="docutils literal notranslate"><span class="pre">QuantizableBasicBlock</span></code> 模块和它的浮点数等效值。这个 API 返回字典，其键对应于模块名，每个条目都是一个字典，有两个键 ‘float’ 和 ‘quantized’，包含 quantized 及其匹配的浮点阴影模块的输出张量。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">img_data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">module_swap_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">torchvision</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">quantization</span><span class="o">.</span><span class="n">resnet</span><span class="o">.</span><span class="n">QuantizableBasicBlock</span><span class="p">]</span>
+
+<span class="c1"># Takes in floating point and quantized model as well as input data, and returns a dict with key</span>
+<span class="c1"># corresponding to module names and each entry being a dictionary with two keys &#39;float&#39; and</span>
+<span class="c1"># &#39;quantized&#39;, containing the output tensors of quantized module and its matching floating point shadow module.</span>
+<span class="n">ob_dict</span> <span class="o">=</span> <span class="n">ns</span><span class="o">.</span><span class="n">compare_model_stub</span><span class="p">(</span><span class="n">float_model</span><span class="p">,</span> <span class="n">qmodel</span><span class="p">,</span> <span class="n">module_swap_list</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;keys of ob_dict:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ob_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">keys of ob_dict entry for layer1.0&#39;s output:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ob_dict</span><span class="p">[</span><span class="s1">&#39;layer1.0.stats&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ob_dict</span><span class="p">[</span><span class="s1">&#39;layer1.0.stats&#39;</span><span class="p">][</span><span class="s1">&#39;float&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ob_dict</span><span class="p">[</span><span class="s1">&#39;layer1.0.stats&#39;</span><span class="p">][</span><span class="s1">&#39;quantized&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>这个字典可以用来比较和计算模块级量化误差。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">ob_dict</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">compute_error</span><span class="p">(</span><span class="n">ob_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;float&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">ob_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;quantized&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dequantize</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>如果希望对多个输入数据进行比较，可以执行以下操作。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ns</span><span class="o">.</span><span class="n">prepare_model_with_stubs</span><span class="p">(</span><span class="n">float_model</span><span class="p">,</span> <span class="n">qmodel</span><span class="p">,</span> <span class="n">module_swap_list</span><span class="p">,</span> <span class="n">ns</span><span class="o">.</span><span class="n">ShadowLogger</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">img_data</span><span class="p">:</span>
+    <span class="n">qmodel</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">ob_dict</span> <span class="o">=</span> <span class="n">ns</span><span class="o">.</span><span class="n">get_logger_dict</span><span class="p">(</span><span class="n">qmodel</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>在上述 API 中使用的默认记录器是 <code class="docutils literal notranslate"><span class="pre">ShadowLogger</span></code>，用于记录量化模块及其匹配的浮动阴影模块的输出。我们可以继承基类 <code class="docutils literal notranslate"><span class="pre">Logger</span></code>，并创建自己的 Logger 来执行不同的功能。例如，我们可以创建新的 <code class="docutils literal notranslate"><span class="pre">MyShadowLogger</span></code> 类，如下所示。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyShadowLogger</span><span class="p">(</span><span class="n">ns</span><span class="o">.</span><span class="n">Logger</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Customized logger class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MyShadowLogger</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="c1"># Custom functionalities</span>
+        <span class="c1"># ...</span>
+        <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>然后我们可以把这个记录器传递到上面的 API 中，比如：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">img_data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">ob_dict</span> <span class="o">=</span> <span class="n">ns</span><span class="o">.</span><span class="n">compare_model_stub</span><span class="p">(</span><span class="n">float_model</span><span class="p">,</span> <span class="n">qmodel</span><span class="p">,</span> <span class="n">module_swap_list</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">logger_cls</span><span class="o">=</span><span class="n">MyShadowLogger</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>或者：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ns</span><span class="o">.</span><span class="n">prepare_model_with_stubs</span><span class="p">(</span><span class="n">float_model</span><span class="p">,</span> <span class="n">qmodel</span><span class="p">,</span> <span class="n">module_swap_list</span><span class="p">,</span> <span class="n">MyShadowLogger</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">img_data</span><span class="p">:</span>
+    <span class="n">qmodel</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">ob_dict</span> <span class="o">=</span> <span class="n">ns</span><span class="o">.</span><span class="n">get_logger_dict</span><span class="p">(</span><span class="n">qmodel</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="numeric-suite">
+<h2>Numeric Suite 之动态量化<a class="headerlink" href="#numeric-suite" title="永久链接至标题">#</a></h2>
+<p>Numeric Suite APIs are designed in such as way that they work for both dynamic quantized model and static quantized model. We will use a model with both LSTM and Linear modules to demonstrate the usage of Numeric Suite on dynamic quantized model. This model is the same one used in the tutorial of dynamic quantization on LSTM word language model <a class="footnote-reference brackets" href="#id8" id="id5">1</a>.</p>
+<section id="id6">
+<h3>设置<a class="headerlink" href="#id6" title="永久链接至标题">#</a></h3>
+<p>First we define the model as below. Notice that within this model only <code class="docutils literal notranslate"><span class="pre">nn.LSTM</span></code> and <code class="docutils literal notranslate"><span class="pre">nn.Linear</span></code> modules will be quantized dynamically and <code class="docutils literal notranslate"><span class="pre">nn.Embedding</span></code> will remain as floating point module after quantization.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">LSTMModel</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Container module with an encoder, a recurrent module, and a decoder.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ntoken</span><span class="p">,</span> <span class="n">ninp</span><span class="p">,</span> <span class="n">nhid</span><span class="p">,</span> <span class="n">nlayers</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LSTMModel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">ntoken</span><span class="p">,</span> <span class="n">ninp</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rnn</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">(</span><span class="n">ninp</span><span class="p">,</span> <span class="n">nhid</span><span class="p">,</span> <span class="n">nlayers</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">dropout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">nhid</span><span class="p">,</span> <span class="n">ntoken</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_weights</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nhid</span> <span class="o">=</span> <span class="n">nhid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nlayers</span> <span class="o">=</span> <span class="n">nlayers</span>
+
+    <span class="k">def</span> <span class="nf">init_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">initrange</span> <span class="o">=</span> <span class="mf">0.1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span><span class="o">-</span><span class="n">initrange</span><span class="p">,</span> <span class="n">initrange</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">zero_</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span><span class="o">-</span><span class="n">initrange</span><span class="p">,</span> <span class="n">initrange</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">hidden</span><span class="p">):</span>
+        <span class="n">emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+        <span class="n">output</span><span class="p">,</span> <span class="n">hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rnn</span><span class="p">(</span><span class="n">emb</span><span class="p">,</span> <span class="n">hidden</span><span class="p">)</span>
+        <span class="n">decoded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">decoded</span><span class="p">,</span> <span class="n">hidden</span>
+
+    <span class="k">def</span> <span class="nf">init_hidden</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bsz</span><span class="p">):</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">weight</span><span class="o">.</span><span class="n">new_zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nlayers</span><span class="p">,</span> <span class="n">bsz</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nhid</span><span class="p">),</span>
+                <span class="n">weight</span><span class="o">.</span><span class="n">new_zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nlayers</span><span class="p">,</span> <span class="n">bsz</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nhid</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then we create the <code class="docutils literal notranslate"><span class="pre">float_model</span></code> and quantize it into qmodel.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ntokens</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">float_model</span> <span class="o">=</span> <span class="n">LSTMModel</span><span class="p">(</span>
+    <span class="n">ntoken</span> <span class="o">=</span> <span class="n">ntokens</span><span class="p">,</span>
+    <span class="n">ninp</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span>
+    <span class="n">nhid</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span>
+    <span class="n">nlayers</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">float_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+<span class="n">qmodel</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">quantization</span><span class="o">.</span><span class="n">quantize_dynamic</span><span class="p">(</span>
+    <span class="n">float_model</span><span class="p">,</span> <span class="p">{</span><span class="n">nn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">},</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">qint8</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="compare-the-weights-of-float-and-quantized-models">
+<h3>1. Compare the weights of float and quantized models<a class="headerlink" href="#compare-the-weights-of-float-and-quantized-models" title="永久链接至标题">#</a></h3>
+<p>We first call <code class="docutils literal notranslate"><span class="pre">compare_weights()</span></code> from PyTorch Numeric Suite to get a dictionary <code class="docutils literal notranslate"><span class="pre">wt_compare_dict</span></code> with key corresponding to module names and each entry is a dictionary with two keys ‘float’ and ‘quantized’, containing the float and quantized weights.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wt_compare_dict</span> <span class="o">=</span> <span class="n">ns</span><span class="o">.</span><span class="n">compare_weights</span><span class="p">(</span><span class="n">float_model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">qmodel</span><span class="o">.</span><span class="n">state_dict</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Once we get <code class="docutils literal notranslate"><span class="pre">wt_compare_dict</span></code>, it can be used to compare and compute the quantization error of the weights of float and quantized models as following.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">wt_compare_dict</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">wt_compare_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;quantized&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">is_quantized</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">compute_error</span><span class="p">(</span><span class="n">wt_compare_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;float&#39;</span><span class="p">],</span> <span class="n">wt_compare_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;quantized&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dequantize</span><span class="p">()))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">compute_error</span><span class="p">(</span><span class="n">wt_compare_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;float&#39;</span><span class="p">],</span> <span class="n">wt_compare_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;quantized&#39;</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The Inf value in <code class="docutils literal notranslate"><span class="pre">encoder.weight</span></code> entry above is because encoder module is not quantized and the weights are the same in both floating point and quantized models.</p>
+</section>
+<section id="compare-float-point-and-quantized-models-at-corresponding-locations">
+<h3>2. Compare float point and quantized models at corresponding locations<a class="headerlink" href="#compare-float-point-and-quantized-models-at-corresponding-locations" title="永久链接至标题">#</a></h3>
+<p>Then we call <code class="docutils literal notranslate"><span class="pre">compare_model_outputs()</span></code> from PyTorch Numeric Suite to get the activations in float model and quantized model at corresponding locations for the given input data. This API returns a dict with module names being keys. Each entry is itself a dict with two keys ‘float’ and ‘quantized’ containing the activations. Notice that this sequence model has two inputs, and we can pass both inputs into <code class="docutils literal notranslate"><span class="pre">compare_model_outputs()</span></code> and <code class="docutils literal notranslate"><span class="pre">compare_model_stub()</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">input_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">ntokens</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+<span class="n">hidden</span> <span class="o">=</span> <span class="n">float_model</span><span class="o">.</span><span class="n">init_hidden</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">act_compare_dict</span> <span class="o">=</span> <span class="n">ns</span><span class="o">.</span><span class="n">compare_model_outputs</span><span class="p">(</span><span class="n">float_model</span><span class="p">,</span> <span class="n">qmodel</span><span class="p">,</span> <span class="n">input_</span><span class="p">,</span> <span class="n">hidden</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">act_compare_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This dict can be used to compare and compute the quantization error of the activations of float and quantized models as following. The LSTM module in this model has two outputs, in this example we compute the error of the first output.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">act_compare_dict</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">compute_error</span><span class="p">(</span><span class="n">act_compare_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;float&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">act_compare_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;quantized&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="compare-a-module-in-a-quantized-model-with-its-float-point-equivalent-with-the-same-input-data">
+<h3>3. Compare a module in a quantized model with its float point equivalent, with the same input data<a class="headerlink" href="#compare-a-module-in-a-quantized-model-with-its-float-point-equivalent-with-the-same-input-data" title="永久链接至标题">#</a></h3>
+<p>Next we call <code class="docutils literal notranslate"><span class="pre">compare_model_stub()</span></code> from PyTorch Numeric Suite to compare LSTM and Linear module with its float point equivalent. This API returns a dict with key corresponding to module names and each entry being a dictionary with two keys ‘float’ and ‘quantized’, containing the output tensors of quantized and its matching float shadow module.</p>
+<p>We reset the model first.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">float_model</span> <span class="o">=</span> <span class="n">LSTMModel</span><span class="p">(</span>
+    <span class="n">ntoken</span> <span class="o">=</span> <span class="n">ntokens</span><span class="p">,</span>
+    <span class="n">ninp</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span>
+    <span class="n">nhid</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span>
+    <span class="n">nlayers</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">float_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+<span class="n">qmodel</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">quantization</span><span class="o">.</span><span class="n">quantize_dynamic</span><span class="p">(</span>
+    <span class="n">float_model</span><span class="p">,</span> <span class="p">{</span><span class="n">nn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">},</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">qint8</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next we call <code class="docutils literal notranslate"><span class="pre">compare_model_stub()</span></code> from PyTorch Numeric Suite to compare LSTM and Linear module with its float point equivalent. This API returns a dict with key corresponding to module names and each entry being a dictionary with two keys ‘float’ and ‘quantized’, containing the output tensors of quantized and its matching float shadow module.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">module_swap_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">]</span>
+<span class="n">ob_dict</span> <span class="o">=</span> <span class="n">ns</span><span class="o">.</span><span class="n">compare_model_stub</span><span class="p">(</span><span class="n">float_model</span><span class="p">,</span> <span class="n">qmodel</span><span class="p">,</span> <span class="n">module_swap_list</span><span class="p">,</span> <span class="n">input_</span><span class="p">,</span> <span class="n">hidden</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ob_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This dict can be then used to compare and compute the module level quantization error.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">ob_dict</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">compute_error</span><span class="p">(</span><span class="n">ob_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;float&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">ob_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;quantized&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>40db 的 SQNR 是很高的，在这种情况下，我们在浮点和量化模型之间有很好的数值对齐。</p>
+</section>
+</section>
+<section id="id7">
+<h2>结论<a class="headerlink" href="#id7" title="永久链接至标题">#</a></h2>
+<p>在本教程中，我们演示了如何使用 PyTorch Numeric Suite 来度量量化模型和浮点模型之间的统计数据，并使用用于静态量化和动态量化的统一 API 在即时模式下进行比较。
+感谢你的阅读!一如既往，我们欢迎任何反馈，所以如果您有任何问题，请创建 <a class="reference external" href="https://github.com/pytorch/pytorch/issues">issue</a>。</p>
+<hr class="footnotes docutils" />
+<dl class="footnote brackets">
+<dt class="label" id="id8"><span class="brackets"><a class="fn-backref" href="#id5">1</a></span></dt>
+<dd><p><a class="reference external" href="https://pytorch.org/tutorials/advanced/dynamic_quantization_tutorial.html">DYNAMIC QUANTIZATION ON AN LSTM WORD LANGUAGE MODEL</a>.</p>
+</dd>
+</dl>
+</section>
+</section>
+
+<div class="section">
+   
+</div>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="basic.html" title="上一页 页">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">上一页</p>
+            <p class="prev-next-title">基础</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../study/index.html" title="下一页 页">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">学习</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By xinetzone<br/>
+  
+      &copy; Copyright 2021, xinetzone.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

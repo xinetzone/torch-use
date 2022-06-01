@@ -1,0 +1,1189 @@
+
+<!DOCTYPE html>
+
+<html lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>TVM &#8212; torch-book 0.0.1 文档</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/default.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/tabs.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script kind="utterances">
+
+    var commentsRunWhenDOMLoaded = cb => {
+    if (document.readyState != 'loading') {
+        cb()
+    } else if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', cb)
+    } else {
+        document.attachEvent('onreadystatechange', function() {
+        if (document.readyState == 'complete') cb()
+        })
+    }
+}
+
+var addUtterances = () => {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "https://utteranc.es/client.js";
+    script.async = "async";
+
+    script.setAttribute("repo", "xinetzone/torch-book");
+    script.setAttribute("issue-term", "pathname");
+    script.setAttribute("theme", "github-light");
+    script.setAttribute("label", "💬 comment");
+    script.setAttribute("crossorigin", "anonymous");
+
+    sections = document.querySelectorAll("div.section");
+    if (sections !== null) {
+        section = sections[sections.length-1];
+        section.appendChild(script);
+    }
+}
+commentsRunWhenDOMLoaded(addUtterances);
+</script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script src="../../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <link rel="canonical" href="https://xinetzone.github.io/torch-book/chaos/study/transfer-learning/tvm.html" />
+    <link rel="shortcut icon" href="../../../_static/favicon.jpg"/>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="高级教程" href="../advanced/index.html" />
+    <link rel="prev" title="测试" href="cifar.html" /> 
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="zh_CN">
+    
+
+    <!-- Google Analytics -->
+     
+<link
+  rel="alternate"
+  type="application/atom+xml"
+  href="../../../posts/atom.xml"
+  title="Blog"
+/>
+ 
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../../../_static/logo.jpg" class="logo" alt="logo">
+      
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../intro.html">
+   项目简介
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../tutorials/index.html">
+   教程
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../../tutorials/basics/index.html">
+     PyTorch 基础
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../tutorials/basics/quickstart.html">
+       快速入门
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../tutorials/basics/autogradqs.html">
+       自动微分
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../../tutorials/notes/index.html">
+     笔记
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../tutorials/notes/autograd-mechanics.html">
+       自动微分机制
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../tutorials/notes/extending.html">
+       扩展 PyTorch
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../quant/index.html">
+   量化
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../quant/start.html">
+     快速入门
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../../index.html">
+   Eager 量化(混乱)
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../intro.html">
+     量化简介（Eager）
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../recipes.html">
+     量化菜谱
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../quantized-tensor.html">
+     量化张量
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../start/index.html">
+     快速上手
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+    <label for="toctree-checkbox-6">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../start/basic.html">
+       基础
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../start/ns.html">
+       Pytorch 数值套件教程
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="../index.html">
+     学习
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+    <label for="toctree-checkbox-7">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="../intro.html">
+       概述
+      </a>
+     </li>
+     <li class="toctree-l3 current active has-children">
+      <a class="reference internal" href="index.html">
+       迁移学习
+      </a>
+      <input checked="" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+      <label for="toctree-checkbox-8">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul class="current">
+       <li class="toctree-l4">
+        <a class="reference internal" href="basic.html">
+         计算机视觉分类
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="quantized.html">
+         量化计算机视觉分类
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="custom.html">
+         自定义
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="cifar.html">
+         测试
+        </a>
+       </li>
+       <li class="toctree-l4 current active">
+        <a class="current reference internal" href="#">
+         TVM
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../advanced/index.html">
+       高级教程
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+      <label for="toctree-checkbox-9">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../advanced/custom.html">
+         自定义量化
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../advanced/run.html">
+         通用量化模型
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../advanced/qat.html">
+         QAT
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../advanced/cifar.html">
+         特定于 cifar10 的量化（待更）
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../qat-resnet18.html">
+       QAT（resnet18）
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../test.html">
+       测试 QAT
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../draft.html">
+       回收站
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../papers/index.html">
+     论文
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+    <label for="toctree-checkbox-10">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../papers/gholami2021survey.html">
+       A Survey of Quantization Methods for Efficient Neural Network Inference
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../ecosystem/index.html">
+   生态系统
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+  <label for="toctree-checkbox-11">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../ecosystem/intro.html">
+     简介
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../others/index.html">
+   其他
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+  <label for="toctree-checkbox-12">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../others/colab.html">
+     Colab 训练
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../others/en-zh.html">
+     中英互译
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../refs.html">
+   参考
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            <div>
+版权所有 © 2021 <a href="https://xinetzone.github.io/">xinetzone</a></div>
+<div>由 <a href="https://ebp.jupyterbook.org/">EBP</a> 提供技术支持</div>
+<a href="https://torch-book.readthedocs.io/zh/latest/">版本切换</a>
+
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/xinetzone/torch-book/main?urlpath=lab/tree/docs/chaos/study/transfer-learning/tvm.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../../../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://colab.research.google.com/github/xinetzone/torch-book/blob/main/docs/chaos/study/transfer-learning/tvm.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Colab"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="headerbtn__text-container">Colab</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/xinetzone/torch-book"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/xinetzone/torch-book/issues/new?title=Issue%20on%20page%20%2Fchaos/study/transfer-learning/tvm.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/xinetzone/torch-book/edit/main/docs/chaos/study/transfer-learning/tvm.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/chaos/study/transfer-learning/tvm.ipynb.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>TVM</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                 <section class="tex2jax_ignore mathjax_ignore" id="tvm">
+<h1>TVM<a class="headerlink" href="#tvm" title="永久链接至标题">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="kn">from</span> <span class="nn">mod</span> <span class="kn">import</span> <span class="n">load_mod</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
+<span class="c1"># 载入自定义模块</span>
+<span class="n">load_mod</span><span class="p">()</span>
+
+<span class="kn">from</span> <span class="nn">xinet</span> <span class="kn">import</span> <span class="n">CV</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torchvision.models</span> <span class="kn">import</span> <span class="n">quantization</span> <span class="k">as</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
+
+<span class="k">def</span> <span class="nf">create_combined_model</span><span class="p">(</span><span class="n">model_fe</span><span class="p">):</span>
+    <span class="c1"># 步骤1：分离特征提取器</span>
+    <span class="n">model_fe_features</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+        <span class="n">model_fe</span><span class="o">.</span><span class="n">quant</span><span class="p">,</span>  <span class="c1"># 量化 input</span>
+        <span class="n">model_fe</span><span class="o">.</span><span class="n">conv1</span><span class="p">,</span>
+        <span class="n">model_fe</span><span class="o">.</span><span class="n">bn1</span><span class="p">,</span>
+        <span class="n">model_fe</span><span class="o">.</span><span class="n">relu</span><span class="p">,</span>
+        <span class="n">model_fe</span><span class="o">.</span><span class="n">maxpool</span><span class="p">,</span>
+        <span class="n">model_fe</span><span class="o">.</span><span class="n">layer1</span><span class="p">,</span>
+        <span class="n">model_fe</span><span class="o">.</span><span class="n">layer2</span><span class="p">,</span>
+        <span class="n">model_fe</span><span class="o">.</span><span class="n">layer3</span><span class="p">,</span>
+        <span class="n">model_fe</span><span class="o">.</span><span class="n">layer4</span><span class="p">,</span>
+        <span class="n">model_fe</span><span class="o">.</span><span class="n">avgpool</span><span class="p">,</span>
+        <span class="n">model_fe</span><span class="o">.</span><span class="n">dequant</span><span class="p">,</span>  <span class="c1"># 反量化 output</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 步骤2：创建一个新的“头”</span>
+    <span class="n">new_head</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">num_ftrs</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 步骤3：合并，不要忘记量化 stubs</span>
+    <span class="n">new_model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+        <span class="n">model_fe_features</span><span class="p">,</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">new_head</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">new_model</span>
+
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">train_iter</span><span class="p">,</span> <span class="n">test_iter</span> <span class="o">=</span> <span class="n">CV</span><span class="o">.</span><span class="n">load_data_cifar10</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Files already downloaded and verified
+Files already downloaded and verified
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">TVM_HOME</span> <span class="o">=</span> <span class="s1">&#39;/media/pc/data/4tb/xinet/tvm&#39;</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">TVM_HOME</span><span class="si">}</span><span class="s1">/python&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">TVM_HOME</span><span class="si">}</span><span class="s1">/vta/python&#39;</span><span class="p">])</span>
+
+<span class="kn">import</span> <span class="nn">tvm</span>
+<span class="kn">from</span> <span class="nn">tvm</span> <span class="kn">import</span> <span class="n">relay</span>
+
+
+<span class="k">def</span> <span class="nf">find_topk</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">largest</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">sorted</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">axis_size</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">size</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">axis_size</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="n">axis_size</span>
+
+    <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">largest</span><span class="p">:</span>
+        <span class="n">index_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argpartition</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">axis_size</span><span class="o">-</span><span class="n">k</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+        <span class="n">topk_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">index_array</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">index_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argpartition</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+        <span class="n">topk_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">index_array</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+    <span class="n">topk_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take_along_axis</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">topk_indices</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">sorted</span><span class="p">:</span>
+        <span class="n">sorted_indices_in_topk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">topk_values</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">largest</span><span class="p">:</span>
+            <span class="n">sorted_indices_in_topk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">sorted_indices_in_topk</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+        <span class="n">sorted_topk_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take_along_axis</span><span class="p">(</span>
+            <span class="n">topk_values</span><span class="p">,</span> <span class="n">sorted_indices_in_topk</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+        <span class="n">sorted_topk_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take_along_axis</span><span class="p">(</span>
+            <span class="n">topk_indices</span><span class="p">,</span> <span class="n">sorted_indices_in_topk</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sorted_topk_values</span><span class="p">,</span> <span class="n">sorted_topk_indices</span>
+    <span class="k">return</span> <span class="n">topk_values</span><span class="p">,</span> <span class="n">topk_indices</span>
+
+
+<span class="k">def</span> <span class="nf">calibrate_dataset</span><span class="p">(</span><span class="n">val_loader</span><span class="p">,</span> <span class="n">calibration_samples</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">val_loader</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">*</span> <span class="n">batch_size</span> <span class="o">&gt;=</span> <span class="n">calibration_samples</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">yield</span> <span class="p">{</span><span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="nb">input</span><span class="o">.</span><span class="n">numpy</span><span class="p">()}</span>
+
+
+<span class="k">def</span> <span class="nf">quantize</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">data_aware</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">,</span> <span class="n">calibration_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">data_aware</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;tvm calibration quantize begin----------------------------&gt;&gt;&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">relay</span><span class="o">.</span><span class="n">quantize</span><span class="o">.</span><span class="n">qconfig</span><span class="p">(</span><span class="n">calibrate_mode</span><span class="o">=</span><span class="s2">&quot;kl_divergence&quot;</span><span class="p">,</span> <span class="n">weight_scale</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">,</span> <span class="n">skip_conv_layers</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">skip_dense_layer</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="n">mod</span> <span class="o">=</span> <span class="n">relay</span><span class="o">.</span><span class="n">quantize</span><span class="o">.</span><span class="n">quantize</span><span class="p">(</span>
+                <span class="n">mod</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">calibrate_dataset</span><span class="p">(</span><span class="n">val_loader</span><span class="p">,</span> <span class="n">calibration_samples</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">))</span>
+            <span class="c1">#print(mod)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;tvm calibration quantize end----------------------------&gt;&gt;&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;tvm global scale quantize begin----------------------------&gt;&gt;&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">relay</span><span class="o">.</span><span class="n">quantize</span><span class="o">.</span><span class="n">qconfig</span><span class="p">(</span><span class="n">calibrate_mode</span><span class="o">=</span><span class="s2">&quot;global_scale&quot;</span><span class="p">,</span> <span class="n">global_scale</span><span class="o">=</span><span class="mf">8.0</span><span class="p">):</span>
+            <span class="n">mod</span> <span class="o">=</span> <span class="n">relay</span><span class="o">.</span><span class="n">quantize</span><span class="o">.</span><span class="n">quantize</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;tvm global scale quantize end----------------------------&gt;&gt;&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mod</span>
+
+
+<span class="k">def</span> <span class="nf">run_tvm_model</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s2">&quot;llvm&quot;</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">tvm</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">PassContext</span><span class="p">(</span><span class="n">opt_level</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">lib</span> <span class="o">=</span> <span class="n">relay</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">runtime</span> <span class="o">=</span> <span class="n">tvm</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">graph_executor</span><span class="o">.</span><span class="n">GraphModule</span><span class="p">(</span>
+        <span class="n">lib</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">](</span><span class="n">tvm</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">runtime</span>
+
+
+<span class="k">def</span> <span class="nf">tvm_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+    <span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+    <span class="n">shape_list</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;input&quot;</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">)]</span>
+    <span class="n">input_data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span>
+    <span class="n">scripted_model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">input_data</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="n">mod</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">relay</span><span class="o">.</span><span class="n">frontend</span><span class="o">.</span><span class="n">from_pytorch</span><span class="p">(</span><span class="n">scripted_model</span><span class="p">,</span> <span class="n">shape_list</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mod</span><span class="p">,</span> <span class="n">params</span>
+
+
+<span class="k">def</span> <span class="nf">tvm_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">,</span>
+             <span class="n">batch_size</span><span class="p">,</span> <span class="n">data_aware</span><span class="p">,</span>
+             <span class="n">calibration_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+             <span class="n">print_freq</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+             <span class="n">pre_quantization</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">mod</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">tvm_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">pre_quantization</span><span class="p">:</span>
+        <span class="n">mod</span> <span class="o">=</span> <span class="n">quantize</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">data_aware</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">,</span>
+                       <span class="n">calibration_samples</span><span class="o">=</span><span class="n">calibration_samples</span><span class="p">,</span>
+                       <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+    <span class="n">runtime</span> <span class="o">=</span> <span class="n">run_tvm_model</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+    <span class="c1">#print(runtime.benchmark(dev, number=1, repeat=100))</span>
+
+    <span class="n">test_nums</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">val_loader</span><span class="p">)</span>
+    <span class="n">top1_correct</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">top5_correct</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;llvm inference--------------&gt;&gt;&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">val_loader</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">runtime</span><span class="o">.</span><span class="n">set_input</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="nb">input</span><span class="p">)</span>
+        <span class="n">runtime</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span>
+
+        <span class="c1"># find topk index</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">preds</span> <span class="o">=</span> <span class="n">find_topk</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">label</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">==</span> <span class="n">preds</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">top1_correct</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">label</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="ow">in</span> <span class="n">preds</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">top5_correct</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="n">print_freq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Test: [</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">] </span><span class="se">\t</span><span class="s1">&#39;</span>
+                  <span class="s1">&#39;Acc@1 </span><span class="si">{:.4f}</span><span class="s1"> </span><span class="se">\t</span><span class="s1">&#39;</span>
+                  <span class="s1">&#39;Acc@5 </span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                      <span class="n">i</span><span class="p">,</span> <span class="n">test_nums</span><span class="p">,</span> <span class="n">top1_correct</span> <span class="o">/</span> <span class="n">i</span><span class="p">,</span> <span class="n">top5_correct</span> <span class="o">/</span> <span class="n">i</span><span class="p">))</span>
+
+    <span class="n">top1</span> <span class="o">=</span> <span class="n">top1_correct</span> <span class="o">/</span> <span class="n">test_nums</span>
+    <span class="n">top5</span> <span class="o">=</span> <span class="n">top5_correct</span> <span class="o">/</span> <span class="n">test_nums</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; * Acc@1 </span><span class="si">{:.4f}</span><span class="s1"> Acc@5 </span><span class="si">{:.4f}</span><span class="s1">&#39;</span>
+          <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">top1</span><span class="p">,</span> <span class="n">top5</span><span class="p">))</span>
+
+    <span class="n">time_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">repeat</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">val_loader</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repeat</span><span class="p">):</span>
+            <span class="n">runtime</span><span class="o">.</span><span class="n">set_input</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="nb">input</span><span class="p">)</span>
+            <span class="n">runtime</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span>
+        <span class="n">time_end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;平均推理时间：&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">time_end</span> <span class="o">-</span> <span class="n">time_start</span><span class="p">)</span><span class="o">/</span><span class="n">repeat</span><span class="p">)</span>
+        <span class="n">exit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 注意 `quantize=False`</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">quantize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">num_ftrs</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fc</span><span class="o">.</span><span class="n">in_features</span>
+
+<span class="c1"># Step 1</span>
+<span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+<span class="c1"># model.fuse_model()</span>
+<span class="c1"># Step 2</span>
+<span class="n">model_ft</span> <span class="o">=</span> <span class="n">create_combined_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model_ft</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+  <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+
+
+<span class="n">tvm_test</span><span class="p">(</span><span class="n">model_ft</span><span class="p">,</span> <span class="n">test_iter</span><span class="p">,</span>
+         <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">data_aware</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+         <span class="n">calibration_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+         <span class="n">print_freq</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+         <span class="n">pre_quantization</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ValueError</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
+<span class="nn">/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb Cell 5&#39;</span> in <span class="ni">&lt;cell line: 15&gt;</span><span class="nt">()</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000004vscode-remote?line=10&#39;</span><span class="o">&gt;</span><span class="mi">11</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model_ft</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000004vscode-remote?line=11&#39;</span><span class="o">&gt;</span><span class="mi">12</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>   <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="o">---&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000004vscode-remote?line=14&#39;</span><span class="o">&gt;</span><span class="mi">15</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="n">tvm_test</span><span class="p">(</span><span class="n">model_ft</span><span class="p">,</span> <span class="n">test_iter</span><span class="p">,</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000004vscode-remote?line=15&#39;</span><span class="o">&gt;</span><span class="mi">16</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>          <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">data_aware</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000004vscode-remote?line=16&#39;</span><span class="o">&gt;</span><span class="mi">17</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>          <span class="n">calibration_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000004vscode-remote?line=17&#39;</span><span class="o">&gt;</span><span class="mi">18</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>          <span class="n">print_freq</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000004vscode-remote?line=18&#39;</span><span class="o">&gt;</span><span class="mi">19</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>          <span class="n">pre_quantization</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="nn">/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb Cell 4&#39;</span> in <span class="ni">tvm_test</span><span class="nt">(model, val_loader, batch_size, data_aware, calibration_samples, print_freq, pre_quantization)</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000003vscode-remote?line=79&#39;</span><span class="o">&gt;</span><span class="mi">80</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">tvm_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">,</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000003vscode-remote?line=80&#39;</span><span class="o">&gt;</span><span class="mi">81</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>              <span class="n">batch_size</span><span class="p">,</span> <span class="n">data_aware</span><span class="p">,</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000003vscode-remote?line=81&#39;</span><span class="o">&gt;</span><span class="mi">82</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>              <span class="n">calibration_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000003vscode-remote?line=82&#39;</span><span class="o">&gt;</span><span class="mi">83</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>              <span class="n">print_freq</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000003vscode-remote?line=83&#39;</span><span class="o">&gt;</span><span class="mi">84</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>              <span class="n">pre_quantization</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="o">---&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000003vscode-remote?line=84&#39;</span><span class="o">&gt;</span><span class="mi">85</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">mod</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">tvm_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000003vscode-remote?line=85&#39;</span><span class="o">&gt;</span><span class="mi">86</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="k">if</span> <span class="ow">not</span> <span class="n">pre_quantization</span><span class="p">:</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000003vscode-remote?line=86&#39;</span><span class="o">&gt;</span><span class="mi">87</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="n">mod</span> <span class="o">=</span> <span class="n">quantize</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">data_aware</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">,</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000003vscode-remote?line=87&#39;</span><span class="o">&gt;</span><span class="mi">88</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>                        <span class="n">calibration_samples</span><span class="o">=</span><span class="n">calibration_samples</span><span class="p">,</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000003vscode-remote?line=88&#39;</span><span class="o">&gt;</span><span class="mi">89</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>                        <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+
+<span class="nn">/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb Cell 4&#39;</span> in <span class="ni">tvm_model</span><span class="nt">(model, batch_size)</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000003vscode-remote?line=72&#39;</span><span class="o">&gt;</span><span class="mi">73</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="n">shape_list</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;input&quot;</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">)]</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000003vscode-remote?line=73&#39;</span><span class="o">&gt;</span><span class="mi">74</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="n">input_data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span>
+<span class="o">---&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000003vscode-remote?line=74&#39;</span><span class="o">&gt;</span><span class="mi">75</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="n">scripted_model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">input_data</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000003vscode-remote?line=75&#39;</span><span class="o">&gt;</span><span class="mi">76</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="n">mod</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">relay</span><span class="o">.</span><span class="n">frontend</span><span class="o">.</span><span class="n">from_pytorch</span><span class="p">(</span><span class="n">scripted_model</span><span class="p">,</span> <span class="n">shape_list</span><span class="p">)</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell://ssh-remote%2B10.16.11.3/media/pc/data/4tb/xinet/web/quantization/docs/study/transfer-learning/tvm.ipynb#ch0000003vscode-remote?line=76&#39;</span><span class="o">&gt;</span><span class="mi">77</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">return</span> <span class="n">mod</span><span class="p">,</span> <span class="n">params</span>
+
+<span class="nn">File ~/.local/lib/python3.8/site-packages/torch/jit/_trace.py:733,</span> in <span class="ni">trace</span><span class="nt">(func, example_inputs, optimize, check_trace, check_inputs, check_tolerance, strict, _force_outplace, _module_class, _compilation_unit)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=729&#39;</span><span class="o">&gt;</span><span class="mi">730</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="k">return</span> <span class="n">func</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=731&#39;</span><span class="o">&gt;</span><span class="mi">732</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=732&#39;</span><span class="o">&gt;</span><span class="mi">733</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="k">return</span> <span class="n">trace_module</span><span class="p">(</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=733&#39;</span><span class="o">&gt;</span><span class="mi">734</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="n">func</span><span class="p">,</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=734&#39;</span><span class="o">&gt;</span><span class="mi">735</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="p">{</span><span class="s2">&quot;forward&quot;</span><span class="p">:</span> <span class="n">example_inputs</span><span class="p">},</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=735&#39;</span><span class="o">&gt;</span><span class="mi">736</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="kc">None</span><span class="p">,</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=736&#39;</span><span class="o">&gt;</span><span class="mi">737</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="n">check_trace</span><span class="p">,</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=737&#39;</span><span class="o">&gt;</span><span class="mi">738</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="n">wrap_check_inputs</span><span class="p">(</span><span class="n">check_inputs</span><span class="p">),</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=738&#39;</span><span class="o">&gt;</span><span class="mi">739</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="n">check_tolerance</span><span class="p">,</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=739&#39;</span><span class="o">&gt;</span><span class="mi">740</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="n">strict</span><span class="p">,</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=740&#39;</span><span class="o">&gt;</span><span class="mi">741</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="n">_force_outplace</span><span class="p">,</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=741&#39;</span><span class="o">&gt;</span><span class="mi">742</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="n">_module_class</span><span class="p">,</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=742&#39;</span><span class="o">&gt;</span><span class="mi">743</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=744&#39;</span><span class="o">&gt;</span><span class="mi">745</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">if</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=745&#39;</span><span class="o">&gt;</span><span class="mi">746</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="nb">hasattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s2">&quot;__self__&quot;</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=746&#39;</span><span class="o">&gt;</span><span class="mi">747</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__self__</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=747&#39;</span><span class="o">&gt;</span><span class="mi">748</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="ow">and</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;forward&quot;</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=748&#39;</span><span class="o">&gt;</span><span class="mi">749</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="p">):</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=749&#39;</span><span class="o">&gt;</span><span class="mi">750</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="k">return</span> <span class="n">trace_module</span><span class="p">(</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=750&#39;</span><span class="o">&gt;</span><span class="mi">751</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="n">func</span><span class="o">.</span><span class="vm">__self__</span><span class="p">,</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=751&#39;</span><span class="o">&gt;</span><span class="mi">752</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="p">{</span><span class="s2">&quot;forward&quot;</span><span class="p">:</span> <span class="n">example_inputs</span><span class="p">},</span>
+   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=758&#39;</span><span class="o">&gt;</span><span class="mi">759</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="n">_module_class</span><span class="p">,</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=759&#39;</span><span class="o">&gt;</span><span class="mi">760</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="p">)</span>
+
+<span class="nn">File ~/.local/lib/python3.8/site-packages/torch/jit/_trace.py:934,</span> in <span class="ni">trace_module</span><span class="nt">(mod, inputs, optimize, check_trace, check_inputs, check_tolerance, strict, _force_outplace, _module_class, _compilation_unit)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=931&#39;</span><span class="o">&gt;</span><span class="mi">932</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="n">func</span> <span class="o">=</span> <span class="n">mod</span> <span class="k">if</span> <span class="n">method_name</span> <span class="o">==</span> <span class="s2">&quot;forward&quot;</span> <span class="k">else</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">method_name</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=932&#39;</span><span class="o">&gt;</span><span class="mi">933</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="n">example_inputs</span> <span class="o">=</span> <span class="n">make_tuple</span><span class="p">(</span><span class="n">example_inputs</span><span class="p">)</span>
+<span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=933&#39;</span><span class="o">&gt;</span><span class="mi">934</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="n">module</span><span class="o">.</span><span class="n">_c</span><span class="o">.</span><span class="n">_create_method_from_trace</span><span class="p">(</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=934&#39;</span><span class="o">&gt;</span><span class="mi">935</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">method_name</span><span class="p">,</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=935&#39;</span><span class="o">&gt;</span><span class="mi">936</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">func</span><span class="p">,</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=936&#39;</span><span class="o">&gt;</span><span class="mi">937</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">example_inputs</span><span class="p">,</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=937&#39;</span><span class="o">&gt;</span><span class="mi">938</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">var_lookup_fn</span><span class="p">,</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=938&#39;</span><span class="o">&gt;</span><span class="mi">939</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">strict</span><span class="p">,</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=939&#39;</span><span class="o">&gt;</span><span class="mi">940</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">_force_outplace</span><span class="p">,</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=940&#39;</span><span class="o">&gt;</span><span class="mi">941</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=941&#39;</span><span class="o">&gt;</span><span class="mi">942</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="n">check_trace_method</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">_c</span><span class="o">.</span><span class="n">_get_method</span><span class="p">(</span><span class="n">method_name</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/jit/_trace.py?line=943&#39;</span><span class="o">&gt;</span><span class="mi">944</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="c1"># Check the trace against new traces created from user-specified inputs</span>
+
+<span class="nn">File ~/.local/lib/python3.8/site-packages/torch/nn/modules/module.py:887,</span> in <span class="ni">Module._call_impl</span><span class="nt">(self, *input, **kwargs)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=883&#39;</span><span class="o">&gt;</span><span class="mi">884</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="nb">input</span> <span class="o">=</span> <span class="n">bw_hook</span><span class="o">.</span><span class="n">setup_input_hook</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=885&#39;</span><span class="o">&gt;</span><span class="mi">886</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">_C</span><span class="o">.</span><span class="n">_get_tracing_state</span><span class="p">():</span>
+<span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=886&#39;</span><span class="o">&gt;</span><span class="mi">887</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slow_forward</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=887&#39;</span><span class="o">&gt;</span><span class="mi">888</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">else</span><span class="p">:</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=888&#39;</span><span class="o">&gt;</span><span class="mi">889</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File ~/.local/lib/python3.8/site-packages/torch/nn/modules/module.py:860,</span> in <span class="ni">Module._slow_forward</span><span class="nt">(self, *input, **kwargs)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=857&#39;</span><span class="o">&gt;</span><span class="mi">858</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="n">recording_scopes</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=858&#39;</span><span class="o">&gt;</span><span class="mi">859</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">try</span><span class="p">:</span>
+<span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=859&#39;</span><span class="o">&gt;</span><span class="mi">860</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=860&#39;</span><span class="o">&gt;</span><span class="mi">861</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">finally</span><span class="p">:</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=861&#39;</span><span class="o">&gt;</span><span class="mi">862</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="k">if</span> <span class="n">recording_scopes</span><span class="p">:</span>
+
+<span class="nn">File ~/.local/lib/python3.8/site-packages/torch/nn/modules/container.py:119,</span> in <span class="ni">Sequential.forward</span><span class="nt">(self, input)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/container.py?line=116&#39;</span><span class="o">&gt;</span><span class="mi">117</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">):</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/container.py?line=117&#39;</span><span class="o">&gt;</span><span class="mi">118</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+<span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/container.py?line=118&#39;</span><span class="o">&gt;</span><span class="mi">119</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="nb">input</span> <span class="o">=</span> <span class="n">module</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/container.py?line=119&#39;</span><span class="o">&gt;</span><span class="mi">120</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="k">return</span> <span class="nb">input</span>
+
+<span class="nn">File ~/.local/lib/python3.8/site-packages/torch/nn/modules/module.py:887,</span> in <span class="ni">Module._call_impl</span><span class="nt">(self, *input, **kwargs)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=883&#39;</span><span class="o">&gt;</span><span class="mi">884</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="nb">input</span> <span class="o">=</span> <span class="n">bw_hook</span><span class="o">.</span><span class="n">setup_input_hook</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=885&#39;</span><span class="o">&gt;</span><span class="mi">886</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">_C</span><span class="o">.</span><span class="n">_get_tracing_state</span><span class="p">():</span>
+<span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=886&#39;</span><span class="o">&gt;</span><span class="mi">887</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slow_forward</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=887&#39;</span><span class="o">&gt;</span><span class="mi">888</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">else</span><span class="p">:</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=888&#39;</span><span class="o">&gt;</span><span class="mi">889</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File ~/.local/lib/python3.8/site-packages/torch/nn/modules/module.py:860,</span> in <span class="ni">Module._slow_forward</span><span class="nt">(self, *input, **kwargs)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=857&#39;</span><span class="o">&gt;</span><span class="mi">858</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="n">recording_scopes</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=858&#39;</span><span class="o">&gt;</span><span class="mi">859</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">try</span><span class="p">:</span>
+<span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=859&#39;</span><span class="o">&gt;</span><span class="mi">860</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=860&#39;</span><span class="o">&gt;</span><span class="mi">861</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">finally</span><span class="p">:</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=861&#39;</span><span class="o">&gt;</span><span class="mi">862</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="k">if</span> <span class="n">recording_scopes</span><span class="p">:</span>
+
+<span class="nn">File ~/.local/lib/python3.8/site-packages/torch/nn/modules/container.py:119,</span> in <span class="ni">Sequential.forward</span><span class="nt">(self, input)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/container.py?line=116&#39;</span><span class="o">&gt;</span><span class="mi">117</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">):</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/container.py?line=117&#39;</span><span class="o">&gt;</span><span class="mi">118</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+<span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/container.py?line=118&#39;</span><span class="o">&gt;</span><span class="mi">119</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="nb">input</span> <span class="o">=</span> <span class="n">module</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/container.py?line=119&#39;</span><span class="o">&gt;</span><span class="mi">120</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="k">return</span> <span class="nb">input</span>
+
+<span class="nn">File ~/.local/lib/python3.8/site-packages/torch/nn/modules/module.py:887,</span> in <span class="ni">Module._call_impl</span><span class="nt">(self, *input, **kwargs)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=883&#39;</span><span class="o">&gt;</span><span class="mi">884</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="nb">input</span> <span class="o">=</span> <span class="n">bw_hook</span><span class="o">.</span><span class="n">setup_input_hook</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=885&#39;</span><span class="o">&gt;</span><span class="mi">886</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">_C</span><span class="o">.</span><span class="n">_get_tracing_state</span><span class="p">():</span>
+<span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=886&#39;</span><span class="o">&gt;</span><span class="mi">887</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slow_forward</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=887&#39;</span><span class="o">&gt;</span><span class="mi">888</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">else</span><span class="p">:</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=888&#39;</span><span class="o">&gt;</span><span class="mi">889</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File ~/.local/lib/python3.8/site-packages/torch/nn/modules/module.py:860,</span> in <span class="ni">Module._slow_forward</span><span class="nt">(self, *input, **kwargs)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=857&#39;</span><span class="o">&gt;</span><span class="mi">858</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="n">recording_scopes</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=858&#39;</span><span class="o">&gt;</span><span class="mi">859</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">try</span><span class="p">:</span>
+<span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=859&#39;</span><span class="o">&gt;</span><span class="mi">860</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=860&#39;</span><span class="o">&gt;</span><span class="mi">861</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">finally</span><span class="p">:</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=861&#39;</span><span class="o">&gt;</span><span class="mi">862</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="k">if</span> <span class="n">recording_scopes</span><span class="p">:</span>
+
+<span class="nn">File ~/.local/lib/python3.8/site-packages/torch/nn/modules/container.py:119,</span> in <span class="ni">Sequential.forward</span><span class="nt">(self, input)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/container.py?line=116&#39;</span><span class="o">&gt;</span><span class="mi">117</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">):</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/container.py?line=117&#39;</span><span class="o">&gt;</span><span class="mi">118</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+<span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/container.py?line=118&#39;</span><span class="o">&gt;</span><span class="mi">119</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="nb">input</span> <span class="o">=</span> <span class="n">module</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/container.py?line=119&#39;</span><span class="o">&gt;</span><span class="mi">120</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="k">return</span> <span class="nb">input</span>
+
+<span class="nn">File ~/.local/lib/python3.8/site-packages/torch/nn/modules/module.py:887,</span> in <span class="ni">Module._call_impl</span><span class="nt">(self, *input, **kwargs)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=883&#39;</span><span class="o">&gt;</span><span class="mi">884</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="nb">input</span> <span class="o">=</span> <span class="n">bw_hook</span><span class="o">.</span><span class="n">setup_input_hook</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=885&#39;</span><span class="o">&gt;</span><span class="mi">886</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">_C</span><span class="o">.</span><span class="n">_get_tracing_state</span><span class="p">():</span>
+<span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=886&#39;</span><span class="o">&gt;</span><span class="mi">887</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slow_forward</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=887&#39;</span><span class="o">&gt;</span><span class="mi">888</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">else</span><span class="p">:</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=888&#39;</span><span class="o">&gt;</span><span class="mi">889</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File ~/.local/lib/python3.8/site-packages/torch/nn/modules/module.py:860,</span> in <span class="ni">Module._slow_forward</span><span class="nt">(self, *input, **kwargs)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=857&#39;</span><span class="o">&gt;</span><span class="mi">858</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="n">recording_scopes</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=858&#39;</span><span class="o">&gt;</span><span class="mi">859</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">try</span><span class="p">:</span>
+<span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=859&#39;</span><span class="o">&gt;</span><span class="mi">860</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=860&#39;</span><span class="o">&gt;</span><span class="mi">861</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">finally</span><span class="p">:</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=861&#39;</span><span class="o">&gt;</span><span class="mi">862</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="k">if</span> <span class="n">recording_scopes</span><span class="p">:</span>
+
+<span class="nn">File ~/.local/lib/python3.8/site-packages/torchvision/models/quantization/resnet.py:32,</span> in <span class="ni">QuantizableBasicBlock.forward</span><span class="nt">(self, x)</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torchvision/models/quantization/resnet.py?line=28&#39;</span><span class="o">&gt;</span><span class="mi">29</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="n">identity</span> <span class="o">=</span> <span class="n">x</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torchvision/models/quantization/resnet.py?line=30&#39;</span><span class="o">&gt;</span><span class="mi">31</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="o">---&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torchvision/models/quantization/resnet.py?line=31&#39;</span><span class="o">&gt;</span><span class="mi">32</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn1</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torchvision/models/quantization/resnet.py?line=32&#39;</span><span class="o">&gt;</span><span class="mi">33</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+     <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torchvision/models/quantization/resnet.py?line=34&#39;</span><span class="o">&gt;</span><span class="mi">35</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+<span class="nn">File ~/.local/lib/python3.8/site-packages/torch/nn/modules/module.py:887,</span> in <span class="ni">Module._call_impl</span><span class="nt">(self, *input, **kwargs)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=883&#39;</span><span class="o">&gt;</span><span class="mi">884</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="nb">input</span> <span class="o">=</span> <span class="n">bw_hook</span><span class="o">.</span><span class="n">setup_input_hook</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=885&#39;</span><span class="o">&gt;</span><span class="mi">886</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">_C</span><span class="o">.</span><span class="n">_get_tracing_state</span><span class="p">():</span>
+<span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=886&#39;</span><span class="o">&gt;</span><span class="mi">887</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slow_forward</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=887&#39;</span><span class="o">&gt;</span><span class="mi">888</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">else</span><span class="p">:</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=888&#39;</span><span class="o">&gt;</span><span class="mi">889</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File ~/.local/lib/python3.8/site-packages/torch/nn/modules/module.py:860,</span> in <span class="ni">Module._slow_forward</span><span class="nt">(self, *input, **kwargs)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=857&#39;</span><span class="o">&gt;</span><span class="mi">858</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="n">recording_scopes</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=858&#39;</span><span class="o">&gt;</span><span class="mi">859</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">try</span><span class="p">:</span>
+<span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=859&#39;</span><span class="o">&gt;</span><span class="mi">860</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=860&#39;</span><span class="o">&gt;</span><span class="mi">861</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">finally</span><span class="p">:</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/module.py?line=861&#39;</span><span class="o">&gt;</span><span class="mi">862</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="k">if</span> <span class="n">recording_scopes</span><span class="p">:</span>
+
+<span class="nn">File ~/.local/lib/python3.8/site-packages/torch/nn/modules/batchnorm.py:135,</span> in <span class="ni">_BatchNorm.forward</span><span class="nt">(self, input)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/batchnorm.py?line=132&#39;</span><span class="o">&gt;</span><span class="mi">133</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">running_mean</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">running_mean</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/batchnorm.py?line=133&#39;</span><span class="o">&gt;</span><span class="mi">134</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">running_var</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">running_var</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span>
+<span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/batchnorm.py?line=134&#39;</span><span class="o">&gt;</span><span class="mi">135</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">batch_norm</span><span class="p">(</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/batchnorm.py?line=135&#39;</span><span class="o">&gt;</span><span class="mi">136</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="nb">input</span><span class="p">,</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/batchnorm.py?line=136&#39;</span><span class="o">&gt;</span><span class="mi">137</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="c1"># If buffers are not to be tracked, ensure that they won&#39;t be updated</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/batchnorm.py?line=137&#39;</span><span class="o">&gt;</span><span class="mi">138</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="bp">self</span><span class="o">.</span><span class="n">running_mean</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">track_running_stats</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/batchnorm.py?line=138&#39;</span><span class="o">&gt;</span><span class="mi">139</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="bp">self</span><span class="o">.</span><span class="n">running_var</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">track_running_stats</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/modules/batchnorm.py?line=139&#39;</span><span class="o">&gt;</span><span class="mi">140</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span> <span class="n">bn_training</span><span class="p">,</span> <span class="n">exponential_average_factor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span><span class="p">)</span>
+
+<span class="nn">File ~/.local/lib/python3.8/site-packages/torch/nn/functional.py:2147,</span> in <span class="ni">batch_norm</span><span class="nt">(input, running_mean, running_var, weight, bias, training, momentum, eps)</span>
+   <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/functional.py?line=2133&#39;</span><span class="o">&gt;</span><span class="mi">2134</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="k">return</span> <span class="n">handle_torch_function</span><span class="p">(</span>
+   <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/functional.py?line=2134&#39;</span><span class="o">&gt;</span><span class="mi">2135</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="n">batch_norm</span><span class="p">,</span>
+   <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/functional.py?line=2135&#39;</span><span class="o">&gt;</span><span class="mi">2136</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="p">(</span><span class="nb">input</span><span class="p">,),</span>
+   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+   <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/functional.py?line=2143&#39;</span><span class="o">&gt;</span><span class="mi">2144</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>         <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span>
+   <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/functional.py?line=2144&#39;</span><span class="o">&gt;</span><span class="mi">2145</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="p">)</span>
+   <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/functional.py?line=2145&#39;</span><span class="o">&gt;</span><span class="mi">2146</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">if</span> <span class="n">training</span><span class="p">:</span>
+<span class="o">-&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/functional.py?line=2146&#39;</span><span class="o">&gt;</span><span class="mi">2147</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">_verify_batch_size</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+   <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/functional.py?line=2148&#39;</span><span class="o">&gt;</span><span class="mi">2149</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">batch_norm</span><span class="p">(</span>
+   <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/functional.py?line=2149&#39;</span><span class="o">&gt;</span><span class="mi">2150</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="nb">input</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">bias</span><span class="p">,</span> <span class="n">running_mean</span><span class="p">,</span> <span class="n">running_var</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">momentum</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">cudnn</span><span class="o">.</span><span class="n">enabled</span>
+   <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/functional.py?line=2150&#39;</span><span class="o">&gt;</span><span class="mi">2151</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="p">)</span>
+
+<span class="nn">File ~/.local/lib/python3.8/site-packages/torch/nn/functional.py:2114,</span> in <span class="ni">_verify_batch_size</span><span class="nt">(size)</span>
+   <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/functional.py?line=2111&#39;</span><span class="o">&gt;</span><span class="mi">2112</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="n">size_prods</span> <span class="o">*=</span> <span class="n">size</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span>
+   <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/functional.py?line=2112&#39;</span><span class="o">&gt;</span><span class="mi">2113</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">if</span> <span class="n">size_prods</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="o">-&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;file:///home/pc/.local/lib/python3.8/site-packages/torch/nn/functional.py?line=2113&#39;</span><span class="o">&gt;</span><span class="mi">2114</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected more than 1 value per channel when training, got input size </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">size</span><span class="p">))</span>
+
+<span class="ne">ValueError</span>: Expected more than 1 value per channel when training, got input size torch.Size([1, 512, 1, 1])
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+
+<div class="section">
+   
+</div>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="cifar.html" title="上一页 页">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">上一页</p>
+            <p class="prev-next-title">测试</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../advanced/index.html" title="下一页 页">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">高级教程</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By xinetzone<br/>
+  
+      &copy; Copyright 2021, xinetzone.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
