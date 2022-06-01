@@ -7,8 +7,8 @@
 
 intro
 tutorials/index
-quant-eager/index
 quant/index
+chaos/index
 ecosystem/index
 others/index
 refs

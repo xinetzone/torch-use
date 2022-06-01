@@ -73,6 +73,26 @@ def load_model(model, model_file):
     model.load_state_dict(state_dict)
     return model
 
+def load_qat_model(model, model_file, backend):
+    from torch.ao.quantization import get_default_qat_qconfig
+    from torch.ao.quantization import prepare_qat, convert
+    model.fuse_model()
+    model.qconfig = get_default_qat_qconfig(backend=backend)
+    model = prepare_qat(model, inplace=True)
+    model = convert(model, inplace=True)
+    state_dict = torch.load(model_file)
+    model.load_state_dict(state_dict)
+
+def load_ptq_model(model, model_file, backend):
+    from torch.ao.quantization import get_default_qconfig
+    from torch.ao.quantization import  prepare, convert
+    model.fuse_model()
+    model.qconfig = get_default_qconfig(backend=backend)
+    model = prepare(model, inplace=True)
+    model = convert(model, inplace=True)
+    state_dict = torch.load(model_file)
+    model.load_state_dict(state_dict)
+
 
 def get_size_of_model(model_path):
     '''获取模型的大小（MB）'''

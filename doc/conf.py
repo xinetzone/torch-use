@@ -4,8 +4,8 @@ import ablog
 
 ROOT = Path(__file__).parent.resolve()
 sys.path.extend([str(ROOT)])
-from _conf import *
 from doc_tool import *
+from _conf import *
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates', ablog.get_html_templates_path()]
@@ -41,7 +41,8 @@ extensions = [
 release = '0.0.1'
 
 # basic build settings
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "**.ipynb_checkpoints"]
+exclude_patterns = ["_build", "Thumbs.db", "draft",
+                    ".DS_Store", "**.ipynb_checkpoints"]
 html_theme = 'sphinx_book_theme'
 html_static_path = ['_static']
 html_css_files = ["default.css"]
@@ -52,3 +53,6 @@ gettext_compact = False  # optional.
 
 bibtex_bibfiles = ["refs.bib"]
 bibtex_reference_style = "author_year"
+
+# Execution mode for notebooks
+nb_execution_mode = 'off'
