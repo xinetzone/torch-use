@@ -29,7 +29,7 @@
     "        for image, target in data_loader:\n",
     "            model(image)\n",
     "prepared_model = prepare_fx(float_model, qconfig_dict)  # fuse modules and insert observers\n",
-    "calibrate(prepared_model, data_loader_test)  # run calibration on sample data\n",
+    "calibrate(prepared_model, valset)  # run calibration on sample data\n",
     "quantized_model = convert_fx(prepared_model)  # convert the calibrated model to a quantized model\n",
     "```\n",
     "\n",
@@ -53,8 +53,13 @@
     "\n",
     "## 定义辅助函数和 Prepare Dataset\n",
     "\n",
-    "首先进行必要的导入，定义一些辅助函数并准备数据。这些步骤与 PyTorch 中 [使用 Eager 模式的静态量化](https://pytorch.org/tutorials/advanced/static_quantization_tutorial.html) 相同。\n",
-    "\n",
+    "首先进行必要的导入，定义一些辅助函数并准备数据。这些步骤与 PyTorch 中 [使用 Eager 模式的静态量化](https://pytorch.org/tutorials/advanced/static_quantization_tutorial.html) 相同。"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
     "要使用整个 ImageNet 数据集运行本教程中的代码，首先按照 [ImageNet Data](http://www.image-net.org/download) 中的说明下载 ImageNet。将下载的文件解压缩到 `data_path` 文件夹中。\n",
     "\n",
     "下载 {mod}`torchvision resnet18 模型 <torchvision.models.resnet>` 并将其重命名为 `models/resnet18_pretrained_float.pth`。"
@@ -62,29 +67,32 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 4,
+   "execution_count": 1,
    "metadata": {},
    "outputs": [],
    "source": [
-    "import copy\n",
-    "from torch import nn\n",
-    "# from torch_book.data import ImageNet\n",
-    "from tools.helper import prepare_data_loaders, load_model"
+    "from torch_book.data import ImageNet\n",
+    "\n",
+    "\n",
+    "root = \"/media/pc/data/4tb/lxw/datasets/ILSVRC\"\n",
+    "saved_model_dir = 'models/'\n",
+    "\n",
+    "dataset = ImageNet(root)\n",
+    "trainset = dataset.loader(batch_size=30, split=\"train\")\n",
+    "valset = dataset.loader(batch_size=50, split=\"val\")"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 5,
+   "execution_count": 2,
    "metadata": {},
    "outputs": [],
    "source": [
-    "data_path = \"/media/pc/data/4tb/lxw/datasets/ILSVRC\"\n",
-    "saved_model_dir = 'models/'\n",
-    "float_model_file = 'resnet18_pretrained_float.pth'\n",
+    "import copy\n",
+    "from torchvision import models\n",
     "\n",
-    "data_loader, data_loader_test = prepare_data_loaders(data_path)\n",
-    "criterion = nn.CrossEntropyLoss()\n",
-    "float_model = load_model(saved_model_dir + float_model_file).to(\"cpu\")\n",
+    "model_name = \"resnet18\"\n",
+    "float_model = getattr(models, model_name)(pretrained=True)\n",
     "float_model.eval()\n",
     "\n",
     "# deepcopy the model since we need to keep the original model around\n",
@@ -102,105 +110,11 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 6,
+   "execution_count": 3,
    "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "ResNet(\n",
-       "  (conv1): Conv2d(3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)\n",
-       "  (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)\n",
-       "  (relu): ReLU(inplace=True)\n",
-       "  (maxpool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)\n",
-       "  (layer1): Sequential(\n",
-       "    (0): BasicBlock(\n",
-       "      (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)\n",
-       "      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)\n",
-       "      (relu): ReLU(inplace=True)\n",
-       "      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)\n",
-       "      (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)\n",
-       "    )\n",
-       "    (1): BasicBlock(\n",
-       "      (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)\n",
-       "      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)\n",
-       "      (relu): ReLU(inplace=True)\n",
-       "      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)\n",
-       "      (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)\n",
-       "    )\n",
-       "  )\n",
-       "  (layer2): Sequential(\n",
-       "    (0): BasicBlock(\n",
-       "      (conv1): Conv2d(64, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)\n",
-       "      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)\n",
-       "      (relu): ReLU(inplace=True)\n",
-       "      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)\n",
-       "      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)\n",
-       "      (downsample): Sequential(\n",
-       "        (0): Conv2d(64, 128, kernel_size=(1, 1), stride=(2, 2), bias=False)\n",
-       "        (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)\n",
-       "      )\n",
-       "    )\n",
-       "    (1): BasicBlock(\n",
-       "      (conv1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)\n",
-       "      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)\n",
-       "      (relu): ReLU(inplace=True)\n",
-       "      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)\n",
-       "      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)\n",
-       "    )\n",
-       "  )\n",
-       "  (layer3): Sequential(\n",
-       "    (0): BasicBlock(\n",
-       "      (conv1): Conv2d(128, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)\n",
-       "      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)\n",
-       "      (relu): ReLU(inplace=True)\n",
-       "      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)\n",
-       "      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)\n",
-       "      (downsample): Sequential(\n",
-       "        (0): Conv2d(128, 256, kernel_size=(1, 1), stride=(2, 2), bias=False)\n",
-       "        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)\n",
-       "      )\n",
-       "    )\n",
-       "    (1): BasicBlock(\n",
-       "      (conv1): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)\n",
-       "      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)\n",
-       "      (relu): ReLU(inplace=True)\n",
-       "      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)\n",
-       "      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)\n",
-       "    )\n",
-       "  )\n",
-       "  (layer4): Sequential(\n",
-       "    (0): BasicBlock(\n",
-       "      (conv1): Conv2d(256, 512, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)\n",
-       "      (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)\n",
-       "      (relu): ReLU(inplace=True)\n",
-       "      (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)\n",
-       "      (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)\n",
-       "      (downsample): Sequential(\n",
-       "        (0): Conv2d(256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False)\n",
-       "        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)\n",
-       "      )\n",
-       "    )\n",
-       "    (1): BasicBlock(\n",
-       "      (conv1): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)\n",
-       "      (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)\n",
-       "      (relu): ReLU(inplace=True)\n",
-       "      (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)\n",
-       "      (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)\n",
-       "    )\n",
-       "  )\n",
-       "  (avgpool): AdaptiveAvgPool2d(output_size=(1, 1))\n",
-       "  (fc): Linear(in_features=512, out_features=1000, bias=True)\n",
-       ")"
-      ]
-     },
-     "execution_count": 6,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
+   "outputs": [],
    "source": [
-    "model_to_quantize.eval()"
+    "model_to_quantize.eval();"
    ]
   },
   {
@@ -266,7 +180,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 7,
+   "execution_count": 4,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -285,20 +199,14 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 9,
+   "execution_count": 5,
    "metadata": {},
-   "outputs": [
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "/media/workspace/anaconda3/envs/torchx/lib/python3.10/site-packages/torch/ao/quantization/observer.py:177: UserWarning: Please use quant_min and quant_max to specify the range for observers.                     reduce_range will be deprecated in a future release of PyTorch.\n",
-      "  warnings.warn(\n"
-     ]
-    }
-   ],
+   "outputs": [],
    "source": [
+    "import warnings\n",
     "from torch.quantization.quantize_fx import prepare_fx\n",
+    "\n",
+    "warnings.filterwarnings('ignore')\n",
     "\n",
     "prepared_model = prepare_fx(model_to_quantize, qconfig_dict)"
    ]
@@ -312,7 +220,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 10,
+   "execution_count": 6,
    "metadata": {},
    "outputs": [
     {
@@ -413,18 +321,23 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 11,
+   "execution_count": 7,
    "metadata": {},
    "outputs": [],
    "source": [
     "import torch\n",
     "\n",
-    "def calibrate(model, data_loader):\n",
+    "def calibrate(model, data_loader, samples=500):\n",
     "    model.eval()\n",
     "    with torch.no_grad():\n",
-    "        for image, target in data_loader:\n",
+    "        k = 0\n",
+    "        for image, _ in data_loader:\n",
+    "            if k > samples:\n",
+    "                break\n",
     "            model(image)\n",
-    "calibrate(prepared_model, data_loader_test)  # run calibration on sample data"
+    "            k += len(image)\n",
+    "\n",
+    "calibrate(prepared_model, trainset)  # run calibration on sample data"
    ]
   },
   {
@@ -438,83 +351,67 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 12,
+   "execution_count": 8,
    "metadata": {},
    "outputs": [
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "/media/workspace/anaconda3/envs/torchx/lib/python3.10/site-packages/torch/ao/quantization/observer.py:177: UserWarning: Please use quant_min and quant_max to specify the range for observers.                     reduce_range will be deprecated in a future release of PyTorch.\n",
-      "  warnings.warn(\n",
-      "/media/workspace/anaconda3/envs/torchx/lib/python3.10/site-packages/torch/nn/quantized/_reference/modules/conv.py:49: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).\n",
-      "  torch.tensor(weight_qparams[\"scale\"], dtype=torch.float, device=device))\n",
-      "/media/workspace/anaconda3/envs/torchx/lib/python3.10/site-packages/torch/nn/quantized/_reference/modules/conv.py:52: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).\n",
-      "  torch.tensor(weight_qparams[\"zero_point\"], dtype=torch.int, device=device))\n",
-      "/media/workspace/anaconda3/envs/torchx/lib/python3.10/site-packages/torch/nn/quantized/_reference/modules/linear.py:41: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).\n",
-      "  torch.tensor(weight_qparams[\"scale\"], dtype=torch.float, device=device))\n",
-      "/media/workspace/anaconda3/envs/torchx/lib/python3.10/site-packages/torch/nn/quantized/_reference/modules/linear.py:44: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).\n",
-      "  torch.tensor(\n"
-     ]
-    },
     {
      "name": "stdout",
      "output_type": "stream",
      "text": [
       "GraphModule(\n",
-      "  (conv1): QuantizedConvReLU2d(3, 64, kernel_size=(7, 7), stride=(2, 2), scale=0.02416340634226799, zero_point=0, padding=(3, 3))\n",
+      "  (conv1): QuantizedConvReLU2d(3, 64, kernel_size=(7, 7), stride=(2, 2), scale=0.03267836198210716, zero_point=0, padding=(3, 3))\n",
       "  (maxpool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)\n",
       "  (layer1): Module(\n",
       "    (0): Module(\n",
-      "      (conv1): QuantizedConvReLU2d(64, 64, kernel_size=(3, 3), stride=(1, 1), scale=0.016458377242088318, zero_point=0, padding=(1, 1))\n",
-      "      (conv2): QuantizedConv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), scale=0.05186988785862923, zero_point=76, padding=(1, 1))\n",
+      "      (conv1): QuantizedConvReLU2d(64, 64, kernel_size=(3, 3), stride=(1, 1), scale=0.019193191081285477, zero_point=0, padding=(1, 1))\n",
+      "      (conv2): QuantizedConv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), scale=0.051562923938035965, zero_point=75, padding=(1, 1))\n",
       "    )\n",
       "    (1): Module(\n",
-      "      (conv1): QuantizedConvReLU2d(64, 64, kernel_size=(3, 3), stride=(1, 1), scale=0.01640539988875389, zero_point=0, padding=(1, 1))\n",
-      "      (conv2): QuantizedConv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), scale=0.06668238341808319, zero_point=75, padding=(1, 1))\n",
+      "      (conv1): QuantizedConvReLU2d(64, 64, kernel_size=(3, 3), stride=(1, 1), scale=0.019093887880444527, zero_point=0, padding=(1, 1))\n",
+      "      (conv2): QuantizedConv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), scale=0.06979087740182877, zero_point=78, padding=(1, 1))\n",
       "    )\n",
       "  )\n",
       "  (layer2): Module(\n",
       "    (0): Module(\n",
-      "      (conv1): QuantizedConvReLU2d(64, 128, kernel_size=(3, 3), stride=(2, 2), scale=0.014990044757723808, zero_point=0, padding=(1, 1))\n",
-      "      (conv2): QuantizedConv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), scale=0.043533820658922195, zero_point=65, padding=(1, 1))\n",
+      "      (conv1): QuantizedConvReLU2d(64, 128, kernel_size=(3, 3), stride=(2, 2), scale=0.01557458657771349, zero_point=0, padding=(1, 1))\n",
+      "      (conv2): QuantizedConv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), scale=0.050476107746362686, zero_point=68, padding=(1, 1))\n",
       "      (downsample): Module(\n",
-      "        (0): QuantizedConv2d(64, 128, kernel_size=(1, 1), stride=(2, 2), scale=0.039839211851358414, zero_point=57)\n",
+      "        (0): QuantizedConv2d(64, 128, kernel_size=(1, 1), stride=(2, 2), scale=0.039443813264369965, zero_point=60)\n",
       "      )\n",
       "    )\n",
       "    (1): Module(\n",
-      "      (conv1): QuantizedConvReLU2d(128, 128, kernel_size=(3, 3), stride=(1, 1), scale=0.017353743314743042, zero_point=0, padding=(1, 1))\n",
-      "      (conv2): QuantizedConv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), scale=0.04932788759469986, zero_point=67, padding=(1, 1))\n",
+      "      (conv1): QuantizedConvReLU2d(128, 128, kernel_size=(3, 3), stride=(1, 1), scale=0.016193654388189316, zero_point=0, padding=(1, 1))\n",
+      "      (conv2): QuantizedConv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), scale=0.05214320868253708, zero_point=68, padding=(1, 1))\n",
       "    )\n",
       "  )\n",
       "  (layer3): Module(\n",
       "    (0): Module(\n",
-      "      (conv1): QuantizedConvReLU2d(128, 256, kernel_size=(3, 3), stride=(2, 2), scale=0.021761329844594002, zero_point=0, padding=(1, 1))\n",
-      "      (conv2): QuantizedConv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), scale=0.0588294193148613, zero_point=51, padding=(1, 1))\n",
+      "      (conv1): QuantizedConvReLU2d(128, 256, kernel_size=(3, 3), stride=(2, 2), scale=0.018163194879889488, zero_point=0, padding=(1, 1))\n",
+      "      (conv2): QuantizedConv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), scale=0.05316956341266632, zero_point=51, padding=(1, 1))\n",
       "      (downsample): Module(\n",
-      "        (0): QuantizedConv2d(128, 256, kernel_size=(1, 1), stride=(2, 2), scale=0.02464589849114418, zero_point=70)\n",
+      "        (0): QuantizedConv2d(128, 256, kernel_size=(1, 1), stride=(2, 2), scale=0.01836947724223137, zero_point=107)\n",
       "      )\n",
       "    )\n",
       "    (1): Module(\n",
-      "      (conv1): QuantizedConvReLU2d(256, 256, kernel_size=(3, 3), stride=(1, 1), scale=0.02051834762096405, zero_point=0, padding=(1, 1))\n",
-      "      (conv2): QuantizedConv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), scale=0.0531822107732296, zero_point=73, padding=(1, 1))\n",
+      "      (conv1): QuantizedConvReLU2d(256, 256, kernel_size=(3, 3), stride=(1, 1), scale=0.013543782755732536, zero_point=0, padding=(1, 1))\n",
+      "      (conv2): QuantizedConv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), scale=0.048523254692554474, zero_point=71, padding=(1, 1))\n",
       "    )\n",
       "  )\n",
       "  (layer4): Module(\n",
       "    (0): Module(\n",
-      "      (conv1): QuantizedConvReLU2d(256, 512, kernel_size=(3, 3), stride=(2, 2), scale=0.017118634656071663, zero_point=0, padding=(1, 1))\n",
-      "      (conv2): QuantizedConv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), scale=0.05871155112981796, zero_point=72, padding=(1, 1))\n",
+      "      (conv1): QuantizedConvReLU2d(256, 512, kernel_size=(3, 3), stride=(2, 2), scale=0.014485283754765987, zero_point=0, padding=(1, 1))\n",
+      "      (conv2): QuantizedConv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), scale=0.0517863854765892, zero_point=64, padding=(1, 1))\n",
       "      (downsample): Module(\n",
-      "        (0): QuantizedConv2d(256, 512, kernel_size=(1, 1), stride=(2, 2), scale=0.04433954134583473, zero_point=68)\n",
+      "        (0): QuantizedConv2d(256, 512, kernel_size=(1, 1), stride=(2, 2), scale=0.04331441596150398, zero_point=58)\n",
       "      )\n",
       "    )\n",
       "    (1): Module(\n",
-      "      (conv1): QuantizedConvReLU2d(512, 512, kernel_size=(3, 3), stride=(1, 1), scale=0.016849324107170105, zero_point=0, padding=(1, 1))\n",
-      "      (conv2): QuantizedConv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), scale=0.19534127414226532, zero_point=50, padding=(1, 1))\n",
+      "      (conv1): QuantizedConvReLU2d(512, 512, kernel_size=(3, 3), stride=(1, 1), scale=0.021167000755667686, zero_point=0, padding=(1, 1))\n",
+      "      (conv2): QuantizedConv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), scale=0.22766999900341034, zero_point=45, padding=(1, 1))\n",
       "    )\n",
       "  )\n",
       "  (avgpool): AdaptiveAvgPool2d(output_size=(1, 1))\n",
-      "  (fc): QuantizedLinear(in_features=512, out_features=1000, scale=0.3029012978076935, zero_point=35, qscheme=torch.per_channel_affine)\n",
+      "  (fc): QuantizedLinear(in_features=512, out_features=1000, scale=0.27226582169532776, zero_point=35, qscheme=torch.per_channel_affine)\n",
       ")\n",
       "\n",
       "\n",
@@ -595,7 +492,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 13,
+   "execution_count": 9,
    "metadata": {},
    "outputs": [
     {
@@ -603,27 +500,50 @@
      "output_type": "stream",
      "text": [
       "Size of model before quantization\n",
-      "Size (MB): 46.873073\n",
+      "模型大小(MB)：46.873073 MB\n",
       "Size of model after quantization\n",
-      "Size (MB): 11.853109\n",
-      "\n",
-      "[before serilaization] Evaluation accuracy on test dataset: 69.45, 88.90\n",
-      "\n",
-      "[after serialization/deserialization] Evaluation accuracy on test dataset: 69.45, 88.90\n"
+      "模型大小(MB)：11.853109 MB\n"
      ]
     }
    ],
    "source": [
-    "from tools.helper import print_size_of_model, evaluate\n",
+    "from torch_book.contrib.helper import evaluate, print_size_of_model\n",
+    "from torch import nn\n",
+    "\n",
+    "\n",
+    "criterion = nn.CrossEntropyLoss()\n",
     "\n",
     "print(\"Size of model before quantization\")\n",
     "print_size_of_model(float_model)\n",
     "print(\"Size of model after quantization\")\n",
     "print_size_of_model(quantized_model)\n",
-    "top1, top5 = evaluate(quantized_model, criterion, data_loader_test)\n",
-    "print(\"[before serilaization] Evaluation accuracy on test dataset: %2.2f, %2.2f\"%(top1.avg, top5.avg))\n",
-    "\n",
-    "fx_graph_mode_model_file_path = saved_model_dir + \"resnet18_fx_graph_mode_quantized.pth\"\n",
+    "top1, top5 = evaluate(quantized_model, criterion, valset)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[before serilaization] Evaluation accuracy on test dataset: 69.37, 88.89\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(f\"[before serilaization] Evaluation accuracy on test dataset: {top1.avg:2.2f}, {top5.avg:2.2f}\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fx_graph_mode_model_file_path = saved_model_dir + f\"{model_name}_fx_graph_mode_quantized.pth\"\n",
     "\n",
     "# this does not run due to some erros loading convrelu module:\n",
     "# ModuleAttributeError: 'ConvReLU2d' object has no attribute '_modules'\n",
@@ -643,8 +563,24 @@
     "torch.jit.save(torch.jit.script(quantized_model), fx_graph_mode_model_file_path)\n",
     "loaded_quantized_model = torch.jit.load(fx_graph_mode_model_file_path)\n",
     "\n",
-    "top1, top5 = evaluate(loaded_quantized_model, criterion, data_loader_test)\n",
-    "print(\"[after serialization/deserialization] Evaluation accuracy on test dataset: %2.2f, %2.2f\"%(top1.avg, top5.avg))"
+    "top1, top5 = evaluate(loaded_quantized_model, criterion, valset)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[after serialization/deserialization] Evaluation accuracy on test dataset: 69.37, 88.89\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(f\"[after serialization/deserialization] Evaluation accuracy on test dataset: {top1.avg:2.2f}, {top5.avg:2.2f}\")"
    ]
   },
   {
@@ -660,7 +596,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 14,
+   "execution_count": 17,
    "metadata": {},
    "outputs": [
     {
@@ -691,7 +627,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 15,
+   "execution_count": 18,
    "metadata": {},
    "outputs": [
     {
@@ -699,8 +635,7 @@
      "output_type": "stream",
      "text": [
       "Size of baseline model\n",
-      "Size (MB): 46.874273\n",
-      "\n",
+      "模型大小(MB)：46.874273 MB\n",
       "Baseline Float Model Evaluation accuracy: 69.76, 89.08\n"
      ]
     }
@@ -711,7 +646,7 @@
     "print(\"Size of baseline model\")\n",
     "print_size_of_model(float_model)\n",
     "\n",
-    "top1, top5 = evaluate(float_model, criterion, data_loader_test)\n",
+    "top1, top5 = evaluate(float_model, criterion, valset)\n",
     "print(\"Baseline Float Model Evaluation accuracy: %2.2f, %2.2f\"%(top1.avg, top5.avg))\n",
     "torch.jit.save(torch.jit.script(float_model), saved_model_dir + scripted_float_model_file)"
    ]
@@ -725,7 +660,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 16,
+   "execution_count": 19,
    "metadata": {},
    "outputs": [
     {
@@ -733,12 +668,10 @@
      "output_type": "stream",
      "text": [
       "Size of Fx graph mode quantized model\n",
-      "Size (MB): 11.855297\n",
-      "\n",
-      "FX graph mode quantized model Evaluation accuracy on test dataset: 69.45, 88.90\n",
+      "模型大小(MB)：11.855297 MB\n",
+      "FX graph mode quantized model Evaluation accuracy on test dataset: 69.37, 88.89\n",
       "Size of eager mode quantized model\n",
-      "Size (MB): 11.850395\n",
-      "\n",
+      "模型大小(MB)：11.850395 MB\n",
       "eager mode quantized model Evaluation accuracy on test dataset: 69.50, 88.88\n"
      ]
     }
@@ -746,7 +679,7 @@
    "source": [
     "print(\"Size of Fx graph mode quantized model\")\n",
     "print_size_of_model(quantized_model)\n",
-    "top1, top5 = evaluate(quantized_model, criterion, data_loader_test)\n",
+    "top1, top5 = evaluate(quantized_model, criterion, valset)\n",
     "print(\"FX graph mode quantized model Evaluation accuracy on test dataset: %2.2f, %2.2f\"%(top1.avg, top5.avg))\n",
     "\n",
     "from torchvision.models.quantization.resnet import resnet18\n",
@@ -754,7 +687,7 @@
     "print(\"Size of eager mode quantized model\")\n",
     "eager_quantized_model = torch.jit.script(eager_quantized_model)\n",
     "print_size_of_model(eager_quantized_model)\n",
-    "top1, top5 = evaluate(eager_quantized_model, criterion, data_loader_test)\n",
+    "top1, top5 = evaluate(eager_quantized_model, criterion, valset)\n",
     "print(\"eager mode quantized model Evaluation accuracy on test dataset: %2.2f, %2.2f\"%(top1.avg, top5.avg))\n",
     "eager_mode_model_file = \"resnet18_eager_mode_quantized.pth\"\n",
     "torch.jit.save(eager_quantized_model, saved_model_dir + eager_mode_model_file)"
@@ -791,6 +724,13 @@
    "source": [
     "可以看到，对于 resnet18, FX Graph 模式和 Eager 模式量化模型都比浮点模型获得了相似的速度，大约比浮点模型快 2-4 倍。但是浮点模型上的实际加速可能会因模型、设备、构建、输入批大小、线程等而不同。"
    ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
   }
  ],
  "metadata": {
