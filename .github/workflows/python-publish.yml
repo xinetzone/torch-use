@@ -29,5 +29,6 @@ jobs:
       - name: Publish package
         uses: pypa/gh-action-pypi-publish@master
         with:
+          verbose: true
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
