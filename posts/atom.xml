@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh_CN">
   <id>https://xinetzone.github.io/torch-book</id>
   <title>Blog</title>
-  <updated>2022-06-24T11:45:16.288238+00:00</updated>
+  <updated>2022-06-24T12:00:06.091713+00:00</updated>
   <link href="https://xinetzone.github.io/torch-book"/>
   <link href="https://xinetzone.github.io/torch-book/zh_CN/posts/atom.xml" rel="self"/>
   <generator uri="https://ablog.readthedocs.org/" version="0.10.25">ABlog</generator>
