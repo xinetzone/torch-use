@@ -7,6 +7,8 @@ from torchvision import transforms
 class Transforms:
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
+    # normalize = transforms.Normalize(mean=[123.68, 116.779, 103.939],
+    #                                  std=[58.393, 57.12, 57.375])
 
     train = transforms.Compose([
         transforms.RandomResizedCrop(224),

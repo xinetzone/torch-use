@@ -8,6 +8,7 @@
 intro
 tutorials/index
 quant/index
+openmmlab/index
 chaos/index
 ecosystem/index
 others/index
