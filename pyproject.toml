@@ -34,6 +34,8 @@ doc = [
   "sphinx-thebe",
   "sphinx-copybutton",
   "sphinx-comments",
+  "sphinx-click",
+  "sphinxcontrib-websupport",
   "plotly",
   "pandas",
   "matplotlib",
@@ -41,7 +43,8 @@ doc = [
   "sphinx-design",
   "sphinx-inline-tabs",
   "sphinx-automodapi",
-  "sphinxcontrib-bibtex"
+  "sphinxcontrib-bibtex",
+  "latexcodec"
 ]
 
 [tool.flit.module]

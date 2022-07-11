@@ -13,6 +13,7 @@ chaos/index
 ecosystem/index
 others/index
 refs
+glossary/index
 ```
 
 ## 目录和索引
