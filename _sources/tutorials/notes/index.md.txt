@@ -2,5 +2,7 @@
 
 ```{toctree}
 autograd-mechanics
+detection
 extending
+thop
 ```

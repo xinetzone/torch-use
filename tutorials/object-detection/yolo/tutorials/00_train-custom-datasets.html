@@ -1,0 +1,1097 @@
+
+<!DOCTYPE html>
+
+<html lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>自定义数据 📌 &#8212; torch-book 0.0.1 文档</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/default.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/clipboard.min.js"></script>
+    <script src="../../../../_static/copybutton.js"></script>
+    <script src="../../../../_static/tabs.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script kind="utterances">
+
+    var commentsRunWhenDOMLoaded = cb => {
+    if (document.readyState != 'loading') {
+        cb()
+    } else if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', cb)
+    } else {
+        document.attachEvent('onreadystatechange', function() {
+        if (document.readyState == 'complete') cb()
+        })
+    }
+}
+
+var addUtterances = () => {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "https://utteranc.es/client.js";
+    script.async = "async";
+
+    script.setAttribute("repo", "xinetzone/torch-book");
+    script.setAttribute("issue-term", "pathname");
+    script.setAttribute("theme", "github-light");
+    script.setAttribute("label", "💬 comment");
+    script.setAttribute("crossorigin", "anonymous");
+
+    sections = document.querySelectorAll("div.section");
+    if (sections !== null) {
+        section = sections[sections.length-1];
+        section.appendChild(script);
+    }
+}
+commentsRunWhenDOMLoaded(addUtterances);
+</script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script src="../../../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../../_static/design-tabs.js"></script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <link rel="canonical" href="https://xinetzone.github.io/torch-book/tutorials/object-detection/yolo/tutorials/00_train-custom-datasets.html" />
+    <link rel="shortcut icon" href="../../../../_static/favicon.jpg"/>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="Tips for Best Training Results" href="01_training-tips-best-results.html" />
+    <link rel="prev" title="YOLO 教程" href="index.html" /> 
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="zh_CN">
+    
+
+    <!-- Google Analytics -->
+     
+<link
+  rel="alternate"
+  type="application/atom+xml"
+  href="../../../../posts/atom.xml"
+  title="Blog"
+/>
+ 
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../../../../_static/logo.jpg" class="logo" alt="logo">
+      
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../../intro.html">
+   项目简介
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../../../index.html">
+   教程
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../../basics/index.html">
+     PyTorch 基础
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../basics/quickstart.html">
+       快速入门
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../basics/autogradqs.html">
+       自动微分
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="../../index.html">
+     目标检测
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3 current active has-children">
+      <a class="reference internal" href="../index.html">
+       YOLO 系列
+      </a>
+      <input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+      <label for="toctree-checkbox-4">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul class="current">
+       <li class="toctree-l4">
+        <a class="reference internal" href="../intro.html">
+         YOLO 简介
+        </a>
+       </li>
+       <li class="toctree-l4 current active">
+        <a class="reference internal" href="index.html">
+         YOLO 教程
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../../notes/index.html">
+     笔记
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+    <label for="toctree-checkbox-5">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../notes/autograd-mechanics.html">
+       自动微分机制
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../notes/detection.html">
+       目标检测
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../notes/extending.html">
+       扩展 PyTorch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../notes/thop.html">
+       THOP: PyTorch OpCounter
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../seg-fine-tuning.html">
+     微调分割
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../../quant/index.html">
+   量化
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../quant/intro.html">
+     量化简介
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../quant/start.html">
+     快速入门
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../../openmmlab/index.html">
+   MMDetection
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+  <label for="toctree-checkbox-7">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../openmmlab/start.html">
+     MMDect 快速上手
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../../chaos/index.html">
+   Eager 量化(混乱)
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../chaos/intro.html">
+     量化简介（Eager）
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../chaos/recipes.html">
+     量化菜谱
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../chaos/quantized-tensor.html">
+     量化张量
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../../../chaos/start/index.html">
+     快速上手
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+    <label for="toctree-checkbox-9">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../chaos/start/basic.html">
+       基础
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../chaos/start/ns.html">
+       Pytorch 数值套件教程
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../../../chaos/study/index.html">
+     学习
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+    <label for="toctree-checkbox-10">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../chaos/study/intro.html">
+       概述
+      </a>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../../../../chaos/study/transfer-learning/index.html">
+       迁移学习
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+      <label for="toctree-checkbox-11">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../../../../chaos/study/transfer-learning/basic.html">
+         计算机视觉分类
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../../../../chaos/study/transfer-learning/quantized.html">
+         量化计算机视觉分类
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../../../../chaos/study/transfer-learning/custom.html">
+         自定义
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../../../../chaos/study/transfer-learning/cifar.html">
+         测试
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../../../../chaos/study/transfer-learning/tvm.html">
+         TVM
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../../../../chaos/study/advanced/index.html">
+       高级教程
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+      <label for="toctree-checkbox-12">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../../../../chaos/study/advanced/custom.html">
+         自定义量化
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../../../../chaos/study/advanced/run.html">
+         通用量化模型
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../../../../chaos/study/advanced/qat.html">
+         QAT
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../../../../chaos/study/advanced/cifar.html">
+         特定于 cifar10 的量化（待更）
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../chaos/study/qat-resnet18.html">
+       QAT（resnet18）
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../chaos/study/test.html">
+       测试 QAT
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../chaos/study/draft.html">
+       回收站
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../../../chaos/papers/index.html">
+     论文
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+    <label for="toctree-checkbox-13">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../chaos/papers/gholami2021survey.html">
+       A Survey of Quantization Methods for Efficient Neural Network Inference
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../../ecosystem/index.html">
+   生态系统
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+  <label for="toctree-checkbox-14">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../ecosystem/intro.html">
+     简介
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../../others/index.html">
+   其他
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+  <label for="toctree-checkbox-15">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../others/colab.html">
+     Colab 训练
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../others/en-zh.html">
+     中英互译
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../others/raw.html">
+     未整理的资料
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../../refs.html">
+   参考
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../../glossary/index.html">
+   术语表
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+  <label for="toctree-checkbox-16">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../glossary/numpy.html">
+     NumPy
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../glossary/pytorch.html">
+     PyTorch 词汇表
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            <div>
+版权所有 © 2021 <a href="https://xinetzone.github.io/">xinetzone</a></div>
+<div>由 <a href="https://ebp.jupyterbook.org/">EBP</a> 提供技术支持</div>
+<a href="https://torch-book.readthedocs.io/">版本切换</a>
+
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/xinetzone/torch-book"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/xinetzone/torch-book/issues/new?title=Issue%20on%20page%20%2Ftutorials/object-detection/yolo/tutorials/00_train-custom-datasets.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/xinetzone/torch-book/edit/main/docs/tutorials/object-detection/yolo/tutorials/00_train-custom-datasets.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../../_sources/tutorials/object-detection/yolo/tutorials/00_train-custom-datasets.md.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> 导航
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   训练
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dataset-yaml">
+     创建
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       dataset.yaml
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     创建标签
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     组织目录
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     选择一个模型
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     训练
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id7">
+   可视化
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id8">
+     权重和偏差日志
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id9">
+     本地日志
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id10">
+   环境
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id11">
+   状态
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>自定义数据 📌</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> 导航 </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   训练
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dataset-yaml">
+     创建
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       dataset.yaml
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     创建标签
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     组织目录
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     选择一个模型
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     训练
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id7">
+   可视化
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id8">
+     权重和偏差日志
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id9">
+     本地日志
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id10">
+   环境
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id11">
+   状态
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                 <section class="tex2jax_ignore mathjax_ignore" id="yolo-tutorials-train-custom-datasets">
+<span id="id1"></span><h1>自定义数据 📌<a class="headerlink" href="#yolo-tutorials-train-custom-datasets" title="永久链接至标题">#</a></h1>
+<p>📚本指南解释了如何使用YOLOv5🚀训练自定义数据集。</p>
+<section id="id2">
+<h2>训练<a class="headerlink" href="#id2" title="永久链接至标题">#</a></h2>
+<p>设置训练配置。</p>
+<section id="dataset-yaml">
+<h3>创建 <code class="docutils literal notranslate"><span class="pre">dataset.yaml</span></code><a class="headerlink" href="#dataset-yaml" title="永久链接至标题">#</a></h3>
+<p><a class="reference external" href="https://www.kaggle.com/ultralytics/coco128">COCO128</a> 是一个小型教程数据集，由 <a class="reference external" href="http://cocodataset.org/#home">COCO</a> train2017 中的前 128 张图像组成。这些相同的 128 幅图像用于训练和验证，以验证我们的训练管道能够过拟合。<a class="reference external" href="https://github.com/ultralytics/yolov5/blob/master/data/coco128.yaml"><code class="docutils literal notranslate"><span class="pre">data/coco128.yaml</span></code></a> 是数据集配置文件它定义了：</p>
+<ol class="arabic simple">
+<li><p>可选下载命令/ 自动下载的 URL；</p></li>
+<li><p>训练图像路的目录（或训练图片路径列表的 <code class="docutils literal notranslate"><span class="pre">*.txt</span></code> 文件）；</p></li>
+<li><p>验证图片的目录（或验证图片路径列表的 <code class="docutils literal notranslate"><span class="pre">*.txt</span></code> 文件）；</p></li>
+<li><p>类的数量；</p></li>
+<li><p>类名称的列表</p></li>
+</ol>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># COCO 2017 dataset http://cocodataset.org - first 128 training images</span><span class="w"></span>
+<span class="c1"># Train command: python train.py --data coco128.yaml</span><span class="w"></span>
+<span class="c1"># Default dataset location is next to YOLOv5:</span><span class="w"></span>
+<span class="c1">#   /parent</span><span class="w"></span>
+<span class="c1">#     /datasets/coco128</span><span class="w"></span>
+<span class="c1">#     /yolov5</span><span class="w"></span>
+
+
+<span class="c1"># Train/val/test sets as 1) dir: path/to/imgs, 2) file: path/to/imgs.txt, or 3) list: [path/to/imgs1, path/to/imgs2, ..]</span><span class="w"></span>
+<span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">../datasets/coco128</span><span class="w">  </span><span class="c1"># dataset root dir</span><span class="w"></span>
+<span class="nt">train</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">images/train2017</span><span class="w">  </span><span class="c1"># train images (relative to &#39;path&#39;) 128 images</span><span class="w"></span>
+<span class="nt">val</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">images/train2017</span><span class="w">  </span><span class="c1"># val images (relative to &#39;path&#39;) 128 images</span><span class="w"></span>
+<span class="nt">test</span><span class="p">:</span><span class="w">  </span><span class="c1"># test images (optional)</span><span class="w"></span>
+
+<span class="c1"># Classes</span><span class="w"></span>
+<span class="nt">nc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span><span class="w">  </span><span class="c1"># number of classes</span><span class="w"></span>
+<span class="nt">names</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&#39;person&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;bicycle&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;car&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;motorcycle&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;airplane&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;bus&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;train&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;truck&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;boat&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;traffic</span><span class="nv"> </span><span class="s">light&#39;</span><span class="p p-Indicator">,</span><span class="w"></span>
+<span class="w">         </span><span class="s">&#39;fire</span><span class="nv"> </span><span class="s">hydrant&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;stop</span><span class="nv"> </span><span class="s">sign&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;parking</span><span class="nv"> </span><span class="s">meter&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;bench&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;bird&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;cat&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;dog&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;horse&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;sheep&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;cow&#39;</span><span class="p p-Indicator">,</span><span class="w"></span>
+<span class="w">         </span><span class="s">&#39;elephant&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;bear&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;zebra&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;giraffe&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;backpack&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;umbrella&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;handbag&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;tie&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;suitcase&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;frisbee&#39;</span><span class="p p-Indicator">,</span><span class="w"></span>
+<span class="w">         </span><span class="s">&#39;skis&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;snowboard&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;sports</span><span class="nv"> </span><span class="s">ball&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;kite&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;baseball</span><span class="nv"> </span><span class="s">bat&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;baseball</span><span class="nv"> </span><span class="s">glove&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;skateboard&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;surfboard&#39;</span><span class="p p-Indicator">,</span><span class="w"></span>
+<span class="w">         </span><span class="s">&#39;tennis</span><span class="nv"> </span><span class="s">racket&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;bottle&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;wine</span><span class="nv"> </span><span class="s">glass&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;cup&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;fork&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;knife&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;spoon&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;bowl&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;banana&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;apple&#39;</span><span class="p p-Indicator">,</span><span class="w"></span>
+<span class="w">         </span><span class="s">&#39;sandwich&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;orange&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;broccoli&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;carrot&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;hot</span><span class="nv"> </span><span class="s">dog&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;pizza&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;donut&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;cake&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;chair&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;couch&#39;</span><span class="p p-Indicator">,</span><span class="w"></span>
+<span class="w">         </span><span class="s">&#39;potted</span><span class="nv"> </span><span class="s">plant&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;bed&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;dining</span><span class="nv"> </span><span class="s">table&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;toilet&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;tv&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;laptop&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;mouse&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;remote&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;keyboard&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;cell</span><span class="nv"> </span><span class="s">phone&#39;</span><span class="p p-Indicator">,</span><span class="w"></span>
+<span class="w">         </span><span class="s">&#39;microwave&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;oven&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;toaster&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;sink&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;refrigerator&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;book&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;clock&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;vase&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;scissors&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;teddy</span><span class="nv"> </span><span class="s">bear&#39;</span><span class="p p-Indicator">,</span><span class="w"></span>
+<span class="w">         </span><span class="s">&#39;hair</span><span class="nv"> </span><span class="s">drier&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;toothbrush&#39;</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w">  </span><span class="c1"># class names</span><span class="w"></span>
+
+
+<span class="c1"># Download script/URL (optional)</span><span class="w"></span>
+<span class="nt">download</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/ultralytics/yolov5/releases/download/v1.0/coco128.zip</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h3>创建标签<a class="headerlink" href="#id3" title="永久链接至标题">#</a></h3>
+<p>在使用  <a class="reference external" href="https://github.com/opencv/cvat">CVAT</a>、<a class="reference external" href="https://www.makesense.ai/">makesense.ai</a> 或者 <a class="reference external" href="https://labelbox.com/">Labelbox</a> 标注你的图片，输出你的标签为 <strong>YOLO 格式</strong>，每幅图像一个 <code class="docutils literal notranslate"><span class="pre">*.txt</span></code> 文件（如果图像中没有对象，则不需要 <code class="docutils literal notranslate"><span class="pre">*.txt</span></code> 文件）。<code class="docutils literal notranslate"><span class="pre">*.txt</span></code> 文件规格如下:</p>
+<ul class="simple">
+<li><p>每个对象一行</p></li>
+<li><p>每一行都是 <code class="docutils literal notranslate"><span class="pre">class</span> <span class="pre">x_center</span> <span class="pre">y_center</span> <span class="pre">width</span> <span class="pre">height</span></code> 格式。</p></li>
+<li><p>边框坐标必须是 <strong>归一化的 <code class="docutils literal notranslate"><span class="pre">xywh</span></code></strong> 格式（从 0 到 1）。如果框以像素为单位，则将 <code class="docutils literal notranslate"><span class="pre">x_center</span></code> 和 <code class="docutils literal notranslate"><span class="pre">width</span></code> 除以图像宽度，<code class="docutils literal notranslate"><span class="pre">y_center</span></code>和 <code class="docutils literal notranslate"><span class="pre">height</span></code> 除以图像高度。</p></li>
+<li><p>类号是零索引的（从 0 开始)）。</p></li>
+</ul>
+<p><img alt="" src="../../../../_images/bbox.jpg" /></p>
+<p>上图所对应的标签文件包含 2 个人（类 <code class="docutils literal notranslate"><span class="pre">0</span></code>）和一条领带（类 <code class="docutils literal notranslate"><span class="pre">27</span></code>）：</p>
+<p><img alt="" src="../../../../_images/label.png" /></p>
+</section>
+<section id="id4">
+<h3>组织目录<a class="headerlink" href="#id4" title="永久链接至标题">#</a></h3>
+<p>根据下面的示例组织您的 <code class="docutils literal notranslate"><span class="pre">train</span></code> 和 <code class="docutils literal notranslate"><span class="pre">val</span></code> 图像和标签。在本例中，我们假设 <code class="docutils literal notranslate"><span class="pre">/coco128</span></code> 位于 <code class="docutils literal notranslate"><span class="pre">/yolov5</span></code> 目录旁边。<code class="docutils literal notranslate"><span class="pre">YOLOv5</span></code> 通过将每个图像路径中的最后一个 <code class="docutils literal notranslate"><span class="pre">/images/</span></code> 实例替换为 <code class="docutils literal notranslate"><span class="pre">/labels/</span></code> 来自动定位每个图像的标签。例如：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>dataset/images/im0.jpg  <span class="c1"># image</span>
+dataset/labels/im0.txt  <span class="c1"># label</span>
+</pre></div>
+</div>
+<p><img alt="" src="../../../../_images/organize-dir.png" /></p>
+</section>
+<section id="id5">
+<h3>选择一个模型<a class="headerlink" href="#id5" title="永久链接至标题">#</a></h3>
+<p>选择一个预先训练的模型来开始训练。这里选择 <a class="reference external" href="https://github.com/ultralytics/yolov5/blob/master/models/yolov5s.yaml">YOLOv5s</a>，最小和最快的可用模型。</p>
+<p><img alt="YOLOv5 模型比较" src="../../../../_images/model_comparison.png" /></p>
+</section>
+<section id="id6">
+<h3>训练<a class="headerlink" href="#id6" title="永久链接至标题">#</a></h3>
+<p>在 COCO128 上训练 YOLOv5s 模型，指定数据集、批大小、图像大小，或者预训练的 <code class="docutils literal notranslate"><span class="pre">--weights</span> <span class="pre">yolov5s.pt</span></code>（推荐），或者随机初始化 <code class="docutils literal notranslate"><span class="pre">--weights</span> <span class="pre">''</span> <span class="pre">--cfg</span> <span class="pre">yolov5s.yaml</span></code>（不推荐）。预训练的权重可以从<a class="reference external" href="https://github.com/ultralytics/yolov5/releases">最新的YOLOv5 版本</a>中自动下载。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Train YOLOv5s on COCO128 for 5 epochs</span>
+$ python train.py --img <span class="m">640</span> --batch <span class="m">16</span> --epochs <span class="m">5</span> --data coco128.yaml --weights yolov5s.pt
+</pre></div>
+</div>
+<p>所有的训练结果都保存到 <code class="docutils literal notranslate"><span class="pre">runs/train/</span></code>，运行目录是递增的，例如：<code class="docutils literal notranslate"><span class="pre">runs/train/exp2</span></code>, <code class="docutils literal notranslate"><span class="pre">runs/train/exp3</span></code> 等。要了解更多细节，请参阅我们谷歌 Colab 笔记本的训练部分。<a class="reference external" href="https://colab.research.google.com/github/ultralytics/yolov5/blob/master/tutorial.ipynb"><img alt="" src="https://colab.research.google.com/assets/colab-badge.svg" /></a> <a class="reference external" href="https://www.kaggle.com/ultralytics/yolov5"><img alt="" src="https://kaggle.com/static/images/open-in-kaggle.svg" /></a></p>
+</section>
+</section>
+<section id="id7">
+<h2>可视化<a class="headerlink" href="#id7" title="永久链接至标题">#</a></h2>
+<section id="id8">
+<h3>权重和偏差日志<a class="headerlink" href="#id8" title="永久链接至标题">#</a></h3>
+<p><a class="reference external" href="https://wandb.ai/site?utm_campaign=repo_yolo_traintutorial">Weight &amp; Bias</a>（W&amp;B）现在与 YOLOv5 集成，用于训练运行的实时可视化和云记录。这允许更好的运行比较和内省，以及改进团队成员之间的可见性和协作。要启用 W&amp;B 日志，请安装 <code class="docutils literal notranslate"><span class="pre">wandb</span></code>，然后进行正常训练（您将在第一次使用时得到指导）。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ pip install wandb
+</pre></div>
+</div>
+<p>在训练期间，您将在 <a class="reference external" href="https://wandb.ai">https://wandb.ai</a> 上看到实时更新，您可以使用 W&amp;B 报告工具创建结果的<a class="reference external" href="https://wandb.ai/glenn-jocher/yolov5_tutorial/reports/YOLOv5-COCO128-Tutorial-Results--VmlldzozMDI5OTY">详细报告</a>。</p>
+<p><img alt="" src="../../../../_images/viz.jpg" /></p>
+</section>
+<section id="id9">
+<h3>本地日志<a class="headerlink" href="#id9" title="永久链接至标题">#</a></h3>
+<p>默认情况下，所有结果都被记录到 <code class="docutils literal notranslate"><span class="pre">runs/train</span></code>，为每个新的训练创建一个新的实验目录，如 <code class="docutils literal notranslate"><span class="pre">runs/train/exp2</span></code>、<code class="docutils literal notranslate"><span class="pre">runs/train/exp3</span></code> 等。查看训练和测试 jpgs 可以看到马赛克（mosaics），标签，预测和增强效果。注意，马赛克数据加载器（<strong>Mosaic Dataloader</strong>）用于训练（如下所示），一个由 Ultralytics 首次在 <a class="reference external" href="https://arxiv.org/abs/2004.10934">YOLOv4</a> 开发的新概念。</p>
+<p><code class="docutils literal notranslate"><span class="pre">train_batch0.jpg</span></code> 显示训练批次 0 的马赛克和标签：</p>
+<p><img alt="" src="../../../../_images/train_batch0.jpeg" /></p>
+<p><code class="docutils literal notranslate"><span class="pre">test_batch0_labels.jpg</span></code> 显示测试批次 0 标签：</p>
+<p><img alt="" src="../../../../_images/test_batch0_labels.jpeg" /></p>
+<p><code class="docutils literal notranslate"><span class="pre">test_batch0_pred.jpg</span></code> 显示测试批 0 的预测：</p>
+<p><img alt="" src="../../../../_images/test_batch0_pred.jpeg" /></p>
+<p>训练损失和性能指标也被记录到 <a class="reference external" href="https://www.tensorflow.org/tensorboard">Tensorboard</a> 和一个定制的 <code class="docutils literal notranslate"><span class="pre">results.txt</span></code> 日志文件中，该日志文件在训练完成后绘制为 <code class="docutils literal notranslate"><span class="pre">results.png</span></code>（下图）。在这里，我们展示了训练过 COCO128 到 300 个 epoch 的 YOLOv5s，从头开始（蓝色），以及预训练 <code class="docutils literal notranslate"><span class="pre">--weights</span> <span class="pre">yolov5s.pt</span></code>（橙色）。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>from utils.plots import plot_results 
+plot_results<span class="o">(</span><span class="nv">save_dir</span><span class="o">=</span><span class="s1">&#39;runs/train/exp&#39;</span><span class="o">)</span>  <span class="c1"># plot results.txt as results.png</span>
+</pre></div>
+</div>
+<p><img alt="" src="../../../../_images/res.png" /></p>
+</section>
+</section>
+<section id="id10">
+<h2>环境<a class="headerlink" href="#id10" title="永久链接至标题">#</a></h2>
+<p>YOLOv5 可以在以下任何一个最新验证环境中运行（所有依赖项包括 <a class="reference external" href="https://developer.nvidia.com/cuda">CUDA</a>/<a class="reference external" href="https://developer.nvidia.com/cudnn">CUDNN</a>, <a class="reference external" href="https://www.python.org/">Python</a> 和 <a class="reference external" href="https://pytorch.org/">PyTorch</a> 预安装）：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://colab.research.google.com/github/ultralytics/yolov5/blob/master/tutorial.ipynb">谷歌 Colab</a> 和 <a class="reference external" href="https://www.kaggle.com/ultralytics/yolov5">Kaggle 笔记本</a>与免费 GPU</p></li>
+<li><p>谷歌云深度学习虚拟机。见 <a class="reference external" href="https://github.com/ultralytics/yolov5/wiki/GCP-Quickstart">GCP 快速入门指南</a></p></li>
+<li><p>亚马逊深度学习AMI。见 <a class="reference external" href="https://github.com/ultralytics/yolov5/wiki/AWS-Quickstart">AWS 快速入门指南</a></p></li>
+<li><p>Docker Image。见 <a class="reference external" href="https://github.com/ultralytics/yolov5/wiki/Docker-Quickstart">Docker 快速入门指南</a> <a class="reference external" href="https://hub.docker.com/r/ultralytics/yolov5"><img alt="" src="https://img.shields.io/docker/pulls/ultralytics/yolov5?logo=docker" /></a></p></li>
+</ul>
+</section>
+<section id="id11">
+<h2>状态<a class="headerlink" href="#id11" title="永久链接至标题">#</a></h2>
+<p><img alt="" src="https://github.com/ultralytics/yolov5/workflows/CI%20CPU%20testing/badge.svg" /></p>
+<p>如果此标识为绿色，则当前通过了所有 <a class="reference external" href="https://github.com/ultralytics/yolov5/actions">YOLOv5 GitHub Actions</a> Continuous Integration（CI）测试。CI 测试在 MacOS、Windows 和 Ubuntu 上每 24 小时和每次提交时验证 YOLOv5 训练（<a class="reference external" href="https://github.com/ultralytics/yolov5/blob/master/train.py"><code class="docutils literal notranslate"><span class="pre">train.py</span></code></a>）、测试（<a class="reference external" href="https://github.com/ultralytics/yolov5/blob/master/test.py"><code class="docutils literal notranslate"><span class="pre">test.py</span></code></a>）、推断（<a class="reference external" href="https://github.com/ultralytics/yolov5/blob/master/detect.py"><code class="docutils literal notranslate"><span class="pre">detect.py</span></code></a>）和导出（<a class="reference external" href="https://github.com/ultralytics/yolov5/blob/master/models/export.py"><code class="docutils literal notranslate"><span class="pre">export.py</span></code></a>）的正确操作。</p>
+</section>
+</section>
+
+<div class="section">
+   
+</div>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="index.html" title="上一页 页">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">上一页</p>
+            <p class="prev-next-title">YOLO 教程</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="01_training-tips-best-results.html" title="下一页 页">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">Tips for Best Training Results</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By xinetzone<br/>
+  
+      &copy; Copyright 2021, xinetzone.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
