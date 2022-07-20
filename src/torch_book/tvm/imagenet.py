@@ -9,10 +9,12 @@ class TestImage:
         # img_url = "https://github.com/dmlc/mxnet.js/blob/main/data/cat.png?raw=true"
         self.img_path = download_testdata(img_url, name, module="data")
         self.im = Image.open(self.img_path)
+        
 
     def get_imagenet_input(self, im_height, im_width):
+        transforms = Transforms((im_height, im_width))
         im = self.im.resize((im_height, im_width))
-        preprocess = Transforms.test
+        preprocess = transforms.test
         pt_tensor = preprocess(im)
         return np.expand_dims(pt_tensor.numpy(), 0)
 
