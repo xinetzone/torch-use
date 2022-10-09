@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>1. PTQ 与 QAT 实践 &#8212; torch-book 0.0.1 文档</title>
+    <title>PTQ 与 QAT 实践 &#8212; torch-book 0.0.1 文档</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -22,13 +22,12 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/default.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
     
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
@@ -40,10 +39,6 @@
     <script src="../../_static/clipboard.min.js"></script>
     <script src="../../_static/copybutton.js"></script>
     <script src="../../_static/tabs.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../_static/togglebutton.js"></script>
     <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
     <script kind="utterances">
 
@@ -81,7 +76,6 @@ commentsRunWhenDOMLoaded(addUtterances);
 </script>
     <script src="../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
     <script src="../../_static/translations.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../_static/design-tabs.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -471,11 +465,23 @@ commentsRunWhenDOMLoaded(addUtterances);
     </ul>
    </li>
    <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../papers/index.html">
-     论文
+    <a class="reference internal" href="index.html">
+     教程
     </a>
     <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
     <label for="toctree-checkbox-13">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="simple">
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../papers/index.html">
+     论文
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+    <label for="toctree-checkbox-14">
      <i class="fas fa-chevron-down">
      </i>
     </label>
@@ -493,8 +499,8 @@ commentsRunWhenDOMLoaded(addUtterances);
   <a class="reference internal" href="../../ecosystem/index.html">
    生态系统
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
-  <label for="toctree-checkbox-14">
+  <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+  <label for="toctree-checkbox-15">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -510,8 +516,8 @@ commentsRunWhenDOMLoaded(addUtterances);
   <a class="reference internal" href="../../others/index.html">
    其他
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
-  <label for="toctree-checkbox-15">
+  <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+  <label for="toctree-checkbox-16">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -542,8 +548,8 @@ commentsRunWhenDOMLoaded(addUtterances);
   <a class="reference internal" href="../../glossary/index.html">
    术语表
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
-  <label for="toctree-checkbox-16">
+  <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+  <label for="toctree-checkbox-17">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -807,81 +813,81 @@ title="Print to PDF"
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id1">
-   1.1. 背景
+   背景
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id2">
-     1.1.1. 读者
+     读者
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id3">
-     1.1.2. 环境配置
+     环境配置
     </a>
    </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#pqt-qat">
-   1.2. 概述：PQT 与 QAT
+   概述：PQT 与 QAT
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#ptq">
-     1.2.1. PTQ 简介
+     PTQ 简介
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#qat">
-     1.2.2. QAT 概述
+     QAT 概述
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id4">
-     1.2.3. PTQ/QAT 统一的量化流程
+     PTQ/QAT 统一的量化流程
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id5">
-     1.2.4. PTQ/QAT 量化策略
+     PTQ/QAT 量化策略
     </a>
    </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id6">
-   1.3. PTQ 和 QAT 实战
+   PTQ 和 QAT 实战
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id7">
-     1.3.1. 一些准备工作
+     一些准备工作
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id8">
-     1.3.2. 微调浮点模型
+     微调浮点模型
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id9">
-     1.3.3. 配置可量化模型
+     配置可量化模型
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id10">
-     1.3.4. PTQ 实战
+     PTQ 实战
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id11">
-     1.3.5. QAT 实战
+     QAT 实战
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id12">
-     1.3.6. 小结
+     小结
     </a>
    </li>
   </ul>
@@ -907,81 +913,81 @@ title="Print to PDF"
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id1">
-   1.1. 背景
+   背景
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id2">
-     1.1.1. 读者
+     读者
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id3">
-     1.1.2. 环境配置
+     环境配置
     </a>
    </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#pqt-qat">
-   1.2. 概述：PQT 与 QAT
+   概述：PQT 与 QAT
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#ptq">
-     1.2.1. PTQ 简介
+     PTQ 简介
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#qat">
-     1.2.2. QAT 概述
+     QAT 概述
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id4">
-     1.2.3. PTQ/QAT 统一的量化流程
+     PTQ/QAT 统一的量化流程
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id5">
-     1.2.4. PTQ/QAT 量化策略
+     PTQ/QAT 量化策略
     </a>
    </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id6">
-   1.3. PTQ 和 QAT 实战
+   PTQ 和 QAT 实战
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id7">
-     1.3.1. 一些准备工作
+     一些准备工作
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id8">
-     1.3.2. 微调浮点模型
+     微调浮点模型
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id9">
-     1.3.3. 配置可量化模型
+     配置可量化模型
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id10">
-     1.3.4. PTQ 实战
+     PTQ 实战
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id11">
-     1.3.5. QAT 实战
+     QAT 实战
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id12">
-     1.3.6. 小结
+     小结
     </a>
    </li>
   </ul>
@@ -996,17 +1002,17 @@ title="Print to PDF"
                 
               <div>
                  <section class="tex2jax_ignore mathjax_ignore" id="ptq-qat">
-<h1><span class="section-number">1. </span>PTQ 与 QAT 实践<a class="headerlink" href="#ptq-qat" title="永久链接至标题">#</a></h1>
+<h1>PTQ 与 QAT 实践<a class="headerlink" href="#ptq-qat" title="永久链接至标题">#</a></h1>
 <p>本文主要介绍如何使用 PyTorch 将浮点模型转换为 PTQ 或者 QAT 模型。</p>
 <section id="id1">
-<h2><span class="section-number">1.1. </span>背景<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h2>
+<h2>背景<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h2>
 <p><span class="guilabel">目标</span>：快速将浮点模型转换为 PTQ 或者 QAT 模型。</p>
 <section id="id2">
-<h3><span class="section-number">1.1.1. </span>读者<a class="headerlink" href="#id2" title="永久链接至标题">#</a></h3>
+<h3>读者<a class="headerlink" href="#id2" title="永久链接至标题">#</a></h3>
 <p>本教程适用于会使用 PyTorch 编写 CNN 等模块的的算法工程师。</p>
 </section>
 <section id="id3">
-<h3><span class="section-number">1.1.2. </span>环境配置<a class="headerlink" href="#id3" title="永久链接至标题">#</a></h3>
+<h3>环境配置<a class="headerlink" href="#id3" title="永久链接至标题">#</a></h3>
 <p>本文使用 Python 3.10.0 （其他版本请自测），暂时仅 Linux 平台被测试。</p>
 <p>查看 <code class="docutils literal notranslate"><span class="pre">torch</span></code> 和 <code class="docutils literal notranslate"><span class="pre">torchvision</span></code> 的版本：</p>
 <div class="cell docutils container">
@@ -1047,7 +1053,7 @@ torchvision: 0.12.0
 </section>
 </section>
 <section id="pqt-qat">
-<h2><span class="section-number">1.2. </span>概述：PQT 与 QAT<a class="headerlink" href="#pqt-qat" title="永久链接至标题">#</a></h2>
+<h2>概述：PQT 与 QAT<a class="headerlink" href="#pqt-qat" title="永久链接至标题">#</a></h2>
 <p>参考：<a class="reference external" href="https://pytorch.org/docs/master/quantization.html">量化</a></p>
 <dl class="simple myst">
 <dt><code class="docutils literal notranslate"><span class="pre">训练后量化</span></code></dt><dd><p>简称 PTQ（Post Training Quantization）：权重量化，激活量化，需要借助数据在训练后进行校准。</p>
@@ -1154,7 +1160,7 @@ torchvision: 0.12.0
 </div>
 <p>可以看出，此时模块 <code class="docutils literal notranslate"><span class="pre">m</span></code> 是浮点模块。</p>
 <section id="ptq">
-<h3><span class="section-number">1.2.1. </span>PTQ 简介<a class="headerlink" href="#ptq" title="永久链接至标题">#</a></h3>
+<h3>PTQ 简介<a class="headerlink" href="#ptq" title="永久链接至标题">#</a></h3>
 <p>当内存带宽和计算空间都很重要时，通常会使用训练后量化，而 CNN 就是其典型的用例。训练后量化对模型的 <strong>权重</strong> 和 <strong>激活</strong> 进行量化。它在可能的情况下将 <strong>激活</strong> 融合到前面的层中。它需要用具有代表性的数据集进行 <strong>校准</strong>，以确定激活的最佳量化参数。</p>
 <p class="rubric">示意图</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># 原始模型</span>
@@ -1398,7 +1404,7 @@ torchvision: 0.12.0
 <p>要了解更多关于量化意识训练的信息，请参阅 <a class="reference external" href="https://pytorch.org/tutorials/advanced/static_quantization_tutorial.html">QAT 教程</a>。</p>
 </section>
 <section id="qat">
-<h3><span class="section-number">1.2.2. </span>QAT 概述<a class="headerlink" href="#qat" title="永久链接至标题">#</a></h3>
+<h3>QAT 概述<a class="headerlink" href="#qat" title="永久链接至标题">#</a></h3>
 <p>与其他量化方法相比，QAT 在 <strong>训练过程中</strong> 模拟量化的效果，可以获得更高的 accuracy。在训练过程中，所有的计算都是在浮点上进行的，使用 fake_quant 模块通过夹紧和舍入的方式对量化效果进行建模，模拟 INT8 的效果。模型转换后，权值和激活被量化，激活在可能的情况下被融合到前一层。它通常与 CNN 一起使用，与 PTQ 相比具有更高的 accuracy。</p>
 <p class="rubric">示意图</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># 原始模型</span>
@@ -1534,7 +1540,7 @@ torchvision: 0.12.0
 <p>要了解更多关于量化意识训练的信息，请参阅 <a class="reference external" href="https://pytorch.org/tutorials/advanced/static_quantization_tutorial.html">QAT 教程</a>。</p>
 </section>
 <section id="id4">
-<h3><span class="section-number">1.2.3. </span>PTQ/QAT 统一的量化流程<a class="headerlink" href="#id4" title="永久链接至标题">#</a></h3>
+<h3>PTQ/QAT 统一的量化流程<a class="headerlink" href="#id4" title="永久链接至标题">#</a></h3>
 <p>PTQ 和 QAT 的量化流程十分相似，为了统一接口，可以使用 <code class="docutils literal notranslate"><span class="pre">torchvision</span></code> 提供的函数 <a class="reference external" href="https://xinetzone.github.io/pytorch-book/api/pytorch/torchvision/generated/torchvision.models.quantization.utils._fuse_modules.html#torchvision.models.quantization.utils._fuse_modules" title="(在 Pytorch Book)"><code class="xref py py-func docutils literal notranslate"><span class="pre">_fuse_modules()</span></code></a>。</p>
 <p>下面利用函数 <a class="reference external" href="https://xinetzone.github.io/pytorch-book/api/pytorch/torchvision/generated/torchvision.models.quantization.utils._fuse_modules.html#torchvision.models.quantization.utils._fuse_modules" title="(在 Pytorch Book)"><code class="xref py py-func docutils literal notranslate"><span class="pre">_fuse_modules()</span></code></a> 可量化模块 <code class="docutils literal notranslate"><span class="pre">QM2</span></code>。</p>
 <div class="cell docutils container">
@@ -1613,7 +1619,7 @@ torchvision: 0.12.0
 </div>
 </section>
 <section id="id5">
-<h3><span class="section-number">1.2.4. </span>PTQ/QAT 量化策略<a class="headerlink" href="#id5" title="永久链接至标题">#</a></h3>
+<h3>PTQ/QAT 量化策略<a class="headerlink" href="#id5" title="永久链接至标题">#</a></h3>
 <p>对于通用量化技术，需要了解：</p>
 <ol class="arabic simple">
 <li><p>将任何需要输出再量化请求的运算（因此有额外的参数）从函数形式转换为模块形式（例如，使用 <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html#torch.nn.ReLU" title="(在 PyTorch v1.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.ReLU</span></code></a> 而不是 <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.functional.relu.html#torch.nn.functional.relu" title="(在 PyTorch v1.12)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.nn.functional.relu()</span></code></a>）。</p></li>
@@ -1635,7 +1641,7 @@ torchvision: 0.12.0
 </section>
 </section>
 <section id="id6">
-<h2><span class="section-number">1.3. </span>PTQ 和 QAT 实战<a class="headerlink" href="#id6" title="永久链接至标题">#</a></h2>
+<h2>PTQ 和 QAT 实战<a class="headerlink" href="#id6" title="永久链接至标题">#</a></h2>
 <p class="rubric">模型对比</p>
 <table class="colwidths-auto table">
 <thead>
@@ -1812,7 +1818,7 @@ torchvision: 0.12.0
 </div>
 </div>
 <section id="id7">
-<h3><span class="section-number">1.3.1. </span>一些准备工作<a class="headerlink" href="#id7" title="永久链接至标题">#</a></h3>
+<h3>一些准备工作<a class="headerlink" href="#id7" title="永久链接至标题">#</a></h3>
 <p>下面以 Cifar10 为了来说明 PTQ/QAT 的量化流程。</p>
 <p>定义几个<a class="reference external" href="https://github.com/pytorch/examples/blob/master/imagenet/main.py">辅助函数</a>来帮助评估模型。</p>
 <div class="cell docutils container">
@@ -1892,7 +1898,7 @@ Files already downloaded and verified
 </div>
 </section>
 <section id="id8">
-<h3><span class="section-number">1.3.2. </span>微调浮点模型<a class="headerlink" href="#id8" title="永久链接至标题">#</a></h3>
+<h3>微调浮点模型<a class="headerlink" href="#id8" title="永久链接至标题">#</a></h3>
 <p>配置浮点模型：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1951,7 +1957,7 @@ Files already downloaded and verified
 </div>
 </section>
 <section id="id9">
-<h3><span class="section-number">1.3.3. </span>配置可量化模型<a class="headerlink" href="#id9" title="永久链接至标题">#</a></h3>
+<h3>配置可量化模型<a class="headerlink" href="#id9" title="永久链接至标题">#</a></h3>
 <p>加载浮点模型：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2083,7 +2089,7 @@ Files already downloaded and verified
 <p>这将是我们进行比较的基准。接下来，尝试不同的量化方法。</p>
 </section>
 <section id="id10">
-<h3><span class="section-number">1.3.4. </span>PTQ 实战<a class="headerlink" href="#id10" title="永久链接至标题">#</a></h3>
+<h3>PTQ 实战<a class="headerlink" href="#id10" title="永久链接至标题">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 加载模型</span>
@@ -2292,7 +2298,7 @@ Files already downloaded and verified
 <p>仅仅改变这种量化配置方法，就可以将准确度提高到 <span class="math notranslate nohighlight">\(80.42\%\)</span> 以上！尽管如此，这还是比 <span class="math notranslate nohighlight">\(95\%\)</span> 的基线水平低了 <span class="math notranslate nohighlight">\(15\%\)</span>。</p>
 </section>
 <section id="id11">
-<h3><span class="section-number">1.3.5. </span>QAT 实战<a class="headerlink" href="#id11" title="永久链接至标题">#</a></h3>
+<h3>QAT 实战<a class="headerlink" href="#id11" title="永久链接至标题">#</a></h3>
 <p>使用 QAT，所有的权值和激活都在前向和后向训练过程中被“伪量化”：也就是说，浮点值被舍入以模拟 int8 值，但所有的计算仍然使用浮点数完成。因此，训练过程中的所有权重调整都是在“感知到”模型最终将被量化的情况下进行的；因此，在量化之后，这种方法通常比动态量化或训练后的静态量化产生更高的精度。</p>
 <p>实际执行 QAT 的总体工作流程与之前非常相似：</p>
 <ul class="simple">
@@ -2443,7 +2449,7 @@ QAT 模型：
 </div>
 </section>
 <section id="id12">
-<h3><span class="section-number">1.3.6. </span>小结<a class="headerlink" href="#id12" title="永久链接至标题">#</a></h3>
+<h3>小结<a class="headerlink" href="#id12" title="永久链接至标题">#</a></h3>
 <p>同样可以使用 <a class="reference external" href="https://xinetzone.github.io/pytorch-book/api/pytorch/ao/quantization/generated/torch.ao.quantization.quantize.quantize.html#torch.ao.quantization.quantize.quantize" title="(在 Pytorch Book)"><code class="xref py py-func docutils literal notranslate"><span class="pre">quantize()</span></code></a> 和 <a class="reference external" href="https://xinetzone.github.io/pytorch-book/api/pytorch/ao/quantization/generated/torch.ao.quantization.quantize.quantize_qat.html#torch.ao.quantization.quantize.quantize_qat" title="(在 Pytorch Book)"><code class="xref py py-func docutils literal notranslate"><span class="pre">quantize_qat()</span></code></a> 简化流程。</p>
 <p>比如，QAT 流程可以这样：</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_path</span> <span class="o">=</span> <span class="n">saved_model_dir</span> <span class="o">+</span> <span class="n">float_model_file</span>

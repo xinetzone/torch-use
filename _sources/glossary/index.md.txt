@@ -8,5 +8,3 @@
 numpy
 pytorch
 ```
-
-{fa}`rocket` --> {guilabel}`Live Code`

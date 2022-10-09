@@ -8,5 +8,6 @@ recipes
 quantized-tensor
 start/index
 study/index
+tutorial/index
 papers/index
 ```
