@@ -2,7 +2,7 @@
 
 ```{toctree}
 :maxdepth: 3
-:numbered:
+:glob:
 
 *
 ```
