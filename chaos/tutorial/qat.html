@@ -82,7 +82,9 @@ commentsRunWhenDOMLoaded(addUtterances);
     <link rel="canonical" href="https://xinetzone.github.io/torch-book/chaos/tutorial/qat.html" />
     <link rel="shortcut icon" href="../../_static/favicon.jpg"/>
     <link rel="index" title="索引" href="../../genindex.html" />
-    <link rel="search" title="搜索" href="../../search.html" /> 
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="QAT 的不同训练策略" href="qat-fuse.html" />
+    <link rel="prev" title="PTQ 与 QAT 实践" href="pqt-qat.html" /> 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="zh_CN">
     
@@ -164,7 +166,7 @@ commentsRunWhenDOMLoaded(addUtterances);
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="../../intro.html">
    项目简介
@@ -314,16 +316,16 @@ commentsRunWhenDOMLoaded(addUtterances);
    </li>
   </ul>
  </li>
- <li class="toctree-l1 has-children">
+ <li class="toctree-l1 current active has-children">
   <a class="reference internal" href="../index.html">
    Eager 量化(混乱)
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
   <label for="toctree-checkbox-8">
    <i class="fas fa-chevron-down">
    </i>
   </label>
-  <ul>
+  <ul class="current">
    <li class="toctree-l2">
     <a class="reference internal" href="../intro.html">
      量化简介（Eager）
@@ -462,16 +464,36 @@ commentsRunWhenDOMLoaded(addUtterances);
      </li>
     </ul>
    </li>
-   <li class="toctree-l2 has-children">
+   <li class="toctree-l2 current active has-children">
     <a class="reference internal" href="index.html">
      教程
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
     <label for="toctree-checkbox-13">
      <i class="fas fa-chevron-down">
      </i>
     </label>
-    <ul class="simple">
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="pqt-qat.html">
+       PTQ 与 QAT 实践
+      </a>
+     </li>
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       QAT 的不同训练策略
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="qat-fuse.html">
+       QAT 的不同训练策略
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="tvm.html">
+       TVM 初探
+      </a>
+     </li>
     </ul>
    </li>
    <li class="toctree-l2 has-children">
@@ -1802,6 +1824,20 @@ torch.float32
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="pqt-qat.html" title="上一页 页">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">上一页</p>
+            <p class="prev-next-title">PTQ 与 QAT 实践</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="qat-fuse.html" title="下一页 页">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">QAT 的不同训练策略</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
 </div>
             </footer>
         </div>

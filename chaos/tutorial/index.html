@@ -83,7 +83,7 @@ commentsRunWhenDOMLoaded(addUtterances);
     <link rel="shortcut icon" href="../../_static/favicon.jpg"/>
     <link rel="index" title="索引" href="../../genindex.html" />
     <link rel="search" title="搜索" href="../../search.html" />
-    <link rel="next" title="论文" href="../papers/index.html" />
+    <link rel="next" title="PTQ 与 QAT 实践" href="pqt-qat.html" />
     <link rel="prev" title="回收站" href="../study/draft.html" /> 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="zh_CN">
@@ -473,7 +473,27 @@ commentsRunWhenDOMLoaded(addUtterances);
      <i class="fas fa-chevron-down">
      </i>
     </label>
-    <ul class="simple">
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="pqt-qat.html">
+       PTQ 与 QAT 实践
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="qat.html">
+       QAT 的不同训练策略
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="qat-fuse.html">
+       QAT 的不同训练策略
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="tvm.html">
+       TVM 初探
+      </a>
+     </li>
     </ul>
    </li>
    <li class="toctree-l2 has-children">
@@ -768,6 +788,35 @@ title="Print to PDF"
                  <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1>教程<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h1>
 <div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pqt-qat.html">PTQ 与 QAT 实践</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pqt-qat.html#id1">背景</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pqt-qat.html#id2">读者</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pqt-qat.html#id3">环境配置</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pqt-qat.html#pqt-qat">概述：PQT 与 QAT</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pqt-qat.html#ptq">PTQ 简介</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pqt-qat.html#qat">QAT 概述</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pqt-qat.html#id4">PTQ/QAT 统一的量化流程</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pqt-qat.html#id5">PTQ/QAT 量化策略</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pqt-qat.html#id6">PTQ 和 QAT 实战</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pqt-qat.html#id7">一些准备工作</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pqt-qat.html#id8">微调浮点模型</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pqt-qat.html#id9">配置可量化模型</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pqt-qat.html#id10">PTQ 实战</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pqt-qat.html#id11">QAT 实战</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pqt-qat.html#id12">小结</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="qat.html">QAT 的不同训练策略</a></li>
+<li class="toctree-l1"><a class="reference internal" href="qat-fuse.html">QAT 的不同训练策略</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tvm.html">TVM 初探</a></li>
+</ul>
 </div>
 </section>
 
@@ -789,10 +838,10 @@ title="Print to PDF"
             <p class="prev-next-title">回收站</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="../papers/index.html" title="下一页 页">
+    <a class='right-next' id="next-link" href="pqt-qat.html" title="下一页 页">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">下一页</p>
-        <p class="prev-next-title">论文</p>
+        <p class="prev-next-title">PTQ 与 QAT 实践</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
