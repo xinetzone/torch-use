@@ -4,6 +4,5 @@
 :maxdepth: 3
 :numbered:
 
-pqt-qat
-qat
+*
 ```
